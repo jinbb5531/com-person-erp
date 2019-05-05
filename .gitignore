@@ -1,0 +1,44 @@
+﻿.settings
+*.project
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.tar.gz
+*.rar
+*.myumldata
+*.classpath
+erp-web/*/target/
+erp-web/*/src/test/
+erp-web/*/src/profile/
+erp-web/ContentPublishWeb/src/main/webapp/static/AdminLTE-2.3.11
+.metadata/
+erp-web/.idea/
+*.iml
+*.eml
+erp-web/*/target/
+erp-web/*/src/test/
+erp-web/.gradle/
+erp-web/*/build/
+erp-web/build/
+erp-web/out/
+erp-web/*/out/
+
+erp-web/**/rebel-remote.xml
+erp-web/**/rebel.xml
+erp-web/**/src/profile/
+erp-web/logs/
+erp-web/src/main/resources/static/*.html
+erp-web/src/main/resources/static/static/**
