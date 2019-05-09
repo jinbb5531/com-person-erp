@@ -68,6 +68,6 @@ public class Order {
     /**
      * 订单明细，一对多
      */
-//    private List<OrderItem> itemList;
+    private List<OrderItem> itemList;
 
 }

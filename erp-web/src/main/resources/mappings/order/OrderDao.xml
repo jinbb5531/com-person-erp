@@ -12,7 +12,35 @@
         <result column="HEMMER" property="hemmer" jdbcType="VARCHAR"/>
         <result column="PACKER" property="packer" jdbcType="VARCHAR"/>
         <result column="DEADLINE" property="deadline" jdbcType="TIMESTAMP"/>
-        <result column="SYSTEM_TAG" property="systemTag"/>
+        <result column="SYSTEM_TAG" property="systemTag" jdbcType="BIGINT"/>
         <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
     </resultMap>
+    <insert id="insert" parameterType="com.person.erp.order.entity.Order">
+        INSERT INTO ERP_ORDER
+        (ORDER_CODE,  CUSTOMER, CREATE_AT, CREATE_BY, UPDATE_AT, ORDER_STATUS, CUTTER, HEMMER, PACKER, DEADLINE, SYSTEM_TAG, REMARK)
+        VALUES(
+            #{orderCode},
+			#{customer},
+			#{createAt},
+			#{createBy},
+			#{updateAt},
+			#{status},
+			#{cutter},
+			#{hemmer},
+			#{packer},
+			#{deadline},
+			#{systemTag},
+			#{remark}
+        )
+
+    </insert>
+    <delete id="delete" parameterType="com.person.erp.order.entity.Order">
+        DELETE FROM ERP_ORDER
+        WHERE #{orderCode}
+    </delete>
+    <update id="update" parameterType="com.person.erp.order.entity.Order">
+        UPDATE ERP_ORDER
+        SET CUSTOMER = #{customer}, UPDATE_AT = #{updateAt}
+        WHERE ORDER_CODE = #{orderCode}
+    </update>
 </mapper>

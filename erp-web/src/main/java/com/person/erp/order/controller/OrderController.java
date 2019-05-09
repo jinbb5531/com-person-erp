@@ -2,10 +2,7 @@ package com.person.erp.order.controller;
 
 import com.person.erp.order.entity.Order;
 import com.person.erp.order.service.IOrderService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
@@ -27,7 +24,7 @@ public class OrderController {
      */
     @PostMapping
     private HashMap<String, Object> createOrder(Order order) {
-        order.setOrderCode("wq");
+        order.setOrderCode(UUID.randomUUID().toString());
         order.setCreateAt(new Timestamp(System.currentTimeMillis()));
         order.setCreateBy("jinbb");
         order.setStatus(1);
@@ -37,11 +34,29 @@ public class OrderController {
         HashMap<String, Object> result = new HashMap<String, Object>();
         return result;
     }
+
+    /**
+     * 查询订单
+     * @return
+     */
     @GetMapping
     private HashMap<String, Object> get(){
         HashMap<String, Object> result = new HashMap<String, Object>();
         result.put("id", 211);
         return result;
 
+    }
+
+    /**
+     * 修改订单
+     * @param order
+     * @return
+     */
+    @PutMapping
+    private HashMap<String,Object> update(Order order){
+        orderService.updateOrder(order);
+        HashMap<String, Object> result = new HashMap<String, Object>();
+        result.put("id", 211);
+        return result;
     }
 }

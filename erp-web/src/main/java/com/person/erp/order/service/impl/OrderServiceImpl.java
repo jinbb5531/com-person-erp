@@ -1,6 +1,7 @@
 package com.person.erp.order.service.impl;
 
 import com.person.erp.order.dao.IOrderDAO;
+import com.person.erp.order.dao.IOrderItemDAO;
 import com.person.erp.order.entity.Order;
 import com.person.erp.order.service.IOrderService;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ public class OrderServiceImpl implements IOrderService {
 
     @Resource
     private IOrderDAO dao;
+    @Resource
+    private IOrderItemDAO itemDAO;
 
     @Override
     public boolean createOrder(Order order) {
@@ -24,7 +27,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public boolean deleteOrder(Order order) {
-        return dao.deleteBy(order) > 0;
+        return false;
     }
 
     @Override
@@ -34,7 +37,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public Order findById(Order order) {
-        return dao.findById(order);
+        return null;
     }
 
     @Override
