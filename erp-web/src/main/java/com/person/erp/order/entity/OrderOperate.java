@@ -3,6 +3,11 @@ package com.person.erp.order.entity;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.annotation.Generated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.sql.Timestamp;
 
 /**
@@ -10,12 +15,15 @@ import java.sql.Timestamp;
  */
 @Setter
 @Getter
+@Table(name = "erp_order_operate")
 public class OrderOperate {
 
     /**
      * 主键
      */
-    private Long code;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long code;
     /**
      * 订单号
      */
@@ -40,4 +48,8 @@ public class OrderOperate {
      * 操作时间
      */
     private Timestamp operaTime;
+    /**
+     * 系统标识
+     */
+    private long systemTag;
 }

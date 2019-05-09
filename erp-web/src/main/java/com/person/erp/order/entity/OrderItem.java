@@ -3,16 +3,24 @@ package com.person.erp.order.entity;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * 订单明细
  */
 @Getter
 @Setter
+@Table(name = "erp_order_item")
 public class OrderItem {
     /**
      * 主键
      */
-    private Long code;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long code;
     /**
      * 订单号
      */
@@ -28,11 +36,11 @@ public class OrderItem {
     /**
      * 原料长
      */
-    private Double SizeL;
+    private Double sizeL;
     /**
      * 原料宽
      */
-    private Double SizeW;
+    private Double sizeW;
     /**
      * 裁剪的长
      */
@@ -52,5 +60,5 @@ public class OrderItem {
     /**
      * 系统标识
      */
-    private Integer systemTag;
+    private long systemTag;
 }

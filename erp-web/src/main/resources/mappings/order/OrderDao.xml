@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.person.erp.order.dao.IOrderDAO">
+    <resultMap id="BaseResult" type="com.person.erp.order.entity.Order">
+        <id column="ORDER_CODE" property="orderCode" jdbcType="VARCHAR"/>
+        <result column="CUSTOMER" property="customer" jdbcType="VARCHAR"/>
+        <result column="CREATE_AT" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
+        <result column="UPDATE_AT" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="ORDER_STATUS" property="status" jdbcType="INTEGER"/>
+        <result column="CUTTER" property="cutter" jdbcType="VARCHAR"/>
+        <result column="HEMMER" property="hemmer" jdbcType="VARCHAR"/>
+        <result column="PACKER" property="packer" jdbcType="VARCHAR"/>
+        <result column="DEADLINE" property="deadline" jdbcType="TIMESTAMP"/>
+        <result column="SYSTEM_TAG" property="systemTag"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+</mapper>

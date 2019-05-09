@@ -3,6 +3,8 @@ package com.person.erp.order.entity;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -11,11 +13,13 @@ import java.util.List;
  */
 @Setter
 @Getter
+@Table(name = "erp_order")
 public class Order {
 
     /**
      * 订单主键
      */
+    @Id
     private String orderCode;
     /**
      * 客户名
@@ -56,7 +60,7 @@ public class Order {
     /**
      * 系统标识
      */
-    private Integer systemTag;
+    private long systemTag;
     /**
      * 备注
      */
@@ -64,6 +68,6 @@ public class Order {
     /**
      * 订单明细，一对多
      */
-    private List<OrderItem> itemList;
+//    private List<OrderItem> itemList;
 
 }
