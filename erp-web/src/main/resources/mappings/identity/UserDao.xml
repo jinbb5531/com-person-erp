@@ -249,23 +249,6 @@
 		</if>
 	</select>
 	
-	<select id="findUserDeptList" resultType="UserDept">
-		SELECT * FROM ERP_USER_DEPT
-		WHERE DEPT_CODE IN 
-		<foreach collection="deptCodes" item="item" open="(" separator=", " close=")">
-			#{item}
-		</foreach>
-		<if test="codes != null">
-			AND USER_CODE IN
-			<foreach collection="codes" item="item" open="(" separator=", " close=")">
-				#{item}
-			</foreach>
-		</if>
-		<if test="systemTag != null and systemTag != ''">
-			AND SYSTEM_TAG = #{systemTag}
-		</if>
-	</select>
-
 	<select id="findList" resultType="User">
 		SELECT
 			USER_CODE,

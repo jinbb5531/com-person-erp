@@ -20,6 +20,7 @@
 *.rar
 *.myumldata
 *.classpath
+erp-web/target/
 erp-web/*/target/
 erp-web/*/src/test/
 erp-web/*/src/profile/
