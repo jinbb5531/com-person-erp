@@ -35,4 +35,9 @@ public interface IOrderService {
      */
     List<Order> findPage(Order order);
 
+    /**
+     * 批量删除订单
+     * @param codes
+     */
+    boolean deleteBatch(String[] codes);
 }

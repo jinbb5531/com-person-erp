@@ -20,7 +20,7 @@ public class OrderItem {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long code;
+    private Long code;
     /**
      * 订单号
      */
@@ -61,4 +61,5 @@ public class OrderItem {
      * 系统标识
      */
     private long systemTag;
+
 }

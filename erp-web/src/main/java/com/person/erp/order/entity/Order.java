@@ -13,13 +13,11 @@ import java.util.List;
  */
 @Setter
 @Getter
-@Table(name = "erp_order")
 public class Order {
 
     /**
      * 订单主键
      */
-    @Id
     private String orderCode;
     /**
      * 客户名

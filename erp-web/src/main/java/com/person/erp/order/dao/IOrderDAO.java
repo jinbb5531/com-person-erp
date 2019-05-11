@@ -4,6 +4,8 @@ import com.itexplore.core.orm.BaseDao;
 import com.person.erp.order.entity.Order;
 import com.sun.tools.corba.se.idl.constExpr.Or;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -39,11 +41,18 @@ public interface IOrderDAO  {
      * @param ids
      * @return
      */
-    int deleteBatch(String ids);
+    int deleteBatch(String... ids);
 
     /**
      * 修改订单
      * @return
      */
     int update(Order order);
+
+    /**
+     * 查询单个订单
+     * @param order
+     * @return
+     */
+    Order findById(Order order);
 }

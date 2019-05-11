@@ -14,8 +14,26 @@
         <result column="DEADLINE" property="deadline" jdbcType="TIMESTAMP"/>
         <result column="SYSTEM_TAG" property="systemTag" jdbcType="BIGINT"/>
         <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <collection property="itemList" ofType="com.person.erp.order.entity.OrderItem">
+            <id column="CODE" property="code" jdbcType="BIGINT"/>
+            <result column="NAME" property="name" jdbcType="VARCHAR"/>
+            <result column="COLOR" property="color" jdbcType="VARCHAR"/>
+            <result column="SIZE_L" property="sizeL" jdbcType="DOUBLE"/>
+            <result column="SIZE_W" property="sizeW" jdbcType="DOUBLE"/>
+            <result column="PRO_SIZE_L" property="proSizeL" jdbcType="DOUBLE"/>
+            <result column="PRO_SIZE_W" property="proSizeW" jdbcType="DOUBLE"/>
+            <result column="NUMBER" property="number" jdbcType="INTEGER"/>
+            <result column="PLANT_NUM" property="plantNum" jdbcType="INTEGER"/>
+        </collection>
     </resultMap>
-    <insert id="insert" parameterType="com.person.erp.order.entity.Order">
+
+    <sql id="baseColumn">
+        ORDER_CODE,  CUSTOMER, CREATE_AT, CREATE_BY, UPDATE_AT, ORDER_STATUS, CUTTER, HEMMER, PACKER, DEADLINE, SYSTEM_TAG, REMARK
+    </sql>
+    <insert id="insert" parameterType="com.person.erp.order.entity.Order"  >
+        <selectKey keyColumn="ORDER_CODE" keyProperty="orderCode" order="BEFORE" resultType="java.lang.String">
+        SELECT UUID()
+        </selectKey>
         INSERT INTO ERP_ORDER
         (ORDER_CODE,  CUSTOMER, CREATE_AT, CREATE_BY, UPDATE_AT, ORDER_STATUS, CUTTER, HEMMER, PACKER, DEADLINE, SYSTEM_TAG, REMARK)
         VALUES(
@@ -32,15 +50,33 @@
 			#{systemTag},
 			#{remark}
         )
-
     </insert>
     <delete id="delete" parameterType="com.person.erp.order.entity.Order">
         DELETE FROM ERP_ORDER
-        WHERE #{orderCode}
+        WHERE ORDER_CODE = #{orderCode}
     </delete>
-    <update id="update" parameterType="com.person.erp.order.entity.Order">
+    <update id="update" parameterType="com.person.erp.order.entity.Order" >
         UPDATE ERP_ORDER
-        SET CUSTOMER = #{customer}, UPDATE_AT = #{updateAt}
+        SET
+         CUSTOMER = #{customer},
+         UPDATE_AT = #{updateAt},
+         ORDER_STATUS = #{status},
+
+
         WHERE ORDER_CODE = #{orderCode}
     </update>
+    <delete id="deleteBatch">
+        DELETE FROM ERP_ORDER
+        WHERE
+        ORDER_CODE IN
+        <foreach collection="array" open="(" separator="," close=")" item="id">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="findById" parameterType="com.person.erp.order.entity.Order" resultMap="BaseResult">
+        SELECT *
+        FROM ERP_ORDER o LEFT JOIN ERP_ORDER_ITEM e
+        ON o.ORDER_CODE = e.ORDER_CODE
+        WHERE o.ORDER_CODE = #{orderCode}
+    </select>
 </mapper>

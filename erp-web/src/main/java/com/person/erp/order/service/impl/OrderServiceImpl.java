@@ -27,7 +27,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public boolean deleteOrder(Order order) {
-        return false;
+        return dao.delete(order) > 0;
     }
 
     @Override
@@ -37,11 +37,16 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public Order findById(Order order) {
-        return null;
+        return dao.findById(order);
     }
 
     @Override
     public List<Order> findPage(Order order) {
         return null;
+    }
+
+    @Override
+    public boolean deleteBatch(String[] codes) {
+        return dao.deleteBatch(codes) > 0;
     }
 }
