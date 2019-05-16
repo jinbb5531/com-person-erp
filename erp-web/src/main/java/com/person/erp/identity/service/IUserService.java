@@ -2,6 +2,9 @@ package com.person.erp.identity.service;
 
 import com.person.erp.identity.entity.User;
 import com.person.erp.identity.model.UserDTO;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * <p>IUserService.java</p>
@@ -58,4 +61,24 @@ public interface IUserService {
      * @return boolean
      */
     boolean updateUser(UserDTO userDTO);
+
+    /**
+     * 批量删除用户
+     * @author zhuwj
+     * @since 2019/5/16 15:59
+     * @param codes
+     * @param systemTag
+     * @return boolean
+     */
+    boolean deleteBatch(String[] codes, long systemTag);
+
+    /**
+     * 批量删除用户, userDTO中，userCode与systemTag不能为空。
+     * 超级管理员，可直接删除所传用户；非超级管理员，只能删除自己系统内的用户
+     * @author zhuwj
+     * @since 2019/5/16 16:10
+     * @param userList
+     * @return boolean
+     */
+    boolean deleteBatch(@NotNull List<UserDTO> userList);
 }
