@@ -1,5 +1,6 @@
 package com.person.erp.order.service;
 
+import com.github.pagehelper.PageInfo;
 import com.person.erp.order.entity.Order;
 
 import java.util.List;
@@ -31,13 +32,16 @@ public interface IOrderService {
     Order findById(Order order);
 
     /**
-     * 条件分页查询订单
-     */
-    List<Order> findPage(Order order);
-
-    /**
      * 批量删除订单
      * @param codes
      */
     boolean deleteBatch(String[] codes);
+
+    /**
+     * 条件分页查询订单
+     * @param order
+     * @param page
+     * @return
+     */
+    PageInfo<Order>findPage(Order order, PageInfo<Order> page);
 }

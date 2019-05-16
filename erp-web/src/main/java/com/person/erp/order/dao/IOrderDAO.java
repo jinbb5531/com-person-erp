@@ -1,11 +1,7 @@
 package com.person.erp.order.dao;
 
-import com.itexplore.core.orm.BaseDao;
 import com.person.erp.order.entity.Order;
-import com.sun.tools.corba.se.idl.constExpr.Or;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -14,13 +10,6 @@ import java.util.List;
  */
 @Mapper
 public interface IOrderDAO  {
-
-    /**
-     * 条件分页查询
-     * @param order
-     * @return
-     */
-    List<Order> findPage(Order order);
 
     /**
      * 新增订单
@@ -50,9 +39,16 @@ public interface IOrderDAO  {
     int update(Order order);
 
     /**
-     * 查询单个订单
+     * 查询单个订单，包含订单详情
      * @param order
      * @return
      */
     Order findById(Order order);
+
+    /**
+     * 条件分页查询订单
+     * @param order
+     * @return
+     */
+    List<Order> findPage(Order order);
 }

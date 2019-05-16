@@ -26,6 +26,20 @@
             <result column="PLANT_NUM" property="plantNum" jdbcType="INTEGER"/>
         </collection>
     </resultMap>
+    <resultMap id="baseOrder" type="com.person.erp.order.entity.Order">
+        <id column="ORDER_CODE" property="orderCode" jdbcType="VARCHAR"/>
+        <result column="CUSTOMER" property="customer" jdbcType="VARCHAR"/>
+        <result column="CREATE_AT" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
+        <result column="UPDATE_AT" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="ORDER_STATUS" property="status" jdbcType="INTEGER"/>
+        <result column="CUTTER" property="cutter" jdbcType="VARCHAR"/>
+        <result column="HEMMER" property="hemmer" jdbcType="VARCHAR"/>
+        <result column="PACKER" property="packer" jdbcType="VARCHAR"/>
+        <result column="DEADLINE" property="deadline" jdbcType="TIMESTAMP"/>
+        <result column="SYSTEM_TAG" property="systemTag" jdbcType="BIGINT"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
 
     <sql id="baseColumn">
         ORDER_CODE,  CUSTOMER, CREATE_AT, CREATE_BY, UPDATE_AT, ORDER_STATUS, CUTTER, HEMMER, PACKER, DEADLINE, SYSTEM_TAG, REMARK
@@ -73,10 +87,24 @@
             #{id}
         </foreach>
     </delete>
-    <select id="findById" parameterType="com.person.erp.order.entity.Order" resultMap="BaseResult">
+    <select id="findById" parameterType="com.person.erp.order.model.OrderDTO" resultMap="BaseResult">
         SELECT *
         FROM ERP_ORDER o LEFT JOIN ERP_ORDER_ITEM e
         ON o.ORDER_CODE = e.ORDER_CODE
         WHERE o.ORDER_CODE = #{orderCode}
+    </select>
+    <select id="findPage" parameterType="com.person.erp.order.model.OrderDTO" resultMap="baseOrder">
+        SELECT
+        <include refid="baseColumn"/>
+        FROM ERP_ORDER
+        WHERE
+        <if test="orderCode != null">
+            ORDER_CODE = #{orderCode} AND
+        </if>
+        <if test="customer != null">
+            CUSTOMER = #{customer} AND
+        </if>
+        1=1
+        ORDER BY DEADLINE DESC
     </select>
 </mapper>
