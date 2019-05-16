@@ -19,7 +19,8 @@ import java.io.Serializable;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO implements Serializable {
+public class
+UserDTO implements Serializable {
     /**
      * 用户帐号
      */

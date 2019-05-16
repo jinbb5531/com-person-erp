@@ -64,6 +64,19 @@ public class TokenUtils {
     }
 
     /**
+     * 将用户从 Redis 中移除
+     * @author zhuwj
+     * @since 2019/5/16 16:46
+     * @param user
+     */
+    public static void removeUser(User user) {
+        if (user != null) {
+            String token = encode(User.class.getSimpleName() + user.getSystemTag() + user.getUserCode());
+            RedisUtils.remove(token);
+        }
+    }
+
+    /**
      * 从 Redis 中取出当前登录的用户
      * @param token token
      * @return User

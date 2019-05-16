@@ -11,6 +11,7 @@ import com.person.erp.identity.entity.UserRole;
 import com.person.erp.identity.model.UserDTO;
 import com.person.erp.identity.service.IRoleService;
 import com.person.erp.identity.service.IUserService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -64,6 +65,13 @@ public class UserServiceImpl implements IUserService {
 
         if (exist) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "该用户已存在，无法再次创建");
+        } else if (!JudgeUtils.isEmpty(user.getMobilePhone())) {
+            User phoneUser = new User();
+            phoneUser.setMobilePhone(user.getMobilePhone());
+            phoneUser.setSystemTag(user.getSystemTag());
+            if (userDao.countUser(phoneUser) > 0) {
+                throw new ApiException(HttpStatus.BAD_REQUEST, "该手机号已被占用");
+            }
         }
 
         // 保存用户角色
@@ -124,7 +132,21 @@ public class UserServiceImpl implements IUserService {
         User user = getUser(userDTO.getUserCode(), userDTO.getSystemTag());
 
         if (user == null) {
+
             throw new ApiException(HttpStatus.NOT_FOUND, "该用户不存在");
+
+        } else if (!JudgeUtils.isEmpty(userDTO.getMobilePhone())
+                    && !userDTO.getMobilePhone().equals(user.getMobilePhone())) {
+
+            // 手机号不为空，且不是以前的手机号，则检测一下别人有没有用过
+            User phoneUser = new User();
+            phoneUser.setSystemTag(userDTO.getSystemTag());
+            phoneUser.setMobilePhone(userDTO.getMobilePhone());
+
+            if (userDao.countUser(phoneUser) > 0) {
+                throw new ApiException(HttpStatus.BAD_REQUEST, "该手机号已被占用");
+            }
+
         }
 
         // 待处理的角色主键集
@@ -193,6 +215,60 @@ public class UserServiceImpl implements IUserService {
         }
 
         return userDao.update(user) > 0;
+    }
+
+    @Override
+    public boolean deleteBatch(String[] codes, long systemTag) {
+        return userDao.deleteBatch(codes, systemTag) > 0;
+    }
+
+    @Override
+    public boolean deleteBatch(@NotNull List<UserDTO> userList) {
+
+        boolean success = false;
+
+        if (TokenUtils.superManager()) {
+
+            // 超级管理员，可直接删除所传用户
+            List<User> list = new ArrayList<>(userList.size());
+
+            userList.forEach(userDTO -> {
+                User user = new User();
+                user.setUserCode(userDTO.getUserCode());
+                user.setSystemTag(userDTO.getSystemTag());
+                list.add(user);
+            });
+
+            success = userDao.deleteBatchByUser(list) > 0;
+
+        } else {
+
+            // 非超级管理员，只能删除自己系统内的用户
+            String[] codes = new String[userList.size()];
+
+            for (int i = 0; i < userList.size(); i++) {
+
+                codes[i] = userList.get(i).getUserCode();
+
+            }
+
+            success = userDao.deleteBatch(codes, TokenUtils.getUser() == null ? 0 : TokenUtils.getUser().getSystemTag()) > 0;
+
+        }
+
+        // 删除成功后，将对应用户集的 token 从 Redis 中清空
+        for (UserDTO userDTO : userList) {
+
+            User user = new User();
+            user.setSystemTag(userDTO.getSystemTag());
+            user.setUserCode(userDTO.getUserCode());
+
+            TokenUtils.removeUser(user);
+
+        }
+
+        return success;
+
     }
 
 }
