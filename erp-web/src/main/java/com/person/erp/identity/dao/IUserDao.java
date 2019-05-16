@@ -3,6 +3,7 @@ package com.person.erp.identity.dao;
 import com.itexplore.core.mybatis.MyMapper;
 import com.person.erp.identity.entity.User;
 import com.person.erp.identity.entity.UserRole;
+import com.person.erp.identity.model.UserDTO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -53,14 +54,6 @@ public interface IUserDao {
      * @author zhuwj
      */
     int update(User user);
-
-    /**
-     * 批量删除或还原用户
-     * @param user
-     * @return int
-     * @author zhuwj
-     */
-    int deleteOrRevertBatch(User user);
 
     /**
      * 批量修改用户状态
@@ -129,4 +122,23 @@ public interface IUserDao {
      * @return int
      */
     int deleteUserRoleByUser(String userCode, long systemTag);
+
+    /**
+     * 批量删除用户
+     * @author zhuwj
+     * @since 2019/5/16 16:02
+     * @param codes
+     * @param systemTag
+     * @return boolean
+     */
+    int deleteBatch(@Param("codes") String[] codes, @Param("systemTag") long systemTag);
+
+    /**
+     * 批量删除用户
+     * @author zhuwj
+     * @since 2019/5/16 16:48
+     * @param userList
+     * @return int
+     */
+    int deleteBatchByUser(List<User> userList);
 }

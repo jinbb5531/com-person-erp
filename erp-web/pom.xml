@@ -15,7 +15,7 @@
     <packaging>jar</packaging>
     <properties>
         <mysql.connector>5.1.44</mysql.connector>
-        <itexplore.core>1.0.1</itexplore.core>
+        <itexplore.core>1.0.3</itexplore.core>
     </properties>
     <dependencies>
         <!--私人开发依赖包-->
@@ -52,7 +52,7 @@
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
+                <artifactId> spring-boot-maven-plugin</artifactId>
             </plugin>
 
         </plugins>

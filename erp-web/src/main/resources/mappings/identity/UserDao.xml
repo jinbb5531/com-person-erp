@@ -91,9 +91,18 @@
 
 	<select id="countUser" resultType="Integer">
 		SELECT COUNT(USER_CODE) FROM ERP_USER
-		WHERE USER_CODE = #{userCode} AND SYSTEM_TAG = #{systemTag}
+		WHERE
+		<if test="userCode != null and userCode != ''">
+			USER_CODE = #{userCode} AND
+		</if>
+		<if test="systemTag != null">
+			SYSTEM_TAG = #{systemTag} AND
+		</if>
+		<if test="mobilePhone != null and mobilePhone != ''">
+			MOBILE_PHONE = #{mobilePhone} AND
+		</if>
 	</select>
-	
+		1=1
 	<update id="update">
         UPDATE ERP_USER
         <set>
@@ -167,22 +176,23 @@
 		WHERE USER_CODE = #{userCode} AND SYSTEM_TAG = #{systemTag}
 	</delete>
 
-	<update id="deleteOrRevertBatch">
-		UPDATE ERP_USER
-		<set>
-			DEL_FLAG = #{delFlag},
-			<if test="updateBy != null and updateBy != ''">
-				UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
-			</if>
-			<if test="updateAt != null and updateAt != ''">
-				UPDATE_AT = #{updateAt,jdbcType=VARCHAR},
-			</if>
-		</set>
+	<update id="deleteBatch">
+		DELETE FROM ERP_USER
 		WHERE USER_CODE IN
 			<foreach collection="codes" item="item" index="index" open="(" close=")" separator=", ">
 				#{item}
 			</foreach>
 		AND SYSTEM_TAG = #{systemTag}
+	</update>
+
+	<update id="deleteBatchByUser">
+		DELETE FROM ERP_USER
+		WHERE
+		<foreach collection="userList" item="item" index="index" separator="or">
+			USER_CODE = #{item.userCode}
+			AND
+			SYSTEM_TAG = #{item.systemTag}
+		</foreach>
 	</update>
 
 	<update id="updateStatusBatch">
