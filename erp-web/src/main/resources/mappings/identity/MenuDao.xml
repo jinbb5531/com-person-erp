@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.person.erp.identity.dao.IMenuDao">
+    <resultMap id="MenuResultMap" type="Menu">
+		<id property="menuCode" column="MENU_CODE" jdbcType="VARCHAR"/>
+		<result property="parentCode" column="PARENT_CODE" jdbcType="VARCHAR"/>
+		<result property="moduleFlag" column="MODULE_FLAG" jdbcType="NUMERIC"/>
+		<result property="menuName" column="MENU_NAME" jdbcType="VARCHAR"/>
+		<result property="menuUrl" column="MENU_URL" jdbcType="VARCHAR"/>
+		<result property="iconPath" column="ICON_PATH" jdbcType="VARCHAR"/>
+		<result property="queueNum" column="QUEUE_NUM" jdbcType="NUMERIC"/>
+		<result property="useFlag" column="USE_FLAG" jdbcType="NUMERIC"/>
+		<result property="outsideFlag" column="OUTSIDE_FLAG" jdbcType="NUMERIC"/>
+		<result property="windowModel" column="WINDOW_MODEL" jdbcType="NUMERIC"/>
+		<result property="remark" column="REMARK" jdbcType="VARCHAR"/>
+		<result property="delFlag" column="DEL_FLAG" jdbcType="NUMERIC"/>
+		<result property="creator" column="CREATOR" jdbcType="VARCHAR"/>
+		<result property="createDate" column="CREATE_DATE" jdbcType="VARCHAR"/>
+		<result property="modifier" column="MODIFIER" jdbcType="VARCHAR"/>
+		<result property="modifyDate" column="MODIFY_DATE" jdbcType="VARCHAR"/>
+		<result property="systemTag" column="SYSTEM_TAG" jdbcType="VARCHAR"/>
+		<association property="parentMenu" javaType="Menu" autoMapping="false">
+			<id property="menuCode" column="PARENT_CODE" jdbcType="VARCHAR"/>
+			<result property="menuName" column="PARENT_MENU_NAME" jdbcType="VARCHAR"/>
+			<result property="menuUrl" column="PARENT_MENU_URL" jdbcType="VARCHAR"/>
+			<result property="useFlag" column="PARENT_USE_FLAG" jdbcType="NUMERIC"/>
+		</association>
+	</resultMap>
+
+    <sql id="Menu_Column_List">
+		MENU_CODE,
+		PARENT_CODE,
+		MODULE_FLAG,
+		MENU_NAME,
+		MENU_URL,
+		ICON_PATH,
+		QUEUE_NUM,
+		USE_FLAG,
+		OUTSIDE_FLAG,
+		WINDOW_MODEL,
+		REMARK,
+		DEL_FLAG,
+		CREATOR,
+		CREATE_DATE,
+		MODIFIER,
+		MODIFY_DATE,
+		SYSTEM_TAG
+    </sql>
+
+	<sql id="menuValues">
+		#{item.menuCode},
+		#{item.parentCode},
+		#{item.moduleFlag},
+		#{item.menuName},
+		#{item.menuUrl},
+		#{item.iconPath},
+		#{item.queueNum},
+		#{item.useFlag},
+		#{item.outsideFlag},
+		#{item.windowModel},
+		#{item.remark},
+		#{item.delFlag},
+		#{item.creator},
+		#{item.createDate},
+		#{item.modifier},
+		#{item.modifyDate},
+		#{item.systemTag}
+	</sql>
+
+	<insert id="insertMenuBatch">
+		<if test="dbName == 'mysql'">
+			INSERT INTO MP_SYS_MENU
+			(
+				<include refid="Menu_Column_List"/>
+			)VALUES
+			<foreach collection="childMenuList" item="item" separator="," index="index">
+				(
+					<include refid="menuValues"/>
+				)
+			</foreach>
+		</if>
+		<if test="dbName == 'oracle'">
+			INSERT ALL
+			<foreach collection="childMenuList" item="item" separator=" " index="index">
+				INTO MP_SYS_MENU
+				(
+				<include refid="Menu_Column_List"/>
+				)VALUES
+				(
+				<include refid="menuValues"/>
+				)
+			</foreach>
+			SELECT 1 FROM DUAL
+		</if>
+	</insert>
+
+    <insert id="insert">
+        INSERT INTO MP_SYS_MENU(
+			MENU_CODE,
+			PARENT_CODE,
+			MODULE_FLAG,
+			MENU_NAME,
+			MENU_URL,
+			ICON_PATH,
+			QUEUE_NUM,
+			USE_FLAG,
+			OUTSIDE_FLAG,
+			WINDOW_MODEL,
+			REMARK,
+			DEL_FLAG,
+			CREATOR,
+			CREATE_DATE,
+			MODIFIER,
+			MODIFY_DATE,
+			SYSTEM_TAG
+        ) VALUES (
+			#{menuCode},
+			#{parentCode},
+			#{moduleFlag},
+			#{menuName},
+			#{menuUrl},
+			#{iconPath},
+			#{queueNum},
+			#{useFlag},
+			#{outsideFlag},
+			#{windowModel},
+			#{remark},
+			#{delFlag},
+			#{creator},
+			#{createDate},
+			#{modifier},
+			#{modifyDate},
+			#{systemTag}
+        )
+    </insert>
+	
+	<select id="maxQueueByParentCode" resultType="Integer">
+		SELECT
+			MAX(QUEUE_NUM)
+		FROM MP_SYS_MENU
+		WHERE
+		<if test="parentCode == null">
+			PARENT_CODE IS NULL
+			AND
+		</if>
+		<if test="parentCode == ''">
+			<if test="dbName == 'oracle'">
+				PARENT_CODE IS NULL
+				AND
+			</if>
+			<if test="dbName == 'mysql' or dbName == 'mssql'">
+				PARENT_CODE = #{parentCode,jdbcType=VARCHAR}
+				AND
+			</if>
+		</if>
+		<if test="parentCode != null and parentCode != ''">
+			PARENT_CODE = #{parentCode,jdbcType=VARCHAR}
+			AND
+		</if>
+		<if test="systemTag != null and systemTag != ''">
+			SYSTEM_TAG = #{systemTag}
+			AND
+		</if>
+		1=1
+	</select>
+
+	<update id="update">
+        UPDATE MP_SYS_MENU
+        <set>
+			<if test="parentCode != null and parentCode != ''">
+				PARENT_CODE = #{parentCode, jdbcType=VARCHAR},
+			</if>
+			<if test="moduleFlag != null">
+				MODULE_FLAG = #{moduleFlag},
+			</if>
+			<if test="menuName != null and menuName != ''">
+				MENU_NAME = #{menuName, jdbcType=VARCHAR},
+			</if>
+			<if test="menuUrl != null and menuUrl != ''">
+				MENU_URL = #{menuUrl, jdbcType=VARCHAR},
+			</if>
+			<if test="iconPath != null and iconPath != ''">
+				ICON_PATH = #{iconPath, jdbcType=VARCHAR},
+			</if>
+			<if test="queueNum != null">
+				QUEUE_NUM = #{queueNum, jdbcType=NUMERIC},
+			</if>
+			<if test="useFlag != null">
+				USE_FLAG = #{useFlag, jdbcType=NUMERIC},
+			</if>
+			<if test="outsideFlag != null">
+				OUTSIDE_FLAG = #{outsideFlag, jdbcType=NUMERIC},
+			</if>
+			<if test="windowModel != null">
+				WINDOW_MODEL = #{windowModel, jdbcType=NUMERIC},
+			</if>
+			<if test="remark != null and remark != ''">
+				REMARK = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="delFlag != null">
+				DEL_FLAG = #{delFlag, jdbcType=NUMERIC},
+			</if>
+	        <if test="modifier != null and modifier != ''">
+				MODIFIER = #{modifier,jdbcType=VARCHAR},
+			</if>
+	        <if test="modifyDate != null and modifyDate != ''">
+				MODIFY_DATE = #{modifyDate,jdbcType=VARCHAR},
+			</if>
+		</set>
+        WHERE MENU_CODE = #{menuCode, jdbcType=VARCHAR}
+	</update>
+	
+	<select id="get" resultMap="MenuResultMap">
+		SELECT
+		L.MENU_CODE,
+		L.PARENT_CODE,
+		L.MODULE_FLAG,
+		L.MENU_NAME,
+		L.MENU_URL,
+		L.ICON_PATH,
+		L.QUEUE_NUM,
+		L.USE_FLAG,
+		L.OUTSIDE_FLAG,
+		L.WINDOW_MODEL,
+		L.REMARK,
+		L.DEL_FLAG,
+		L.CREATOR,
+		L.CREATE_DATE,
+		L.MODIFIER,
+		L.MODIFY_DATE,
+		L.SYSTEM_TAG,
+		R.MENU_NAME AS PARENT_MENU_NAME,
+		R.MENU_URL AS PARENT_MENU_URL,
+		R.USE_FLAG AS PARENT_USE_FLAG
+		FROM MP_SYS_MENU L LEFT JOIN MP_SYS_MENU R ON L.PARENT_CODE = R.MENU_CODE
+		WHERE
+		<if test="menuCode != null and menuCode != ''">
+			L.MENU_CODE = #{menuCode, jdbcType=VARCHAR}
+			AND
+		</if>
+		1=1
+	</select>
+	
+	<update id="deleteOrRevertBatch">
+		UPDATE MP_SYS_MENU
+		<set>
+			DEL_FLAG = #{delFlag},
+			<if test="modifier != null and modifier != ''">
+				MODIFIER = #{modifier,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyDate != null and modifyDate != ''">
+				MODIFY_DATE = #{modifyDate,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE MENU_CODE IN
+			<foreach collection="codes" item="item" index="index" open="(" close=")" separator=", ">
+				#{item}
+			</foreach>
+	</update>
+
+	<select id="findList" resultType="Menu">
+		SELECT
+			MENU_CODE,
+			PARENT_CODE,
+			MODULE_FLAG,
+			MENU_NAME,
+			MENU_URL,
+			ICON_PATH,
+			QUEUE_NUM,
+			USE_FLAG,
+			OUTSIDE_FLAG,
+			WINDOW_MODEL,
+			REMARK,
+			DEL_FLAG,
+			CREATOR,
+			CREATE_DATE,
+			MODIFIER,
+			MODIFY_DATE,
+			SYSTEM_TAG
+		FROM MP_SYS_MENU
+		WHERE
+			<if test="codes != null">
+			MENU_CODE IN
+				<foreach collection="codes" item="item" open="(" separator=", " close=")">
+					#{item}
+				</foreach>
+			AND
+			</if>
+			<if test="dbName == 'mysql' or dbName == 'mssql'">
+				<if test="parentCode != null">
+					PARENT_CODE = #{parentCode,jdbcType=VARCHAR}
+					AND
+				</if>
+			</if>
+			<if test="dbName == 'oracle'">
+				<if test="parentCode != null and parentCode != ''">
+					PARENT_CODE = #{parentCode,jdbcType=VARCHAR}
+					AND
+				</if>
+				<if test="parentCode == ''">
+					PARENT_CODE IS NULL
+					AND
+				</if>
+			</if>
+			<if test="menuName != null and menuName != ''">
+			MENU_NAME like
+			<if test="dbName == 'oracle'">'%'||#{menuName,jdbcType=VARCHAR}||'%'</if>
+			<if test="dbName == 'mssql'">'%'+#{menuName,jdbcType=VARCHAR}+'%'</if>
+			<if test="dbName == 'mysql'">CONCAT('%',#{menuName,jdbcType=VARCHAR}, '%')</if>
+			AND
+			</if>
+			<if test="useFlag != null">
+			USE_FLAG = #{useFlag}
+			AND
+			</if>
+			<if test="outsideFlag != null">
+			OUTSIDE_FLAG = #{outsideFlag, jdbcType=NUMERIC}
+			AND
+			</if>
+			<if test="windowModel != null">
+			WINDOW_MODEL = #{windowModel, jdbcType=NUMERIC}
+			AND
+			</if>
+			<if test="moduleFlag != null">
+			MODULE_FLAG = #{moduleFlag}
+			AND
+			</if>
+			<if test="delFlag != null">
+			DEL_FLAG = #{delFlag}
+			AND
+			</if>
+			<if test="systemTag != null and systemTag != ''">
+			SYSTEM_TAG = #{systemTag}
+			AND
+			</if>
+			1=1 ORDER BY MODULE_FLAG ASC, QUEUE_NUM ASC
+	</select>
+	<update id="updateUseFlagBatch">
+		UPDATE MP_SYS_MENU
+		<set>
+			USE_FLAG = #{useFlag},
+			<if test="modifier != null and modifier != ''">
+				MODIFIER = #{modifier},
+			</if>
+			<if test="modifyDate != null and modifyDate != ''">
+				MODIFY_DATE = #{modifyDate},
+			</if>
+		</set>
+		WHERE MENU_CODE IN
+		<foreach collection="codes" item="item" open="(" close=")" separator=", ">
+			#{item}
+		</foreach>
+	</update>
+
+	<select id="getPermissionListByUser" resultType="Menu">
+		SELECT
+			M.MENU_CODE,
+			M.PARENT_CODE,
+			M.MODULE_FLAG,
+			M.MENU_NAME,
+			M.MENU_URL,
+			M.ICON_PATH,
+			M.QUEUE_NUM,
+			M.USE_FLAG,
+			M.OUTSIDE_FLAG,
+			M.WINDOW_MODEL,
+			M.REMARK,
+			M.DEL_FLAG,
+			M.CREATOR,
+			M.CREATE_DATE,
+			M.MODIFIER,
+			M.MODIFY_DATE,
+			M.SYSTEM_TAG
+		FROM MP_SYS_ROLE_MENU RM
+			RIGHT JOIN (
+					SELECT A.* FROM MP_SYS_USER_ROLE A
+						RIGHT JOIN MP_SYS_ROLE R ON R.ROLE_CODE = A.ROLE_CODE
+					WHERE R.SYSTEM_TAG = #{role.systemTag} AND R.DEL_FLAG = #{role.delFlag} AND R.USE_FLAG = #{role.useFlag}
+				)UR ON UR.ROLE_CODE = RM.ROLE_CODE
+			LEFT JOIN MP_SYS_MENU M ON M.MENU_CODE = RM.MENU_CODE
+		WHERE
+			UR.USER_CODE = #{userCode} AND
+			UR.SYSTEM_TAG = #{systemTag}
+		ORDER BY MODULE_FLAG ASC, QUEUE_NUM ASC
+	</select>
+</mapper>

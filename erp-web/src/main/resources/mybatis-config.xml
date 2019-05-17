@@ -42,7 +42,11 @@
     <!-- 类型别名 -->
     <typeAliases>
         <!-- type：类路径；alias：类别名 -->
-
+        <typeAlias type="com.person.erp.identity.entity.User" alias="User"/>
+        <typeAlias type="com.person.erp.identity.entity.Role" alias="Role"/>
+        <typeAlias type="com.person.erp.identity.entity.Permission" alias="Permission"/>
+        <typeAlias type="com.person.erp.identity.entity.Menu" alias="Menu"/>
+        <typeAlias type="com.person.erp.identity.entity.UserRole" alias="UserRole"/>
     </typeAliases>
 
     <!-- 插件配置 -->
