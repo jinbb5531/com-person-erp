@@ -1,6 +1,10 @@
 package com.person.erp.identity.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.itexplore.core.api.model.ApiException;
+import com.itexplore.core.api.model.Pager;
+import com.itexplore.core.api.utils.PageChangeUtils;
 import com.itexplore.core.common.utils.judge.JudgeUtils;
 import com.person.erp.common.constant.WebConstant;
 import com.person.erp.common.utils.TokenUtils;
@@ -19,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import javax.management.relation.RoleList;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -239,7 +244,10 @@ public class UserServiceImpl implements IUserService {
                 list.add(user);
             });
 
-            success = userDao.deleteBatchByUser(list) > 0;
+            // 删除用户角色中间表、用户表
+            userDao.deleteUserRoleByUsers(list);
+
+            success = userDao.deleteBatchByUsers(list) > 0;
 
         } else {
 
@@ -251,6 +259,8 @@ public class UserServiceImpl implements IUserService {
                 codes[i] = userList.get(i).getUserCode();
 
             }
+
+            userDao.deleteUserRoleBatch(codes, TokenUtils.getUser() == null ? 0 : TokenUtils.getUser().getSystemTag());
 
             success = userDao.deleteBatch(codes, TokenUtils.getUser() == null ? 0 : TokenUtils.getUser().getSystemTag()) > 0;
 
@@ -268,6 +278,39 @@ public class UserServiceImpl implements IUserService {
         }
 
         return success;
+
+    }
+
+    /**
+     * 按这些条件 roleIds、status、workKind、userName、systemTag 使用and查询
+     * @author zhuwj
+     * @since 2019/5/17 11:35
+     * @param userDTO
+     * @param pager
+     * @return com.github.pagehelper.PageInfo<com.person.erp.identity.entity.User>
+     */
+    @Override
+    public PageInfo<User> findPage(UserDTO userDTO, Pager pager) {
+
+        Long systemTag = TokenUtils.getUser() == null ? 0 : TokenUtils.getUser().getSystemTag();
+        Integer showFlag = WebConstant.ShowFlag.SHOW.getValue();
+
+        Integer status = userDTO.getStatus();
+        String workKind = userDTO.getWorkKind();
+        String userName = userDTO.getUserName();
+        long[] roleIds = (userDTO.getRoleIds() == null || userDTO.getRoleIds().length == 0) ? null : userDTO.getRoleIds();
+
+        if (TokenUtils.superManager()) {
+            // 超级管理员返回所有用户信息
+            systemTag = null;
+            showFlag = null;
+        }
+
+        PageInfo<User> pageInfo = PageChangeUtils.dealPageInfo(PageChangeUtils.pagerToPageInfo(pager));
+
+        PageHelper.startPage(pageInfo.getPageNum(), pageInfo.getPageSize());
+
+        return new PageInfo<>(userDao.findListUserAssociateRole(systemTag, roleIds, showFlag, status, workKind, userName));
 
     }
 
