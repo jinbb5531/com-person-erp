@@ -144,6 +144,6 @@ public class OrderController {
     @GetMapping("/page")
     private PageResult<Order> findPage(Order order, PageInfo<Order> page) {
         PageInfo result= orderService.findPage(order, page);
-        return PageChangeUtils.pageInfoToPaegResult(result);
+        return PageChangeUtils.pageInfoToPageResult(result);
     }
 }

@@ -101,8 +101,8 @@
 		<if test="mobilePhone != null and mobilePhone != ''">
 			MOBILE_PHONE = #{mobilePhone} AND
 		</if>
-	</select>
 		1=1
+	</select>
 	<update id="update">
         UPDATE ERP_USER
         <set>
