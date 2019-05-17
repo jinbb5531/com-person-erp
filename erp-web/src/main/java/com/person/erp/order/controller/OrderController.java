@@ -9,6 +9,8 @@ import com.person.erp.order.entity.OrderItem;
 import com.person.erp.order.model.OrderDTO;
 import com.person.erp.order.service.IOrderItemService;
 import com.person.erp.order.service.IOrderService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +38,7 @@ public class OrderController {
      * @return result
      */
     @PostMapping
-    private HashMap<String, Object> createOrder(@RequestBody OrderDTO order) {
+    private Object createOrder(@RequestBody OrderDTO order) {
 
         HashMap<String, Object> result = new HashMap<>();
         Order order1 = new Order();
@@ -60,11 +62,10 @@ public class OrderController {
             success = orderItemService.insertBatch(itemList);
         }
         if (success){
-            result.put("desc", "新增订单成功！");
+            return ResponseEntity.ok().build();
         } else {
-            result.put("desc", "新增订单失败！");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return result;
     }
 
     /**
@@ -85,18 +86,17 @@ public class OrderController {
      * @return
      */
     @PutMapping
-    private HashMap<String, Object> update(OrderDTO order) {
+    private Object update(OrderDTO order) {
         HashMap<String, Object> result = new HashMap<>();
         Order order1 = new Order();
         order1.setCustomer(order.getCustomer());
         order1.setUpdateAt(new Timestamp(new Date().getTime()));
         boolean success = orderService.updateOrder(order1);
         if (success) {
-            result.put("desc", "修改成功！");
+            return ResponseEntity.ok().build();
         } else {
-            result.put("desc", "修改失败！");
+            return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return result;
     }
 
     /**
@@ -106,15 +106,14 @@ public class OrderController {
      * @return
      */
     @DeleteMapping
-    private HashMap<String, Object> delete(Order order) {
+    private Object delete(Order order) {
         boolean success = orderService.deleteOrder(order);
         HashMap<String, Object> result = new HashMap<String, Object>();
         if (success) {
-            result.put("desc", "删除成功！");
+            return ResponseEntity.ok().build();
         } else {
-            result.put("desc", "删除失败！");
+            return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return result;
     }
 
     /**
@@ -124,15 +123,14 @@ public class OrderController {
      * @return
      */
     @DeleteMapping("/batch")
-    private HashMap<String, Object> deleteBatch(String codes) {
+    private Object deleteBatch(String codes) {
         boolean success = orderService.deleteBatch(codes.split(","));
         HashMap<String, Object> result = new HashMap<>();
         if (success) {
-            result.put("desc", "删除成功！");
+            return ResponseEntity.ok().build();
         } else {
-            result.put("desc", "删除失败！");
+            return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return result;
     }
 
     /**
