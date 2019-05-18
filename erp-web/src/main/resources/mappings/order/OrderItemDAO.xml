@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.person.erp.order.dao.IOrderItemDAO">
+<resultMap id="baseResult" type="com.person.erp.order.entity.OrderItem">
+    <id column="CODE" property="code" jdbcType="BIGINT"/>
+    <result column="ORDER_CODE" property="orderCode" jdbcType="VARCHAR"/>
+    <result column="NAME" property="name" jdbcType="VARCHAR"/>
+    <result column="COLOR" property="color" jdbcType="VARCHAR"/>
+    <result column="SIZE_L" property="sizeL" jdbcType="DOUBLE"/>
+    <result column="SIZE_W" property="sizeW" jdbcType="DOUBLE"/>
+    <result column="PRO_SIZE_L" property="proSizeL" jdbcType="DOUBLE"/>
+    <result column="PRO_SIZE_W" property="proSizeW" jdbcType="DOUBLE"/>
+    <result column="NUMBER" property="number" jdbcType="INTEGER"/>
+    <result column="PLANT_NUM" property="plantNum" jdbcType="INTEGER"/>
+    <result column="SYSTEM_TAG" property="systemTag" jdbcType="BIGINT"/>
+</resultMap>
+</mapper>
