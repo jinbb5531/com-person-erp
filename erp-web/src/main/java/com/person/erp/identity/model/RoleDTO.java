@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 /**
  * <p>RoleDTO.java</p>
  *
@@ -17,8 +20,9 @@ public class RoleDTO {
     /**
      * 角色主键
      */
-    @NotEmpty(groups = { Update.class },message = "[id] 角色主键不能为空！")
-    private long id;
+    @NotNull(groups = { Update.class },message = "[id] 角色主键不能为空！")
+    @Min(groups = {Update.class}, message = "[id] 不能小于1", value = 1L)
+    private Long id;
 
     /**
      * 角色名
@@ -34,10 +38,10 @@ public class RoleDTO {
     /**
      * 菜单主键数组
      */
-    private long[] menuIds;
+    private Long[] menuIds;
 
     /**
      * 系统标识
      */
-    private long systemTag;
+    private Long systemTag;
 }
