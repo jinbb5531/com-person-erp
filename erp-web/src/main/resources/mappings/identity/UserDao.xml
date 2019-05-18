@@ -23,29 +23,11 @@
 		</collection>
 	</resultMap>
 
-	<resultMap id="UserToRoleMap" type="User">
-		<id property="userCode" column="USER_CODE" jdbcType="VARCHAR"/>
-		<result property="userPwd" column="USER_PWD" jdbcType="VARCHAR"/>
-		<result property="userName" column="USER_NAME" jdbcType="VARCHAR"/>
-		<result property="status" column="STATUS" jdbcType="NUMERIC"/>
-		<result property="telPhone" column="TEL_PHONE" jdbcType="VARCHAR"/>
-		<result property="mobilePhone" column="MOBILE_PHONE" jdbcType="VARCHAR"/>
-		<result property="qqNum" column="QQ_NUM" jdbcType="VARCHAR"/>
-		<result property="userMail" column="USER_MAIL" jdbcType="VARCHAR"/>
-		<result property="createBy" column="CREATE_BY" jdbcType="VARCHAR"/>
-		<result property="createAt" column="CREATE_AT" jdbcType="VARCHAR"/>
-		<result property="updateBy" column="UPDATE_BY" jdbcType="VARCHAR"/>
-		<result property="updateAt" column="UPDATE_AT" jdbcType="VARCHAR"/>
-		<result property="systemTag" column="SYSTEM_TAG" jdbcType="VARCHAR"/>
+	<resultMap id="UserToRoleMap" type="User" autoMapping="true">
 		<collection property="roleList" javaType="ArrayList" ofType="Role" autoMapping="false">
-			<id property="roleCode" column="ROLE_ID" jdbcType="VARCHAR"/>
-			<result property="roleName" column="ROLE_NAME" jdbcType="VARCHAR"/>
-			<result property="useFlag" column="USE_FLAG" jdbcType="NUMERIC"/>
-			<result property="createBy" column="R_CREATE_BY" jdbcType="VARCHAR"/>
-			<result property="createAt" column="R_CREATE_AT" jdbcType="VARCHAR"/>
-			<result property="updateBy" column="R_UPDATE_BY" jdbcType="VARCHAR"/>
-			<result property="updateAt" column="R_UPDATE_AT" jdbcType="VARCHAR"/>
-			<result property="systemTag" column="R_SYSTEM_TAG" jdbcType="VARCHAR"/>
+			<id property="id" column="ROLE_ID" />
+			<result property="roleName" column="ROLE_NAME" />
+			<result property="showFlag" column="SHOW_FLAG" />
 		</collection>
 	</resultMap>
 
@@ -103,6 +85,7 @@
 		</if>
 		1=1
 	</select>
+
 	<update id="update">
         UPDATE ERP_USER
         <set>
@@ -139,7 +122,7 @@
 		</set>
         WHERE USER_CODE = #{userCode, jdbcType=VARCHAR} AND SYSTEM_TAG = #{systemTag}
 	</update>
-	
+
 	<select id="get" resultMap="BaseResultMap">
 		SELECT
 			U.USER_CODE,
@@ -166,35 +149,6 @@
 		WHERE U.USER_CODE = #{userCode} AND U.SYSTEM_TAG = #{systemTag}
 	</select>
 
-	<delete id="deleteUserDeptByUser">
-		DELETE FROM ERP_USER_DEPT
-		WHERE USER_CODE = #{userCode} AND SYSTEM_TAG = #{systemTag}
-	</delete>
-
-	<delete id="deleteUserRoleByUser">
-		DELETE FROM ERP_USER_ROLE
-		WHERE USER_CODE = #{userCode} AND SYSTEM_TAG = #{systemTag}
-	</delete>
-
-	<update id="deleteBatch">
-		DELETE FROM ERP_USER
-		WHERE USER_CODE IN
-			<foreach collection="codes" item="item" index="index" open="(" close=")" separator=", ">
-				#{item}
-			</foreach>
-		AND SYSTEM_TAG = #{systemTag}
-	</update>
-
-	<update id="deleteBatchByUser">
-		DELETE FROM ERP_USER
-		WHERE
-		<foreach collection="userList" item="item" index="index" separator="or">
-			USER_CODE = #{item.userCode}
-			AND
-			SYSTEM_TAG = #{item.systemTag}
-		</foreach>
-	</update>
-
 	<update id="updateStatusBatch">
 		UPDATE ERP_USER
 		<set>
@@ -206,7 +160,7 @@
 			UPDATE_AT = #{updateAt},
 			</if>
 		</set>
-		WHERE USER_CODE IN 
+		WHERE USER_CODE IN
 		<foreach collection="codes" item="item" open="(" separator=", " close=")">
 			#{item}
 		</foreach>
@@ -242,9 +196,57 @@
 		</foreach>
 	</update>
 
+	<delete id="deleteUserDeptByUser">
+		DELETE FROM ERP_USER_DEPT
+		WHERE USER_CODE = #{userCode} AND SYSTEM_TAG = #{systemTag}
+	</delete>
+
+	<delete id="deleteUserRoleByUser">
+		DELETE FROM ERP_USER_ROLE
+		WHERE USER_CODE = #{userCode} AND SYSTEM_TAG = #{systemTag}
+	</delete>
+
+	<delete id="deleteBatch">
+		DELETE FROM ERP_USER
+		WHERE USER_CODE IN
+		<foreach collection="codes" item="item" index="index" open="(" close=")" separator=", ">
+			#{item}
+		</foreach>
+		AND SYSTEM_TAG = #{systemTag}
+	</delete>
+
+	<delete id="deleteBatchByUser">
+		DELETE FROM ERP_USER
+		WHERE
+		<foreach collection="userList" item="item" index="index" separator="or">
+			USER_CODE = #{item.userCode}
+			AND
+			SYSTEM_TAG = #{item.systemTag}
+		</foreach>
+	</delete>
+
+	<delete id="deleteUserRoleByUsers">
+		DELETE FROM ERP_USER_ROLE
+		WHERE
+		<foreach collection="userList" item="item" index="index" separator="or">
+			USER_CODE = #{item.userCode}
+			AND
+			SYSTEM_TAG = #{item.systemTag}
+		</foreach>
+	</delete>
+
+	<delete id="deleteUserRoleBatch">
+		DELETE FROM ERP_USER_ROLE
+		WHERE USER_CODE IN
+		<foreach collection="codes" item="item" index="index" open="(" close=")" separator=", ">
+			#{item}
+		</foreach>
+		AND SYSTEM_TAG = #{systemTag}
+	</delete>
+
 	<select id="findUserRoleList" resultType="UserRole">
 		SELECT * FROM ERP_USER_ROLE
-		WHERE ROLE_ID IN 
+		WHERE ROLE_ID IN
 		<foreach collection="roleCodes" item="item" open="(" separator=", " close=")">
 			#{item}
 		</foreach>
@@ -258,7 +260,7 @@
 			AND SYSTEM_TAG = #{systemTag}
 		</if>
 	</select>
-	
+
 	<select id="findList" resultType="User">
 		SELECT
 			USER_CODE,
@@ -336,34 +338,11 @@
 				ORDER BY CREATE_AT DESC
 			</if>
 	</select>
-	
+
 	<select id="findListUserAssociateRole" resultMap="UserToRoleMap">
 		SELECT
-		A.USER_CODE,
-		A.USER_PWD,
-		A.USER_NAME,
-		A.STATUS,
-		A.TEL_PHONE,
-		A.MOBILE_PHONE,
-		A.QQ_NUM,
-		A.USER_MAIL,
-		A.DEL_FLAG,
-		A.CREATE_BY,
-		A.CREATE_AT,
-		A.UPDATE_BY,
-		A.UPDATE_AT,
-		A.SYSTEM_TAG,
-		R.ROLE_ID,
-		R.ROLE_NAME,
-		R.USE_FLAG,
-		R.DEL_FLAG AS R_DEL_FLAG,
-		R.CREATE_BY AS R_CREATE_BY,
-		R.CREATE_AT AS R_CREATE_AT,
-		R.UPDATE_BY AS R_UPDATE_BY,
-		R.UPDATE_AT AS R_UPDATE_AT,
-		R.SYSTEM_TAG AS R_SYSTEM_TAG
-		FROM (SELECT
 			U.USER_CODE,
+			U.SYSTEM_TAG,
 			U.USER_PWD,
 			U.USER_NAME,
 			U.STATUS,
@@ -371,188 +350,56 @@
 			U.MOBILE_PHONE,
 			U.QQ_NUM,
 			U.USER_MAIL,
-			U.DEL_FLAG,
 			U.CREATE_BY,
 			U.CREATE_AT,
 			U.UPDATE_BY,
 			U.UPDATE_AT,
-			U.SYSTEM_TAG,
-			UR.ROLE_ID
+			U.BASE_SALARY,
+			U.JOIN_AT,
+			U.SEX,
+			U.WORK_KIND,
+			UR.ROLE_ID,
+			R.ROLE_NAME,
+			R.SHOW_FLAG
 		FROM ERP_USER_ROLE UR
-		RIGHT JOIN ERP_USER U ON UR.USER_CODE = U.USER_CODE AND UR.SYSTEM_TAG = U.SYSTEM_TAG
+		<if test="roleIds != null">
+			LEFT JOIN
+		</if>
+		<if test="roleIds == null">
+			RIGHT JOIN
+		</if>
+			ERP_USER U ON UR.USER_CODE = U.USER_CODE AND UR.SYSTEM_TAG = U.SYSTEM_TAG
+			LEFT JOIN ERP_ROLE R R.ID = UR.ROLE_ID
 		WHERE
-		<if test="codes != null">
-			U.USER_CODE IN
-			<foreach collection="codes" item="item" open="(" separator=", " close=")">
+		<if test="systemTag != null ">
+			U.SYSTEM_TAG = #{systemTag}
+			AND
+		</if>
+		<if test="showFlag != null">
+			R.SHOW_FALG = #{showFlag}
+			AND
+		</if>
+		<if test="roleIds != null">
+			UR.ROLE_ID IN
+			<foreach collection="roleIds" item="item" open="(" separator=", " close=")">
 				#{item}
 			</foreach>
-			AND
-		</if>
-		<if test="userName != null and userName != ''">
-			U.USER_NAME like
-			<if test="dbName == 'oracle'">'%'||#{userName,jdbcType=VARCHAR}||'%'</if>
-			<if test="dbName == 'mssql'">'%'+#{userName,jdbcType=VARCHAR}+'%'</if>
-			<if test="dbName == 'mysql'">CONCAT('%',#{userName,jdbcType=VARCHAR}, '%')</if>
-			AND
-		</if>
-		<if test="telPhone != null and telPhone != ''">
-			U.TEL_PHONE like
-			<if test="dbName == 'oracle'">'%'||#{telPhone,jdbcType=VARCHAR}||'%'</if>
-			<if test="dbName == 'mssql'">'%'+#{telPhone,jdbcType=VARCHAR}+'%'</if>
-			<if test="dbName == 'mysql'">CONCAT('%',#{telPhone,jdbcType=VARCHAR}, '%')</if>
-			AND
-		</if>
-		<if test="mobilePhone != null and mobilePhone != ''">
-			U.MOBILE_PHONE like
-			<if test="dbName == 'oracle'">'%'||#{mobilePhone,jdbcType=VARCHAR}||'%'</if>
-			<if test="dbName == 'mssql'">'%'+#{mobilePhone,jdbcType=VARCHAR}+'%'</if>
-			<if test="dbName == 'mysql'">CONCAT('%',#{mobilePhone,jdbcType=VARCHAR}, '%')</if>
-			AND
-		</if>
-		<if test="qqNum != null and qqNum != ''">
-			U.QQ_NUM like
-			<if test="dbName == 'oracle'">'%'||#{qqNum,jdbcType=VARCHAR}||'%'</if>
-			<if test="dbName == 'mssql'">'%'+#{qqNum,jdbcType=VARCHAR}+'%'</if>
-			<if test="dbName == 'mysql'">CONCAT('%',#{qqNum,jdbcType=VARCHAR}, '%')</if>
-			AND
-		</if>
-		<if test="userMail != null and userMail != ''">
-			U.USER_MAIL like
-			<if test="dbName == 'oracle'">'%'||#{userMail,jdbcType=VARCHAR}||'%'</if>
-			<if test="dbName == 'mssql'">'%'+#{userMail,jdbcType=VARCHAR}+'%'</if>
-			<if test="dbName == 'mysql'">CONCAT('%',#{userMail,jdbcType=VARCHAR}, '%')</if>
 			AND
 		</if>
 		<if test="status != null">
 			U.STATUS = #{status}
 			AND
 		</if>
-		<if test="delFlag != null">
-			U.DEL_FLAG = #{delFlag}
-			AND
-		</if>
-		<if test="systemTag != null and systemTag != ''">
-			U.SYSTEM_TAG = #{systemTag}
-			AND
-		</if>
-		1=1 ORDER BY U.CREATE_AT DESC) A
-		LEFT JOIN ERP_ROLE R ON A.ROLE_ID = R.ROLE_ID
-		WHERE
-		<if test="delFlag != null">
-		R.DEL_FLAG = #{delFlag}
-		AND
-		</if>
-		1=1
-	</select>
-
-	<select id="findListUserAssociateDept" resultMap="UserToDeptMap">
-		SELECT
-		A.USER_CODE,
-		A.USER_PWD,
-		A.USER_NAME,
-		A.STATUS,
-		A.TEL_PHONE,
-		A.MOBILE_PHONE,
-		A.QQ_NUM,
-		A.USER_MAIL,
-		A.DEL_FLAG,
-		A.CREATE_BY,
-		A.CREATE_AT,
-		A.UPDATE_BY,
-		A.UPDATE_AT,
-		A.SYSTEM_TAG,
-		D.DEPT_CODE,
-		D.DEPT_NAME,
-		D.DEPT_AS_NAME,
-		D.PARENT_CODE,
-		D.USE_FLAG,
-		D.DEL_FLAG AS D_DEL_FLAG,
-		D.CREATE_BY AS D_CREATE_BY,
-		D.CREATE_AT AS D_CREATE_AT,
-		D.UPDATE_BY AS D_UPDATE_BY,
-		D.UPDATE_AT AS D_UPDATE_AT,
-		D.SYSTEM_TAG AS D_SYSTEM_TAG
-		FROM (SELECT
-			U.USER_CODE,
-			U.USER_PWD,
-			U.USER_NAME,
-			U.STATUS,
-			U.TEL_PHONE,
-			U.MOBILE_PHONE,
-			U.QQ_NUM,
-			U.USER_MAIL,
-			U.DEL_FLAG,
-			U.CREATE_BY,
-			U.CREATE_AT,
-			U.UPDATE_BY,
-			U.UPDATE_AT,
-			U.SYSTEM_TAG,
-			UD.DEPT_CODE
-		FROM ERP_USER_DEPT UD
-		RIGHT JOIN ERP_USER U ON UD.USER_CODE = U.USER_CODE AND UD.SYSTEM_TAG = U.SYSTEM_TAG
-		WHERE
-		<if test="codes != null">
-			U.USER_CODE IN
-			<foreach collection="codes" item="item" open="(" separator=", " close=")">
-				#{item}
-			</foreach>
+		<if test="workKind != null">
+			U.WORK_KIND = #{workKind}
 			AND
 		</if>
 		<if test="userName != null and userName != ''">
 			U.USER_NAME like
-			<if test="dbName == 'oracle'">'%'||#{userName,jdbcType=VARCHAR}||'%'</if>
-			<if test="dbName == 'mssql'">'%'+#{userName,jdbcType=VARCHAR}+'%'</if>
-			<if test="dbName == 'mysql'">CONCAT('%',#{userName,jdbcType=VARCHAR}, '%')</if>
+				CONCAT('%',#{userName,jdbcType=VARCHAR}, '%')
 			AND
 		</if>
-		<if test="telPhone != null and telPhone != ''">
-			U.TEL_PHONE like
-			<if test="dbName == 'oracle'">'%'||#{telPhone,jdbcType=VARCHAR}||'%'</if>
-			<if test="dbName == 'mssql'">'%'+#{telPhone,jdbcType=VARCHAR}+'%'</if>
-			<if test="dbName == 'mysql'">CONCAT('%',#{telPhone,jdbcType=VARCHAR}, '%')</if>
-			AND
-		</if>
-		<if test="mobilePhone != null and mobilePhone != ''">
-			U.MOBILE_PHONE like
-			<if test="dbName == 'oracle'">'%'||#{mobilePhone,jdbcType=VARCHAR}||'%'</if>
-			<if test="dbName == 'mssql'">'%'+#{mobilePhone,jdbcType=VARCHAR}+'%'</if>
-			<if test="dbName == 'mysql'">CONCAT('%',#{mobilePhone,jdbcType=VARCHAR}, '%')</if>
-			AND
-		</if>
-		<if test="qqNum != null and qqNum != ''">
-			U.QQ_NUM like
-			<if test="dbName == 'oracle'">'%'||#{qqNum,jdbcType=VARCHAR}||'%'</if>
-			<if test="dbName == 'mssql'">'%'+#{qqNum,jdbcType=VARCHAR}+'%'</if>
-			<if test="dbName == 'mysql'">CONCAT('%',#{qqNum,jdbcType=VARCHAR}, '%')</if>
-			AND
-		</if>
-		<if test="userMail != null and userMail != ''">
-			U.USER_MAIL like
-			<if test="dbName == 'oracle'">'%'||#{userMail,jdbcType=VARCHAR}||'%'</if>
-			<if test="dbName == 'mssql'">'%'+#{userMail,jdbcType=VARCHAR}+'%'</if>
-			<if test="dbName == 'mysql'">CONCAT('%',#{userMail,jdbcType=VARCHAR}, '%')</if>
-			AND
-		</if>
-		<if test="status != null">
-			U.STATUS = #{status}
-			AND
-		</if>
-		<if test="delFlag != null">
-			U.DEL_FLAG = #{delFlag}
-			AND
-		</if>
-		<if test="systemTag != null and systemTag != ''">
-			U.SYSTEM_TAG = #{systemTag}
-			AND
-		</if>
-		1=1 ORDER BY U.CREATE_AT DESC) A
-		LEFT JOIN ERP_DEPT D ON A.DEPT_CODE = D.DEPT_CODE
-		WHERE
-		<if test="delFlag != null">
-			D.DEL_FLAG = #{delFlag}
-			AND
-		</if>
-		1=1
+		1=1 ORDER BY U.CREATE_AT DESC
 	</select>
 
 	<update id="updateUseFlagBatch">
@@ -582,7 +429,7 @@
 		#{item.roleCode},
 		#{item.systemTag}
 	</sql>
-	
+
 	<insert id="insertUserRoleBatch">
 		INSERT INTO ERP_USER_ROLE(
 			<include refid="userRoleColumn"/>

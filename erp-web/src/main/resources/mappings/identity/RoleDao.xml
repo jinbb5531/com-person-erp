@@ -6,10 +6,10 @@
 		<result property="roleName" column="ROLE_NAME" jdbcType="VARCHAR"/>
 		<result property="showFlag" column="SHOW_FLAG" jdbcType="NUMERIC"/>
 		<result property="delFlag" column="DEL_FLAG" jdbcType="NUMERIC"/>
-		<result property="creator" column="CREATE_BY" jdbcType="VARCHAR"/>
-		<result property="createDate" column="CREATE_AT" jdbcType="VARCHAR"/>
-		<result property="modifier" column="UPDATE_BY" jdbcType="VARCHAR"/>
-		<result property="modifyDate" column="UPDATE_AT" jdbcType="VARCHAR"/>
+		<result property="createBy" column="CREATE_BY" jdbcType="VARCHAR"/>
+		<result property="createAt" column="CREATE_AT" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="UPDATE_BY" jdbcType="VARCHAR"/>
+		<result property="updateAt" column="UPDATE_AT" jdbcType="VARCHAR"/>
 		<result property="systemTag" column="SYSTEM_TAG" jdbcType="VARCHAR"/>
 		<collection property="permissionList" javaType="ArrayList" ofType="Menu" autoMapping="false">
 			<id property="menuCode" column="MENU_CODE" jdbcType="VARCHAR"/>
@@ -24,58 +24,12 @@
 			<result property="windowModel" column="WINDOW_MODEL" jdbcType="NUMERIC"/>
 			<result property="remark" column="M_REMARK" jdbcType="VARCHAR"/>
 			<result property="delFlag" column="M_DEL_FLAG" jdbcType="NUMERIC"/>
-			<result property="creator" column="M_CREATE_BY" jdbcType="VARCHAR"/>
-			<result property="createDate" column="M_CREATE_AT" jdbcType="VARCHAR"/>
-			<result property="modifier" column="M_UPDATE_BY" jdbcType="VARCHAR"/>
-			<result property="modifyDate" column="M_UPDATE_AT" jdbcType="VARCHAR"/>
+			<result property="createBy" column="M_CREATE_BY" jdbcType="VARCHAR"/>
+			<result property="createAt" column="M_CREATE_AT" jdbcType="VARCHAR"/>
+			<result property="updateBy" column="M_UPDATE_BY" jdbcType="VARCHAR"/>
+			<result property="updateAt" column="M_UPDATE_AT" jdbcType="VARCHAR"/>
 		</collection>
 	</resultMap>
-
-    <insert id="insert">
-        INSERT INTO ERP_ROLE(
-			ID,
-			ROLE_NAME,
-			SHOW_FLAG,
-			DEL_FLAG,
-			CREATE_BY,
-			CREATE_AT,
-			UPDATE_BY,
-			UPDATE_AT,
-			SYSTEM_TAG
-        ) VALUES (
-			#{roleCode},
-			#{roleName},
-			#{showFlag},
-			#{delFlag},
-			#{creator},
-			#{createDate},
-			#{modifier},
-			#{modifyDate},
-			#{systemTag}
-        )
-    </insert>
-	
-	<update id="update">
-        UPDATE ERP_ROLE
-        <set>
-			<if test="roleName != null and roleName != ''">
-				ROLE_NAME = #{roleName, jdbcType=VARCHAR},
-			</if>
-			<if test="showFlag != null">
-				SHOW_FLAG = #{showFlag, jdbcType=NUMERIC},
-			</if>
-			<if test="delFlag != null">
-				DEL_FLAG = #{delFlag, jdbcType=NUMERIC},
-			</if>
-	        <if test="modifier != null and modifier != ''">
-				UPDATE_BY = #{modifier,jdbcType=VARCHAR},
-			</if>
-	        <if test="modifyDate != null and modifyDate != ''">
-				UPDATE_AT = #{modifyDate,jdbcType=VARCHAR},
-			</if>
-		</set>
-        WHERE ID = #{roleCode, jdbcType=VARCHAR}
-	</update>
 	
 	<select id="get" resultMap="BaseResultMap">
 		SELECT
@@ -125,11 +79,11 @@
 		UPDATE ERP_ROLE
 		<set>
 			DEL_FLAG = #{delFlag},
-			<if test="modifier != null and modifier != ''">
-				UPDATE_BY = #{modifier,jdbcType=VARCHAR},
+			<if test="updateBy != null and updateBy != ''">
+				UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
 			</if>
-			<if test="modifyDate != null and modifyDate != ''">
-				UPDATE_AT = #{modifyDate,jdbcType=VARCHAR},
+			<if test="updateAt != null and updateAt != ''">
+				UPDATE_AT = #{updateAt,jdbcType=VARCHAR},
 			</if>
 		</set>
 		WHERE ID IN
@@ -175,11 +129,11 @@
 		UPDATE ERP_ROLE
 		<set>
 			SHOW_FLAG = #{showFlag},
-			<if test="modifier != null and modifier != ''">
-				UPDATE_BY = #{modifier},
+			<if test="updateBy != null and updateBy != ''">
+				UPDATE_BY = #{updateBy},
 			</if>
-			<if test="modifyDate != null and modifyDate != ''">
-				UPDATE_AT = #{modifyDate},
+			<if test="updateAt != null and updateAt != ''">
+				UPDATE_AT = #{updateAt},
 			</if>
 		</set>
 		WHERE ID IN
@@ -189,44 +143,27 @@
 	</update>
 
 	<sql id="permissionColumn">
-		CODE,
-		ID,
-		MENU_CODE,
+		ROLE_ID,
+		MENU_ID,
 		CREATE_BY,
 		CREATE_AT
 	</sql>
 	<sql id="permissionValue">
-		#{item.code},
-		#{item.roleCode},
-		#{item.menuCode},
-		#{item.creator},
-		#{item.createDate}
+		#{item.roleId},
+		#{item.menuId},
+		#{item.createBy},
+		#{item.createAt}
 	</sql>
 	
 	<insert id="insertPermissionBatch">
-		<if test="dbName == 'oracle'">
-			INSERT ALL
-			<foreach collection="permissionList" item="item" separator=" ">
-				INTO ERP_ROLE_MENU
-				(
-					<include refid="permissionColumn"/>
-				)VALUES
-				(
-					<include refid="permissionValue"/>
-				)
-			</foreach>
-			SELECT 1 FROM DUAL
-		</if>
-		<if test="dbName == 'mysql' or dbName == 'mssql'">
-			INSERT INTO ERP_ROLE_MENU(
-				<include refid="permissionColumn"/>
-			)VALUES
-			<foreach collection="permissionList" item="item" separator=",">
-			(
-				<include refid="permissionValue"/>
-			)
-			</foreach>
-		</if>
+		INSERT INTO ERP_ROLE_MENU(
+			<include refid="permissionColumn"/>
+		)VALUES
+		<foreach collection="permissionList" item="item" separator=",">
+		(
+			<include refid="permissionValue"/>
+		)
+		</foreach>
 	</insert>
 
 	<delete id="deleteRolePermission">

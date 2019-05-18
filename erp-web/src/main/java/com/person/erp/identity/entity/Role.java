@@ -3,7 +3,8 @@ package com.person.erp.identity.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Transient;
+import javax.persistence.*;
+import javax.print.attribute.standard.MediaSize;
 import java.sql.Timestamp;
 
 /**
@@ -13,11 +14,14 @@ import java.sql.Timestamp;
  */
 @Getter
 @Setter
+@Table(name = "ERP_ROLE")
 public class Role {
 
     /**
      * 角色主键
      */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     /**
