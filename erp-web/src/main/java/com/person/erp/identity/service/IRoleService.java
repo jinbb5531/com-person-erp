@@ -1,6 +1,7 @@
 package com.person.erp.identity.service;
 
 import com.person.erp.identity.entity.Role;
+import com.person.erp.identity.model.RoleDTO;
 
 import java.util.List;
 
@@ -19,4 +20,13 @@ public interface IRoleService {
      * @return java.util.List<com.person.erp.identity.entity.Role>
      */
     List<Role> findList(Role role);
+
+    /**
+     * 新增角色
+     * @author zhuwj
+     * @since 2019/5/17 13:23
+     * @param roleDTO
+     * @return long
+     */
+    long addRole(RoleDTO roleDTO);
 }

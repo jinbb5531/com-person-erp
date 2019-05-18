@@ -1,5 +1,7 @@
 package com.person.erp.identity.service;
 
+import com.github.pagehelper.PageInfo;
+import com.itexplore.core.api.model.Pager;
 import com.person.erp.identity.entity.User;
 import com.person.erp.identity.model.UserDTO;
 import org.jetbrains.annotations.NotNull;
@@ -81,4 +83,14 @@ public interface IUserService {
      * @return boolean
      */
     boolean deleteBatch(@NotNull List<UserDTO> userList);
+
+    /**
+     * 按条件分页查找用户
+     * @author zhuwj
+     * @since 2019/5/17 11:15
+     * @param userDTO
+     * @param pager
+     * @return com.github.pagehelper.PageInfo<com.person.erp.identity.entity.User>
+     */
+    PageInfo<User> findPage(UserDTO userDTO, Pager pager);
 }

@@ -7,6 +7,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * <p>UserDTO.java</p>
@@ -19,8 +21,7 @@ import java.io.Serializable;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class
-UserDTO implements Serializable {
+public class UserDTO implements Serializable {
     /**
      * 用户帐号
      */
@@ -79,7 +80,7 @@ UserDTO implements Serializable {
     /**
      * 入职时间
      */
-    private String joinDate;
+    private Timestamp joinAt;
 
     /**
      * 性别；0:女   1：男
@@ -95,5 +96,10 @@ UserDTO implements Serializable {
      * 角色主键集
      */
     private long[] roleIds;
+
+    /**
+     * 角色集
+     */
+    private List<RoleDTO> roles;
 
 }
