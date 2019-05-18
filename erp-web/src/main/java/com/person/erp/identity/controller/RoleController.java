@@ -42,8 +42,14 @@ public class RoleController {
     @PutMapping("/update")
     public Object updateRole(@RequestBody @Validated({Update.class}) RoleDTO roleDTO) {
 
+        boolean success = roleService.updateRole(roleDTO);
 
-        return null;
+        if (success) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
     }
 
 }

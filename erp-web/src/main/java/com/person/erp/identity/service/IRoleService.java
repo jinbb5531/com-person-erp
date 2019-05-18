@@ -29,4 +29,24 @@ public interface IRoleService {
      * @return long
      */
     long addRole(RoleDTO roleDTO);
+
+    /**
+     * 批量添加角色权限
+     * @author zhuwj
+     * @since 2019/5/18 10:55
+     * @param menuIds
+     * @param roleId
+     * @param createBy
+     * @return boolean
+     */
+    boolean insertPermissionBatch(Long[] menuIds, Long roleId, String createBy);
+
+    /**
+     * 修改角色
+     * @author zhuwj
+     * @since 2019/5/18 10:26
+     * @param roleDTO
+     * @return boolean
+     */
+    boolean updateRole(RoleDTO roleDTO);
 }

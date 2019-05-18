@@ -75,22 +75,13 @@
 			LEFT JOIN ERP_MENU M ON M.MENU_CODE = A.MENU_CODE
 	</select>
 
-	<update id="deleteOrRevertBatch">
-		UPDATE ERP_ROLE
-		<set>
-			DEL_FLAG = #{delFlag},
-			<if test="updateBy != null and updateBy != ''">
-				UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
-			</if>
-			<if test="updateAt != null and updateAt != ''">
-				UPDATE_AT = #{updateAt,jdbcType=VARCHAR},
-			</if>
-		</set>
+	<delete id="deleteBatch">
+		DELETE FROM ERP_ROLE
 		WHERE ID IN
-			<foreach collection="codes" item="item" index="index" open="(" close=")" separator=", ">
+			<foreach collection="ids" item="item" index="index" open="(" close=")" separator=", ">
 				#{item}
 			</foreach>
-	</update>
+	</delete>
 
 	<select id="findList" resultType="Role">
 		SELECT
@@ -166,8 +157,8 @@
 		</foreach>
 	</insert>
 
-	<delete id="deleteRolePermission">
+	<delete id="deletesRolePermission">
 		DELETE FROM ERP_ROLE_MENU
-		WHERE ID = #{roleCode}
+		WHERE ROLE_ID = #{roleId}
 	</delete>
 </mapper>

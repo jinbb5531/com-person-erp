@@ -22,7 +22,7 @@ public class Role {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     /**
      * 角色名
@@ -32,7 +32,7 @@ public class Role {
     /**
      * 显示标识（超级管理员设置为不显示）； 0：显示；1：不显示
      */
-    private int showFlag;
+    private Integer showFlag;
 
     /**
      * 创建人
@@ -57,8 +57,8 @@ public class Role {
     /**
      * 系统标识
      */
-    private long systemTag;
+    private Long systemTag;
 
     @Transient
-    private long[] ids;
+    private Long[] ids;
 }
