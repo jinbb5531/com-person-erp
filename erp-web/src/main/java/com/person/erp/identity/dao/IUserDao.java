@@ -121,7 +121,7 @@ public interface IUserDao {
      * @param systemTag
      * @return int
      */
-    int deleteUserRoleByUser(String userCode, long systemTag);
+    int deleteUserRoleByUser(@Param("userCode") String userCode, @Param("systemTag") long systemTag);
 
     /**
      * 批量删除用户
@@ -140,5 +140,52 @@ public interface IUserDao {
      * @param userList
      * @return int
      */
-    int deleteBatchByUser(List<User> userList);
+    int deleteBatchByUsers(List<User> userList);
+
+    /**
+     * 批量删除用户角色中间表
+     * @author zhuwj
+     * @since 2019/5/17 9:17
+     * @param userList
+     * @return int
+     */
+    int deleteUserRoleByUsers(List<User> userList);
+
+    /**
+     * 批量删除用户角色中间表
+     * @author zhuwj
+     * @since 2019/5/17 9:22
+     * @param codes
+     * @param systemTag
+     * @return int
+     */
+    int deleteUserRoleBatch(@Param("codes") String[] codes, @Param("systemTag") long systemTag);
+
+    /**
+     * 关联查询用户
+     * @author zhuwj
+     * @since 2019/5/17 12:35
+     * @param systemTag
+     * @param roleIds
+     * @param showFlag
+     * @param status
+     * @param workKind
+     * @param userName
+     * @return java.util.List<com.person.erp.identity.entity.User>
+     */
+    List<User> findListUserAssociateRole(@Param("systemTag") Long systemTag,
+                                         @Param("roleIds") Long[] roleIds,
+                                         @Param("showFlag") Integer showFlag,
+                                         @Param("status") Integer status,
+                                         @Param("workKind") String workKind,
+                                         @Param("userName") String userName);
+
+    /**
+     * 通过角色ids, 批量删除用户角色
+     * @author zhuwj
+     * @since 2019/5/20 9:23
+     * @param ids
+     * @return long
+     */
+    long deleteUserRoleBatchByRoleIds(Long[] ids);
 }
