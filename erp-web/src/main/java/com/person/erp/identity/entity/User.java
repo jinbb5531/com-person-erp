@@ -1,9 +1,8 @@
 package com.person.erp.identity.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -14,10 +13,9 @@ import java.util.List;
  * @author zhuwj
  * @since 2019/5/5 16:13
  */
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class User {
 
     /**
@@ -83,7 +81,7 @@ public class User {
     /**
      * 系统标识
      */
-    private long systemTag;
+    private Long systemTag;
 
     /**
      * 基本工资

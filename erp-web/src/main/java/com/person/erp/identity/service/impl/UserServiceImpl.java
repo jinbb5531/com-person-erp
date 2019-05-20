@@ -63,6 +63,17 @@ public class UserServiceImpl implements IUserService {
             // 存在操作者且操作者不是超级管理员, 则使用相同的系统标识
             user.setSystemTag(operateUser.getSystemTag());
 
+        } else {
+
+            user.setSystemTag(WebConstant.SUPER_MANAGER_TAG);
+
+        }
+
+        // 默认值
+        if (user.getSex() == null) {
+
+            user.setSex(WebConstant.Sex.WOMAN.getValue());
+
         }
 
         // 校验是否存在该用户
@@ -80,7 +91,7 @@ public class UserServiceImpl implements IUserService {
         }
 
         // 保存用户角色
-        long[] roleIds = userDTO.getRoleIds();
+        Long[] roleIds = userDTO.getRoleIds();
         if (roleIds != null && roleIds.length > 0) {
 
             List<UserRole> list = new ArrayList<>();
@@ -162,27 +173,7 @@ public class UserServiceImpl implements IUserService {
 
             // 非超级管理员，不能分配隐藏的角色
 
-            // a.先判断有无分配隐藏角色，若有分配隐藏角色，则报异常
-
-            // 查出数据库中所有的 隐藏角色
-            Role role = new Role();
-            role.setShowFlag(WebConstant.ShowFlag.HIDE.getValue());
-            role.setSystemTag(WebConstant.SUPER_MANAGER_TAG);
-            List<Role> hideRoleList = roleService.findList(role);
-
-            if (!JudgeUtils.isEmpty(hideRoleList)) {
-                hideRoleList.forEach(hideRole -> {
-
-                    for (long roleId : roleIdList) {
-                        if (roleId == hideRole.getId()) {
-                            throw new ApiException(HttpStatus.BAD_REQUEST, "不能分配隐藏角色");
-                        }
-                    }
-
-                });
-            }
-
-            // b. 查出当前用户的隐藏角色，待会清空后，再重新插入隐藏角色。
+            // a. 查出当前用户的隐藏角色，待会清空后，再重新插入隐藏角色。
             // 目前已拥有的所有角色
             List<Role> roleList = user.getRoleList();
 
@@ -192,11 +183,41 @@ public class UserServiceImpl implements IUserService {
             roleList.forEach(r -> {
 
                 if (r.getShowFlag() == WebConstant.ShowFlag.HIDE.getValue()) {
+
+                    // 移除 roleIdList 中原来已拥有的隐藏角色
+                    roleIdList.remove(r.getId());
+
                     haveHideRoleIdList.add(r.getId());
+
                 }
 
             });
 
+            // b.判断有无分配隐藏角色，若有分配隐藏角色, 且不是已有的，则报异常
+
+            // 查出数据库中所有的 隐藏角色
+            Role role = new Role();
+            role.setShowFlag(WebConstant.ShowFlag.HIDE.getValue());
+            role.setSystemTag(WebConstant.SUPER_MANAGER_TAG);
+            List<Role> hideRoleList = roleService.findList(role);
+
+            if (!JudgeUtils.isEmpty(hideRoleList)) {
+
+                hideRoleList.forEach(hideRole -> {
+
+                    for (long roleId : roleIdList) {
+
+                        if (roleId == hideRole.getId()) {
+
+                            throw new ApiException(HttpStatus.FORBIDDEN, "非超级管理员，不能分配其他隐藏角色");
+
+                        }
+                    }
+
+                });
+            }
+
+            // 将已有的隐藏角色找回
             roleIdList.addAll(haveHideRoleIdList);
 
         }
@@ -220,11 +241,6 @@ public class UserServiceImpl implements IUserService {
         }
 
         return userDao.update(user) > 0;
-    }
-
-    @Override
-    public boolean deleteBatch(String[] codes, long systemTag) {
-        return userDao.deleteBatch(codes, systemTag) > 0;
     }
 
     @Override
@@ -293,17 +309,17 @@ public class UserServiceImpl implements IUserService {
     public PageInfo<User> findPage(UserDTO userDTO, Pager pager) {
 
         Long systemTag = TokenUtils.getUser() == null ? 0 : TokenUtils.getUser().getSystemTag();
-        Integer showFlag = WebConstant.ShowFlag.SHOW.getValue();
+        Integer showFlag = null;
 
         Integer status = userDTO.getStatus();
         String workKind = userDTO.getWorkKind();
         String userName = userDTO.getUserName();
-        long[] roleIds = (userDTO.getRoleIds() == null || userDTO.getRoleIds().length == 0) ? null : userDTO.getRoleIds();
+        Long[] roleIds = (userDTO.getRoleIds() == null || userDTO.getRoleIds().length == 0) ? null : userDTO.getRoleIds();
 
         if (TokenUtils.superManager()) {
             // 超级管理员返回所有用户信息
             systemTag = null;
-            showFlag = null;
+//            showFlag = null;
         }
 
         PageInfo<User> pageInfo = PageChangeUtils.dealPageInfo(PageChangeUtils.pagerToPageInfo(pager));
@@ -311,6 +327,13 @@ public class UserServiceImpl implements IUserService {
         PageHelper.startPage(pageInfo.getPageNum(), pageInfo.getPageSize());
 
         return new PageInfo<>(userDao.findListUserAssociateRole(systemTag, roleIds, showFlag, status, workKind, userName));
+
+    }
+
+    @Override
+    public boolean deleteUserRoleBatchByRoleIds(Long[] ids) {
+
+        return userDao.deleteUserRoleBatchByRoleIds(ids) > 0;
 
     }
 

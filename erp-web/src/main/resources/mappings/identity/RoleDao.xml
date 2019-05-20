@@ -2,18 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.person.erp.identity.dao.IRoleDao">
     <resultMap id="BaseResultMap" type="Role">
-		<id property="roleCode" column="ID" jdbcType="VARCHAR"/>
+		<id property="id" column="ID" />
 		<result property="roleName" column="ROLE_NAME" jdbcType="VARCHAR"/>
 		<result property="showFlag" column="SHOW_FLAG" jdbcType="NUMERIC"/>
-		<result property="delFlag" column="DEL_FLAG" jdbcType="NUMERIC"/>
 		<result property="createBy" column="CREATE_BY" jdbcType="VARCHAR"/>
-		<result property="createAt" column="CREATE_AT" jdbcType="VARCHAR"/>
+		<result property="createAt" column="CREATE_AT" />
 		<result property="updateBy" column="UPDATE_BY" jdbcType="VARCHAR"/>
-		<result property="updateAt" column="UPDATE_AT" jdbcType="VARCHAR"/>
-		<result property="systemTag" column="SYSTEM_TAG" jdbcType="VARCHAR"/>
-		<collection property="permissionList" javaType="ArrayList" ofType="Menu" autoMapping="false">
-			<id property="menuCode" column="MENU_CODE" jdbcType="VARCHAR"/>
-			<result property="parentCode" column="PARENT_CODE" jdbcType="VARCHAR"/>
+		<result property="updateAt" column="UPDATE_AT" />
+		<result property="systemTag" column="SYSTEM_TAG" />
+		<collection property="menuList" javaType="ArrayList" ofType="Menu" autoMapping="false">
+			<id property="id" column="MENU_ID" />
+			<result property="parentId" column="PARENT_ID" />
 			<result property="moduleFlag" column="MODULE_FLAG" jdbcType="NUMERIC"/>
 			<result property="menuName" column="MENU_NAME" jdbcType="VARCHAR"/>
 			<result property="menuUrl" column="MENU_URL" jdbcType="VARCHAR"/>
@@ -23,27 +22,25 @@
 			<result property="outsideFlag" column="OUTSIDE_FLAG" jdbcType="NUMERIC"/>
 			<result property="windowModel" column="WINDOW_MODEL" jdbcType="NUMERIC"/>
 			<result property="remark" column="M_REMARK" jdbcType="VARCHAR"/>
-			<result property="delFlag" column="M_DEL_FLAG" jdbcType="NUMERIC"/>
 			<result property="createBy" column="M_CREATE_BY" jdbcType="VARCHAR"/>
-			<result property="createAt" column="M_CREATE_AT" jdbcType="VARCHAR"/>
+			<result property="createAt" column="M_CREATE_AT" />
 			<result property="updateBy" column="M_UPDATE_BY" jdbcType="VARCHAR"/>
-			<result property="updateAt" column="M_UPDATE_AT" jdbcType="VARCHAR"/>
+			<result property="updateAt" column="M_UPDATE_AT" />
 		</collection>
 	</resultMap>
 	
-	<select id="get" resultMap="BaseResultMap">
+	<select id="getById" resultMap="BaseResultMap">
 		SELECT
-			A.ID,
-			A.ROLE_NAME,
-			A.SHOW_FLAG,
-			A.DEL_FLAG,
-			A.CREATE_BY,
-			A.CREATE_AT,
-			A.UPDATE_BY,
-			A.UPDATE_AT,
-			A.SYSTEM_TAG,
-			A.MENU_CODE,
-			M.PARENT_CODE,
+			R.ID,
+			R.ROLE_NAME,
+			R.SHOW_FLAG,
+			R.CREATE_BY,
+			R.CREATE_AT,
+			R.UPDATE_BY,
+			R.UPDATE_AT,
+			R.SYSTEM_TAG,
+			P.MENU_ID,
+			M.PARENT_ID,
 			M.MODULE_FLAG,
 			M.MENU_NAME,
 			M.MENU_URL,
@@ -53,32 +50,20 @@
 			M.OUTSIDE_FLAG,
 			M.WINDOW_MODEL,
 			M.REMARK,
-			M.DEL_FLAG AS M_DEL_FLAG,
 			M.CREATE_BY  AS M_CREATE_BY,
 			M.CREATE_AT AS M_CREATE_AT,
 			M.UPDATE_BY AS M_UPDATE_BY,
 			M.UPDATE_AT AS M_UPDATE_AT
-		FROM (SELECT
-			P.ID,
-			R.ROLE_NAME,
-			R.SHOW_FLAG,
-			R.DEL_FLAG,
-			R.CREATE_BY,
-			R.CREATE_AT,
-			R.UPDATE_BY,
-			R.UPDATE_AT,
-			R.SYSTEM_TAG,
-			P.MENU_CODE
 		FROM ERP_ROLE_MENU P
-			RIGHT JOIN ERP_ROLE R ON R.ID = P.ID
-		WHERE R.ID = #{roleCode} ) A
-			LEFT JOIN ERP_MENU M ON M.MENU_CODE = A.MENU_CODE
+			RIGHT JOIN ERP_ROLE R ON R.ID = P.ROLE_ID
+			LEFT JOIN ERP_MENU M ON M.ID = P.MENU_ID
+		WHERE R.ID = #{id}
 	</select>
 
 	<delete id="deleteBatch">
 		DELETE FROM ERP_ROLE
 		WHERE ID IN
-			<foreach collection="ids" item="item" index="index" open="(" close=")" separator=", ">
+			<foreach collection="array" item="item" index="index" open="(" close=")" separator=", ">
 				#{item}
 			</foreach>
 	</delete>
@@ -95,6 +80,8 @@
 			SYSTEM_TAG
 		FROM ERP_ROLE
 		WHERE
+			SYSTEM_TAG = #{systemTag}
+			AND
 			<if test="ids != null">
 			ID IN
 				<foreach collection="ids" item="item" open="(" separator=", " close=")">
@@ -111,8 +98,6 @@
 			SHOW_FLAG = #{showFlag}
 			AND
 			</if>
-			SYSTEM_TAG = #{systemTag}
-			AND
 			1=1 ORDER BY ID ASC
 	</select>
 
@@ -157,8 +142,16 @@
 		</foreach>
 	</insert>
 
-	<delete id="deletesRolePermission">
+	<delete id="deleteRolePermission">
 		DELETE FROM ERP_ROLE_MENU
 		WHERE ROLE_ID = #{roleId}
+	</delete>
+
+	<delete id="deleteRolePermissionBatch">
+		DELETE FROM ERP_ROLE_MENU
+		WHERE ROLE_ID IN
+		<foreach collection="array" item="item" open="(" separator=", " close=")">
+			#{item}
+		</foreach>
 	</delete>
 </mapper>
