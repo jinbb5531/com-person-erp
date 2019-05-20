@@ -1,9 +1,15 @@
 package com.person.erp.identity.model;
 
+import com.person.erp.common.valid.Delete;
 import com.person.erp.common.valid.Update;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * <p>RoleDTO.java</p>
@@ -17,8 +23,9 @@ public class RoleDTO {
     /**
      * 角色主键
      */
-    @NotEmpty(groups = { Update.class },message = "[id] 角色主键不能为空！")
-    private long id;
+    @NotNull(groups = { Update.class },message = "[id] 角色主键不能为空！")
+    @Min(groups = {Update.class}, message = "[id] 不能小于1", value = 1L)
+    private Long id;
 
     /**
      * 角色名
@@ -34,10 +41,23 @@ public class RoleDTO {
     /**
      * 菜单主键数组
      */
-    private long[] menuIds;
+    private Long[] menuIds;
 
     /**
      * 系统标识
      */
-    private long systemTag;
+    private Long systemTag;
+
+    /**
+     * 所拥有的菜单集
+     */
+    private List<MenuDTO> menus;
+
+    /**
+     * 创建时间
+     */
+    private Timestamp createAt;
+
+    @NotEmpty(groups = {Delete.class}, message = "[ids] 角色主键集不能为空")
+    private Long[] ids;
 }

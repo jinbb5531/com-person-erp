@@ -121,7 +121,7 @@ public interface IUserDao {
      * @param systemTag
      * @return int
      */
-    int deleteUserRoleByUser(String userCode, long systemTag);
+    int deleteUserRoleByUser(@Param("userCode") String userCode, @Param("systemTag") long systemTag);
 
     /**
      * 批量删除用户
@@ -173,5 +173,19 @@ public interface IUserDao {
      * @param userName
      * @return java.util.List<com.person.erp.identity.entity.User>
      */
-    List<User> findListUserAssociateRole(Long systemTag, long[] roleIds, Integer showFlag, Integer status, String workKind, String userName);
+    List<User> findListUserAssociateRole(@Param("systemTag") Long systemTag,
+                                         @Param("roleIds") Long[] roleIds,
+                                         @Param("showFlag") Integer showFlag,
+                                         @Param("status") Integer status,
+                                         @Param("workKind") String workKind,
+                                         @Param("userName") String userName);
+
+    /**
+     * 通过角色ids, 批量删除用户角色
+     * @author zhuwj
+     * @since 2019/5/20 9:23
+     * @param ids
+     * @return long
+     */
+    long deleteUserRoleBatchByRoleIds(Long[] ids);
 }

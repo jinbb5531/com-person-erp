@@ -15,6 +15,10 @@
 		<result property="createAt" column="CREATE_AT"/>
 		<result property="updateBy" column="UPDATE_BY"/>
 		<result property="updateAt" column="UPDATE_AT"/>
+		<result property="baseSalary" column="BASE_SALARY"/>
+		<result property="joinAt" column="JOIN_AT"/>
+		<result property="sex" column="SEX"/>
+		<result property="workKind" column="WORK_KIND"/>
 		<collection property="roleList" javaType="ArrayList" ofType="Role" autoMapping="false">
 			<id property="id" column="ROLE_ID"/>
 			<result property="roleName" column="ROLE_NAME"/>
@@ -110,14 +114,23 @@
 			<if test="status != null">
 				STATUS = #{status, jdbcType=NUMERIC},
 			</if>
-			<if test="delFlag != null">
-				DEL_FLAG = #{delFlag, jdbcType=NUMERIC},
-			</if>
 	        <if test="updateBy != null and updateBy != ''">
-				UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+				UPDATE_BY = #{updateBy},
 			</if>
 	        <if test="updateAt != null and updateAt != ''">
-				UPDATE_AT = #{updateAt,jdbcType=VARCHAR},
+				UPDATE_AT = #{updateAt},
+			</if>
+			<if test="baseSalary != null and baseSalary != ''">
+				BASE_SALARY = #{baseSalary},
+			</if>
+			<if test="joinAt != null">
+				JOIN_AT = #{joinAt},
+			</if>
+			<if test="sex != null">
+				SEX = #{sex},
+			</if>
+			<if test="workKind != null and workKind != ''">
+				WORK_KIND = #{workKind},
 			</if>
 		</set>
         WHERE USER_CODE = #{userCode, jdbcType=VARCHAR} AND SYSTEM_TAG = #{systemTag}
@@ -133,14 +146,17 @@
 			U.MOBILE_PHONE,
 			U.QQ_NUM,
 			U.USER_MAIL,
-			U.DEL_FLAG,
 			U.CREATE_BY,
 			U.CREATE_AT,
 			U.UPDATE_BY,
 			U.UPDATE_AT,
 			U.SYSTEM_TAG,
+			U.BASE_SALARY,
+			U.JOIN_AT,
+			U.SEX,
+			U.WORK_KIND,
 			UR.ROLE_ID,
-			R.RLOE_NAME,
+			R.ROLE_NAME,
 			R.SHOW_FLAG,
 			R.SYSTEM_TAG AS SYSTEM_TAG_ROLE
 		FROM ERP_USER_ROLE UR
@@ -244,6 +260,14 @@
 		AND SYSTEM_TAG = #{systemTag}
 	</delete>
 
+	<delete id="deleteUserRoleBatchByRoleIds">
+		DELETE FROM ERP_USER_ROLE
+		WHERE ROLE_ID IN
+		<foreach collection="array" item="item" index="index" open="(" close=")" separator=", ">
+			#{item}
+		</foreach>
+	</delete>
+
 	<select id="findUserRoleList" resultType="UserRole">
 		SELECT * FROM ERP_USER_ROLE
 		WHERE ROLE_ID IN
@@ -341,62 +365,59 @@
 
 	<select id="findListUserAssociateRole" resultMap="UserToRoleMap">
 		SELECT
-			U.USER_CODE,
-			U.SYSTEM_TAG,
-			U.USER_PWD,
-			U.USER_NAME,
-			U.STATUS,
-			U.TEL_PHONE,
-			U.MOBILE_PHONE,
-			U.QQ_NUM,
-			U.USER_MAIL,
-			U.CREATE_BY,
-			U.CREATE_AT,
-			U.UPDATE_BY,
-			U.UPDATE_AT,
-			U.BASE_SALARY,
-			U.JOIN_AT,
-			U.SEX,
-			U.WORK_KIND,
-			UR.ROLE_ID,
-			R.ROLE_NAME,
-			R.SHOW_FLAG
-		FROM ERP_USER_ROLE UR
-		<if test="roleIds != null">
-			LEFT JOIN
-		</if>
-		<if test="roleIds == null">
-			RIGHT JOIN
-		</if>
-			ERP_USER U ON UR.USER_CODE = U.USER_CODE AND UR.SYSTEM_TAG = U.SYSTEM_TAG
-			LEFT JOIN ERP_ROLE R R.ID = UR.ROLE_ID
+		U.USER_CODE,
+		U.SYSTEM_TAG,
+		U.USER_PWD,
+		U.USER_NAME,
+		U.STATUS,
+		U.TEL_PHONE,
+		U.MOBILE_PHONE,
+		U.QQ_NUM,
+		U.USER_MAIL,
+		U.CREATE_BY,
+		U.CREATE_AT,
+		U.UPDATE_BY,
+		U.UPDATE_AT,
+		U.BASE_SALARY,
+		U.JOIN_AT,
+		U.SEX,
+		U.WORK_KIND,
+		R.ID AS ROLE_ID,
+		R.ROLE_NAME,
+		R.SHOW_FLAG
+		FROM (
+			SELECT US.*, UR.ROLE_ID FROM ERP_USER_ROLE UR
+			RIGHT JOIN ERP_USER US ON UR.USER_CODE = US.USER_CODE AND UR.SYSTEM_TAG = US.SYSTEM_TAG
+			WHERE
+			<if test="roleIds != null">
+				UR.ROLE_ID IN
+				<foreach collection="roleIds" item="item" open="(" separator=", " close=")">
+					#{item}
+				</foreach>
+				AND
+			</if>
+			<if test="systemTag != null ">
+				US.SYSTEM_TAG = #{systemTag}
+				AND
+			</if>
+			<if test="status != null">
+				US.STATUS = #{status}
+				AND
+			</if>
+			<if test="workKind != null and workKind != ''">
+				US.WORK_KIND = #{workKind}
+				AND
+			</if>
+			<if test="userName != null and userName != ''">
+				US.USER_NAME like
+					CONCAT('%',#{userName,jdbcType=VARCHAR}, '%')
+				AND
+			</if>
+			1=1 ORDER BY US.CREATE_AT DESC
+		) U LEFT JOIN ERP_ROLE R ON R.ID = U.ROLE_ID
 		WHERE
-		<if test="systemTag != null ">
-			U.SYSTEM_TAG = #{systemTag}
-			AND
-		</if>
 		<if test="showFlag != null">
-			R.SHOW_FALG = #{showFlag}
-			AND
-		</if>
-		<if test="roleIds != null">
-			UR.ROLE_ID IN
-			<foreach collection="roleIds" item="item" open="(" separator=", " close=")">
-				#{item}
-			</foreach>
-			AND
-		</if>
-		<if test="status != null">
-			U.STATUS = #{status}
-			AND
-		</if>
-		<if test="workKind != null">
-			U.WORK_KIND = #{workKind}
-			AND
-		</if>
-		<if test="userName != null and userName != ''">
-			U.USER_NAME like
-				CONCAT('%',#{userName,jdbcType=VARCHAR}, '%')
+			R.SHOW_FLAG = #{showFlag}
 			AND
 		</if>
 		1=1 ORDER BY U.CREATE_AT DESC

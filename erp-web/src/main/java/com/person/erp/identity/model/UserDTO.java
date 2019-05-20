@@ -1,11 +1,16 @@
 package com.person.erp.identity.model;
 
+import com.person.erp.common.valid.Delete;
+import com.person.erp.common.valid.Insert;
+import com.person.erp.common.valid.Update;
 import lombok.*;
-import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.groups.Default;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
@@ -21,30 +26,32 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO implements Serializable {
+public class UserDTO {
     /**
      * 用户帐号
      */
-    @NotEmpty(message = "用户帐号不能为空！")
-    @Pattern(regexp = "[a-zA-Z0-9_]{4,10}", message = "用户帐号必须由4-10位数字、字母或下划线组成")
+    @NotEmpty(groups = {Delete.class, Default.class}, message = "[userCode] 用户帐号不能为空！")
+    @Pattern(groups = {Delete.class, Default.class}, regexp = "[a-zA-Z0-9_]{4,10}", message = "[userCode] 用户帐号必须由4-10位数字、字母或下划线组成")
     private String userCode;
 
     /**
      * 用户密码
      */
-    @NotEmpty(message = "密码不能为空！")
+    @NotEmpty(groups = {Insert.class}, message = "[userPwd] 密码不能为空！")
     private String userPwd;
 
     /**
      * 用户姓名
      */
-    @NotEmpty(message = "用户姓名不能为空！")
+    @NotEmpty(message = "[userName] 用户姓名不能为空！")
     private String userName;
 
     /**
      * 状态（性质，0：临时工  1：全日制）
      */
-    @NotNull(message = "状态不能为空！")
+    @NotNull(message = "[status] 性质不能为空！")
+    @Min(value = 0, message = "[status] 性质最小值为0")
+    @Max(value = 1, message = "[status] 性质最大值为1")
     private Integer status;
 
     /**
@@ -70,7 +77,9 @@ public class UserDTO implements Serializable {
     /**
      * 系统标识
      */
-    private long systemTag;
+    @NotNull(groups = {Update.class, Delete.class}, message = "[systemTag] 系统标识不能为空")
+    @Min(groups = {Update.class, Delete.class}, value = 0, message = "[systemTag] 系统标识最小值为 0")
+    private Long systemTag;
 
     /**
      * 基本工资
@@ -95,7 +104,7 @@ public class UserDTO implements Serializable {
     /**
      * 角色主键集
      */
-    private long[] roleIds;
+    private Long[] roleIds;
 
     /**
      * 角色集

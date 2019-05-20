@@ -60,4 +60,18 @@ public class WebConstant {
      */
     public final static long SUPER_MANAGER_TAG = 0;
 
+    public enum Sex {
+        WOMAN(0),
+
+        MAN(1);
+        private int value;
+        Sex(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
 }

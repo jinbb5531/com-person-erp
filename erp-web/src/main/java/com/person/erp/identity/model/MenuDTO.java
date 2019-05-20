@@ -1,6 +1,8 @@
 package com.person.erp.identity.model;
 
 import com.person.erp.identity.entity.Menu;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
@@ -13,23 +15,25 @@ import java.util.List;
  * @author zhuwj
  * @since 2019/5/8 13:33
  */
+@Getter
+@Setter
 public class MenuDTO {
     /**
      * 菜单主键集
      */
     @NotNull(message = "菜单主键集不能为空！")
-    private String[] codes;
+    private String[] ids;
 
     /**
      * 菜单主键
      */
     @NotEmpty(message = "菜单主键不能为空！")
-    private String menuCode;
+    private Long id;
 
     /**
      * 上级菜单主键
      */
-    private String parentCode;
+    private Long parentId;
 
     /**
      * 菜单名
@@ -99,11 +103,6 @@ public class MenuDTO {
     private Timestamp updateAt;
 
     /**
-     * 系统标识
-     */
-    private long systemTag;
-
-    /**
      * 父菜单实体
      */
     private Menu parentMenu;
@@ -111,5 +110,5 @@ public class MenuDTO {
     /**
      * 子菜单
      */
-    private List<Menu> childMenuList;
+    private List<MenuDTO> childMenus;
 }
