@@ -37,11 +37,11 @@ public interface IRoleDao extends BaseDao<Role> {
 
     /**
      * 根据主键获取单个角色及其对应的权限
-     * @param role
+     * @param id
      * @return com.minstone.mobile.mp.identity.entity.Role
      * @author zhuwj
      */
-    Role get(Role role);
+    Role getById(Long id);
 
     /**
      * 批量删除角色
@@ -74,5 +74,14 @@ public interface IRoleDao extends BaseDao<Role> {
      * @param roleId
      * @return long
      */
-    long deletesRolePermission(Long roleId);
+    long deleteRolePermission(Long roleId);
+
+    /**
+     * 根据角色ids, 清除相关权限
+     * @author zhuwj
+     * @since 2019/5/20 9:07
+     * @param ids
+     * @return long
+     */
+    long deleteRolePermissionBatch(Long[] ids);
 }

@@ -17,12 +17,12 @@ public class Menu {
     /**
      * 菜单主键
      */
-    private long id;
+    private Long id;
 
     /**
      * 上级菜单主键
      */
-    private long parentId;
+    private Long parentId;
 
     /**
      * 菜单名
@@ -92,6 +92,6 @@ public class Menu {
     /**
      * 显示标识 0：显示；1：不显示
      */
-    private int showFlag;
+    private Integer showFlag;
 
 }

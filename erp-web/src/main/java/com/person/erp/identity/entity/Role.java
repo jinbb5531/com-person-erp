@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.print.attribute.standard.MediaSize;
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * @author zhuwj
@@ -61,4 +62,10 @@ public class Role {
 
     @Transient
     private Long[] ids;
+
+    /**
+     * 角色所拥有的菜单
+     */
+    @Transient
+    private List<Menu> menuList;
 }
