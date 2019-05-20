@@ -3,15 +3,16 @@ package com.person.erp.order.controller;
 import com.github.pagehelper.PageInfo;
 import com.itexplore.core.api.model.PageResult;
 import com.itexplore.core.api.utils.PageChangeUtils;
+import com.itexplore.core.api.utils.ResultUtils;
 import com.person.erp.order.constant.OrderConstant;
 import com.person.erp.order.entity.Order;
 import com.person.erp.order.entity.OrderItem;
 import com.person.erp.order.model.OrderDTO;
 import com.person.erp.order.service.IOrderItemService;
 import com.person.erp.order.service.IOrderService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -38,7 +39,7 @@ public class OrderController {
      * @return result
      */
     @PostMapping
-    private Object createOrder(@RequestBody OrderDTO order) {
+    private ResponseEntity createOrder(@Validated @RequestBody OrderDTO order) {
 
         HashMap<String, Object> result = new HashMap<>();
         Order order1 = new Order();
@@ -50,9 +51,9 @@ public class OrderController {
         order1.setDeadline(order.getDeadline());
         order1.setRemark(order.getRemark());
         boolean success = orderService.createOrder(order1);
-        //获取生成的订单主键
 //      级联添加订单列表
         if (success) {
+            //获取生成的订单主键
             String id = order1.getOrderCode();
             List<OrderItem> itemList = order.getItemList();
             //关联订单号
@@ -62,9 +63,9 @@ public class OrderController {
             success = orderItemService.insertBatch(itemList);
         }
         if (success){
-            return ResponseEntity.ok().build();
+            return ResultUtils.success();
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResultUtils.failure("操作失败！");
         }
     }
 
@@ -74,8 +75,8 @@ public class OrderController {
      * @return
      */
     @GetMapping
-    private Order get(Order order) {
-        return orderService.findById(order);
+    private ResponseEntity get(Order order) {
+        return ResultUtils.success(orderService.findById(order));
 
     }
 
@@ -86,16 +87,16 @@ public class OrderController {
      * @return
      */
     @PutMapping
-    private Object update(OrderDTO order) {
+    private ResponseEntity update(OrderDTO order) {
         HashMap<String, Object> result = new HashMap<>();
         Order order1 = new Order();
         order1.setCustomer(order.getCustomer());
         order1.setUpdateAt(new Timestamp(new Date().getTime()));
         boolean success = orderService.updateOrder(order1);
         if (success) {
-            return ResponseEntity.ok().build();
+            return ResultUtils.success();
         } else {
-            return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return  ResultUtils.failure("操作失败！");
         }
     }
 
@@ -106,13 +107,12 @@ public class OrderController {
      * @return
      */
     @DeleteMapping
-    private Object delete(Order order) {
+    private ResponseEntity delete(Order order) {
         boolean success = orderService.deleteOrder(order);
-        HashMap<String, Object> result = new HashMap<String, Object>();
         if (success) {
-            return ResponseEntity.ok().build();
+            return ResultUtils.success();
         } else {
-            return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResultUtils.failure("操作失败！");
         }
     }
 
@@ -123,13 +123,13 @@ public class OrderController {
      * @return
      */
     @DeleteMapping("/batch")
-    private Object deleteBatch(String codes) {
+    private ResponseEntity deleteBatch(String codes) {
         boolean success = orderService.deleteBatch(codes.split(","));
         HashMap<String, Object> result = new HashMap<>();
         if (success) {
-            return ResponseEntity.ok().build();
+            return ResultUtils.success();
         } else {
-            return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return  ResultUtils.failure("操作失败！");
         }
     }
 

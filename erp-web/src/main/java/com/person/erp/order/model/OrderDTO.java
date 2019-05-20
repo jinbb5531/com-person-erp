@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -22,15 +24,18 @@ public class OrderDTO implements Serializable {
     /**
      * 订单主键
      */
+
     private String orderCode;
     /**
      * 客户名
      */
+    @NotBlank(message = "【customer】 不能为空！")
     private String customer;
 
     /**
      * 创建人
      */
+    @NotBlank(message = "【createBy】 不能为空！")
     private String createBy;
 
     /**
@@ -57,6 +62,7 @@ public class OrderDTO implements Serializable {
     /**
      * 订单明细，一对多
      */
+    @NotEmpty(message = "【itemList】 不能为空！")
     private List<OrderItem> itemList;
 
 
