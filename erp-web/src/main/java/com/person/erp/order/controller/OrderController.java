@@ -87,7 +87,7 @@ public class OrderController {
      * @return
      */
     @PutMapping
-    private ResponseEntity update(OrderDTO order) {
+    private ResponseEntity update(@Validated OrderDTO order) {
         HashMap<String, Object> result = new HashMap<>();
         Order order1 = new Order();
         order1.setCustomer(order.getCustomer());
