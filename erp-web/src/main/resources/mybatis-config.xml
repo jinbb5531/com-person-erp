@@ -49,6 +49,8 @@
         <typeAlias type="com.person.erp.identity.entity.Permission" alias="Permission"/>
         <typeAlias type="com.person.erp.identity.entity.Menu" alias="Menu"/>
         <typeAlias type="com.person.erp.identity.entity.UserRole" alias="UserRole"/>
+        <typeAlias type="com.person.erp.dict.entity.Dict" alias="Dict"/>
+        <typeAlias type="com.person.erp.dict.entity.DictType" alias="DictType"/>
     </typeAliases>
 
     <!-- 插件配置 -->
