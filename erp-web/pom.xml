@@ -15,7 +15,7 @@
     <packaging>jar</packaging>
     <properties>
         <mysql.connector>5.1.44</mysql.connector>
-        <itexplore.core>1.0.7</itexplore.core>
+        <itexplore.core>1.0.8</itexplore.core>
     </properties>
     <dependencies>
         <!--私人开发依赖包-->
