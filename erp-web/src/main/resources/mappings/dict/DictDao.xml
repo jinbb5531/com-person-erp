@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.person.erp.dict.dao.IDictDao">
+
+    <resultMap id="DictAndTypeMap" type="Dict" autoMapping="true">
+        <association property="dictType" javaType="DictType" autoMapping="true">
+            <id property="id" column="TYPE_ID" />
+            <result property="typeName" column="TYPE_NAME" />
+        </association>
+    </resultMap>
+
+    <select id="findListAssociateType" resultMap="DictAndTypeMap">
+        SELECT
+        D.ID,
+        D.DICT_NAME,
+        D.STATUS,
+        D.ICON_PATH,
+        D.CREATE_BY,
+        D.CREATE_AT,
+        D.UPDATE_BY,
+        D.UPDATE_AT,
+        D.TYPE_ID,
+        T.TYPE_NAME
+        FROM ERP_DICT D LEFT JOIN ERP_TYPE T ON D.TYPE_ID = T.ID
+        WHERE
+        <if test="ids != null">
+            D.ID IN
+            <foreach collection="ids" item="item" open="(" close=")" separator=", ">
+                #{item}
+            </foreach>
+            AND
+        </if>
+        <if test="dictName != null and dictName != ''">
+            D.DICT_NAME LIKE CONCAT('%',#{dictName}, '%')
+            AND
+        </if>
+        <if test="status != null">
+            D.STATUS = #{status}
+            AND
+        </if>
+        <if test="typeId != null">
+            D.TYPE_ID = #{typeId}
+            AND
+        </if>
+        1=1 ORDER BY D.ID ASC
+    </select>
+    
+</mapper>

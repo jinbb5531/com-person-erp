@@ -63,16 +63,18 @@ public class UserServiceImpl implements IUserService {
             // 存在操作者且操作者不是超级管理员, 则使用相同的系统标识
             user.setSystemTag(operateUser.getSystemTag());
 
-        } else {
-
-            user.setSystemTag(WebConstant.SUPER_MANAGER_TAG);
-
         }
 
         // 默认值
         if (user.getSex() == null) {
 
             user.setSex(WebConstant.Sex.WOMAN.getValue());
+
+        }
+
+        if (user.getSystemTag() == null) {
+
+            user.setSystemTag(WebConstant.SUPER_MANAGER_TAG);
 
         }
 
