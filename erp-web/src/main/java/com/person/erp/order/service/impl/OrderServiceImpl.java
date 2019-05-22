@@ -31,7 +31,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public boolean deleteOrder(Order order) {
-        return dao.delete(order) > 0;
+        return dao.delete(order) >= 0;
     }
 
     @Override

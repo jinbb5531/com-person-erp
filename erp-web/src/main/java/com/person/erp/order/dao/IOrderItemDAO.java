@@ -9,4 +9,10 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface IOrderItemDAO extends BaseDao<OrderItem> {
+    /**
+     * 删除订单下的订单明细
+     * @param orderCode
+     * @return
+     */
+     int deleteByOrderCode(String orderCode);
 }

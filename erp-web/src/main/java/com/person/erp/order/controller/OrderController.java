@@ -61,9 +61,11 @@ public class OrderController {
                 item.setOrderCode(id);
             });
             success = orderItemService.insertBatch(itemList);
-        }
-        if (success){
-            return ResultUtils.success();
+            if (success){
+                return  ResultUtils.success();
+            }else {
+                return  ResultUtils.failure("操作失败！");
+            }
         } else {
             return ResultUtils.failure("操作失败！");
         }
@@ -103,14 +105,21 @@ public class OrderController {
     /**
      * 删除订单
      *
-     * @param order
+     * @param orderCode
      * @return
      */
     @DeleteMapping
-    private ResponseEntity delete(Order order) {
+    private ResponseEntity delete(@RequestParam(name = "orderCode", required = true) String orderCode) {
+        Order order = new Order();
+        order.setOrderCode(orderCode);
         boolean success = orderService.deleteOrder(order);
         if (success) {
-            return ResultUtils.success();
+            success = orderItemService.deleteByOrderCode(orderCode);
+            if (success){
+                return ResultUtils.success();
+            }else {
+                return  ResultUtils.failure("操作失败！");
+            }
         } else {
             return ResultUtils.failure("操作失败！");
         }

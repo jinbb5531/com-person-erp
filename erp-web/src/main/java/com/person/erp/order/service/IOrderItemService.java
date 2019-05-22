@@ -25,4 +25,13 @@ public interface IOrderItemService {
      * @param itemList
      */
     boolean insertBatch(List<OrderItem> itemList);
+
+    /**
+     * 根据orderCode删除明细
+     * @param orderCode
+     * @return
+     */
+    boolean deleteByOrderCode(String orderCode);
+
+    boolean deleteBatch(String... codes);
 }

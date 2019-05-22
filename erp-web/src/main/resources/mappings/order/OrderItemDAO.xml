@@ -14,4 +14,8 @@
     <result column="PLANT_NUM" property="plantNum" jdbcType="INTEGER"/>
     <result column="SYSTEM_TAG" property="systemTag" jdbcType="BIGINT"/>
 </resultMap>
+    <delete id="deleteByOrderCode">
+        DELETE FROM ERP_ORDER_ITEM
+        WHERE ORDER_CODE = #{orderCode}
+    </delete>
 </mapper>
