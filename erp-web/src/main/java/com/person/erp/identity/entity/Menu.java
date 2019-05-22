@@ -30,7 +30,7 @@ public class Menu {
     private String menuName;
 
     /**
-     * 模块标识
+     * 模块标识; 0:模块；1：操作
      */
     private Integer moduleFlag;
 
@@ -93,5 +93,8 @@ public class Menu {
      * 显示标识 0：显示；1：不显示
      */
     private Integer showFlag;
+
+    private Menu parentMenu;
+
 
 }

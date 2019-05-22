@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.person.erp.identity.dao.IMenuDao">
     <resultMap id="MenuResultMap" type="Menu">
-		<id property="menuCode" column="MENU_CODE" jdbcType="VARCHAR"/>
-		<result property="parentCode" column="PARENT_CODE" jdbcType="VARCHAR"/>
+		<id property="id" column="ID"/>
+		<result property="parentId" column="PARENT_ID" />
 		<result property="moduleFlag" column="MODULE_FLAG" jdbcType="NUMERIC"/>
 		<result property="menuName" column="MENU_NAME" jdbcType="VARCHAR"/>
 		<result property="menuUrl" column="MENU_URL" jdbcType="VARCHAR"/>
@@ -13,23 +13,22 @@
 		<result property="outsideFlag" column="OUTSIDE_FLAG" jdbcType="NUMERIC"/>
 		<result property="windowModel" column="WINDOW_MODEL" jdbcType="NUMERIC"/>
 		<result property="remark" column="REMARK" jdbcType="VARCHAR"/>
-		<result property="delFlag" column="DEL_FLAG" jdbcType="NUMERIC"/>
-		<result property="creator" column="CREATOR" jdbcType="VARCHAR"/>
-		<result property="createDate" column="CREATE_DATE" jdbcType="VARCHAR"/>
-		<result property="modifier" column="MODIFIER" jdbcType="VARCHAR"/>
-		<result property="modifyDate" column="MODIFY_DATE" jdbcType="VARCHAR"/>
-		<result property="systemTag" column="SYSTEM_TAG" jdbcType="VARCHAR"/>
+		<result property="showFlag" column="SHOW_FLAG" jdbcType="NUMERIC"/>
+		<result property="createBy" column="CREATE_BY" jdbcType="VARCHAR"/>
+		<result property="createAt" column="CREATE_AT" />
+		<result property="updateBy" column="UPDATE_BY" jdbcType="VARCHAR"/>
+		<result property="updateAt" column="UPDATE_AT" jdbcType="VARCHAR"/>
 		<association property="parentMenu" javaType="Menu" autoMapping="false">
-			<id property="menuCode" column="PARENT_CODE" jdbcType="VARCHAR"/>
+			<id property="id" column="PARENT_ID" jdbcType="VARCHAR"/>
 			<result property="menuName" column="PARENT_MENU_NAME" jdbcType="VARCHAR"/>
 			<result property="menuUrl" column="PARENT_MENU_URL" jdbcType="VARCHAR"/>
 			<result property="useFlag" column="PARENT_USE_FLAG" jdbcType="NUMERIC"/>
+			<result property="showFlag" column="PARENT_SHOW_FLAG" jdbcType="NUMERIC"/>
 		</association>
 	</resultMap>
 
     <sql id="Menu_Column_List">
-		MENU_CODE,
-		PARENT_CODE,
+		PARENT_ID,
 		MODULE_FLAG,
 		MENU_NAME,
 		MENU_URL,
@@ -39,17 +38,16 @@
 		OUTSIDE_FLAG,
 		WINDOW_MODEL,
 		REMARK,
-		DEL_FLAG,
-		CREATOR,
-		CREATE_DATE,
-		MODIFIER,
-		MODIFY_DATE,
+		SHOW_FLAG,
+		CREATE_BY,
+		CREATE_AT,
+		UPDATE_BY,
+		UPDATE_AT,
 		SYSTEM_TAG
     </sql>
 
 	<sql id="menuValues">
-		#{item.menuCode},
-		#{item.parentCode},
+		#{item.parentId},
 		#{item.moduleFlag},
 		#{item.menuName},
 		#{item.menuUrl},
@@ -59,17 +57,17 @@
 		#{item.outsideFlag},
 		#{item.windowModel},
 		#{item.remark},
-		#{item.delFlag},
-		#{item.creator},
-		#{item.createDate},
-		#{item.modifier},
-		#{item.modifyDate},
+		#{item.showFlag},
+		#{item.createBy},
+		#{item.createAt},
+		#{item.updateBy},
+		#{item.updateAt},
 		#{item.systemTag}
 	</sql>
 
 	<insert id="insertMenuBatch">
 		<if test="dbName == 'mysql'">
-			INSERT INTO MP_SYS_MENU
+			INSERT INTO ERP_MENU
 			(
 				<include refid="Menu_Column_List"/>
 			)VALUES
@@ -82,7 +80,7 @@
 		<if test="dbName == 'oracle'">
 			INSERT ALL
 			<foreach collection="childMenuList" item="item" separator=" " index="index">
-				INTO MP_SYS_MENU
+				INTO ERP_MENU
 				(
 				<include refid="Menu_Column_List"/>
 				)VALUES
@@ -94,10 +92,9 @@
 		</if>
 	</insert>
 
-    <insert id="insert">
-        INSERT INTO MP_SYS_MENU(
-			MENU_CODE,
-			PARENT_CODE,
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO ERP_MENU(
+			PARENT_ID,
 			MODULE_FLAG,
 			MENU_NAME,
 			MENU_URL,
@@ -107,15 +104,13 @@
 			OUTSIDE_FLAG,
 			WINDOW_MODEL,
 			REMARK,
-			DEL_FLAG,
-			CREATOR,
-			CREATE_DATE,
-			MODIFIER,
-			MODIFY_DATE,
-			SYSTEM_TAG
+			SHOW_FLAG,
+			CREATE_BY,
+			CREATE_AT,
+			UPDATE_BY,
+			UPDATE_AT
         ) VALUES (
-			#{menuCode},
-			#{parentCode},
+			#{parentId},
 			#{moduleFlag},
 			#{menuName},
 			#{menuUrl},
@@ -125,36 +120,35 @@
 			#{outsideFlag},
 			#{windowModel},
 			#{remark},
-			#{delFlag},
-			#{creator},
-			#{createDate},
-			#{modifier},
-			#{modifyDate},
-			#{systemTag}
+			#{showFlag},
+			#{createBy},
+			#{createAt},
+			#{updateBy},
+			#{updateAt}
         )
     </insert>
 	
 	<select id="maxQueueByParentCode" resultType="Integer">
 		SELECT
 			MAX(QUEUE_NUM)
-		FROM MP_SYS_MENU
+		FROM ERP_MENU
 		WHERE
-		<if test="parentCode == null">
-			PARENT_CODE IS NULL
+		<if test="parentId == null">
+			PARENT_ID IS NULL
 			AND
 		</if>
-		<if test="parentCode == ''">
+		<if test="parentId == ''">
 			<if test="dbName == 'oracle'">
-				PARENT_CODE IS NULL
+				PARENT_ID IS NULL
 				AND
 			</if>
 			<if test="dbName == 'mysql' or dbName == 'mssql'">
-				PARENT_CODE = #{parentCode,jdbcType=VARCHAR}
+				PARENT_ID = #{parentId}
 				AND
 			</if>
 		</if>
-		<if test="parentCode != null and parentCode != ''">
-			PARENT_CODE = #{parentCode,jdbcType=VARCHAR}
+		<if test="parentId != null and parentId != ''">
+			PARENT_ID = #{parentId}
 			AND
 		</if>
 		<if test="systemTag != null and systemTag != ''">
@@ -165,10 +159,10 @@
 	</select>
 
 	<update id="update">
-        UPDATE MP_SYS_MENU
+        UPDATE ERP_MENU
         <set>
-			<if test="parentCode != null and parentCode != ''">
-				PARENT_CODE = #{parentCode, jdbcType=VARCHAR},
+			<if test="parentId != null">
+				PARENT_ID = #{parentId},
 			</if>
 			<if test="moduleFlag != null">
 				MODULE_FLAG = #{moduleFlag},
@@ -197,23 +191,23 @@
 			<if test="remark != null and remark != ''">
 				REMARK = #{remark,jdbcType=VARCHAR},
 			</if>
-			<if test="delFlag != null">
-				DEL_FLAG = #{delFlag, jdbcType=NUMERIC},
+			<if test="showFlag != null">
+				SHOW_FLAG = #{showFlag, jdbcType=NUMERIC},
 			</if>
-	        <if test="modifier != null and modifier != ''">
-				MODIFIER = #{modifier,jdbcType=VARCHAR},
+	        <if test="updateBy != null and updateBy != ''">
+				UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
 			</if>
-	        <if test="modifyDate != null and modifyDate != ''">
-				MODIFY_DATE = #{modifyDate,jdbcType=VARCHAR},
+	        <if test="updateAt != null">
+				UPDATE_AT = #{updateAt},
 			</if>
 		</set>
-        WHERE MENU_CODE = #{menuCode, jdbcType=VARCHAR}
+        WHERE ID = #{id}
 	</update>
 	
-	<select id="get" resultMap="MenuResultMap">
+	<select id="getMenuById" resultMap="MenuResultMap">
 		SELECT
-		L.MENU_CODE,
-		L.PARENT_CODE,
+		L.ID,
+		L.PARENT_ID,
 		L.MODULE_FLAG,
 		L.MENU_NAME,
 		L.MENU_URL,
@@ -223,45 +217,44 @@
 		L.OUTSIDE_FLAG,
 		L.WINDOW_MODEL,
 		L.REMARK,
-		L.DEL_FLAG,
-		L.CREATOR,
-		L.CREATE_DATE,
-		L.MODIFIER,
-		L.MODIFY_DATE,
-		L.SYSTEM_TAG,
+		L.SHOW_FLAG,
+		L.CREATE_BY,
+		L.CREATE_AT,
+		L.UPDATE_BY,
+		L.UPDATE_AT,
 		R.MENU_NAME AS PARENT_MENU_NAME,
 		R.MENU_URL AS PARENT_MENU_URL,
+		R.SHOW_FLAG AS PARENT_SHOW_FLAG,
 		R.USE_FLAG AS PARENT_USE_FLAG
-		FROM MP_SYS_MENU L LEFT JOIN MP_SYS_MENU R ON L.PARENT_CODE = R.MENU_CODE
+		FROM ERP_MENU L LEFT JOIN ERP_MENU R ON L.PARENT_ID = R.ID
 		WHERE
-		<if test="menuCode != null and menuCode != ''">
-			L.MENU_CODE = #{menuCode, jdbcType=VARCHAR}
+		<if test="id != null">
+			L.ID = #{id}
 			AND
 		</if>
 		1=1
 	</select>
 	
-	<update id="deleteOrRevertBatch">
-		UPDATE MP_SYS_MENU
-		<set>
-			DEL_FLAG = #{delFlag},
-			<if test="modifier != null and modifier != ''">
-				MODIFIER = #{modifier,jdbcType=VARCHAR},
-			</if>
-			<if test="modifyDate != null and modifyDate != ''">
-				MODIFY_DATE = #{modifyDate,jdbcType=VARCHAR},
-			</if>
-		</set>
-		WHERE MENU_CODE IN
-			<foreach collection="codes" item="item" index="index" open="(" close=")" separator=", ">
+	<delete id="deletes">
+		DELETE FROM ERP_MENU
+		WHERE ID IN
+			<foreach collection="array" item="item" index="index" open="(" close=")" separator=", ">
 				#{item}
 			</foreach>
-	</update>
+	</delete>
+
+	<delete id="deleteRolePermissionBatch">
+		DELETE FROM ERP_ROLE_MENU
+		WHERE MENU_ID IN
+			<foreach collection="array" item="item" index="index" open="(" close=")" separator=", ">
+				#{item}
+			</foreach>
+	</delete>
 
 	<select id="findList" resultType="Menu">
 		SELECT
-			MENU_CODE,
-			PARENT_CODE,
+			ID,
+			PARENT_ID,
 			MODULE_FLAG,
 			MENU_NAME,
 			MENU_URL,
@@ -271,82 +264,67 @@
 			OUTSIDE_FLAG,
 			WINDOW_MODEL,
 			REMARK,
-			DEL_FLAG,
-			CREATOR,
-			CREATE_DATE,
-			MODIFIER,
-			MODIFY_DATE,
-			SYSTEM_TAG
-		FROM MP_SYS_MENU
+			SHOW_FLAG,
+			CREATE_BY,
+			CREATE_AT,
+			UPDATE_BY,
+			UPDATE_AT
+		FROM ERP_MENU
 		WHERE
-			<if test="codes != null">
-			MENU_CODE IN
-				<foreach collection="codes" item="item" open="(" separator=", " close=")">
-					#{item}
-				</foreach>
-			AND
+			<if test="ids != null">
+				ID IN
+					<foreach collection="ids" item="item" open="(" separator=", " close=")">
+						#{item}
+					</foreach>
+				AND
 			</if>
-			<if test="dbName == 'mysql' or dbName == 'mssql'">
-				<if test="parentCode != null">
-					PARENT_CODE = #{parentCode,jdbcType=VARCHAR}
-					AND
-				</if>
-			</if>
-			<if test="dbName == 'oracle'">
-				<if test="parentCode != null and parentCode != ''">
-					PARENT_CODE = #{parentCode,jdbcType=VARCHAR}
-					AND
-				</if>
-				<if test="parentCode == ''">
-					PARENT_CODE IS NULL
-					AND
-				</if>
+			<if test="parentId != null">
+				PARENT_ID = #{parentId}
+				AND
 			</if>
 			<if test="menuName != null and menuName != ''">
-			MENU_NAME like
-			<if test="dbName == 'oracle'">'%'||#{menuName,jdbcType=VARCHAR}||'%'</if>
-			<if test="dbName == 'mssql'">'%'+#{menuName,jdbcType=VARCHAR}+'%'</if>
-			<if test="dbName == 'mysql'">CONCAT('%',#{menuName,jdbcType=VARCHAR}, '%')</if>
-			AND
+				MENU_NAME like CONCAT('%',#{menuName,jdbcType=VARCHAR}, '%')
+				AND
 			</if>
 			<if test="useFlag != null">
-			USE_FLAG = #{useFlag}
-			AND
+				USE_FLAG = #{useFlag}
+				AND
 			</if>
 			<if test="outsideFlag != null">
-			OUTSIDE_FLAG = #{outsideFlag, jdbcType=NUMERIC}
-			AND
+				OUTSIDE_FLAG = #{outsideFlag, jdbcType=NUMERIC}
+				AND
 			</if>
 			<if test="windowModel != null">
-			WINDOW_MODEL = #{windowModel, jdbcType=NUMERIC}
-			AND
+				WINDOW_MODEL = #{windowModel, jdbcType=NUMERIC}
+				AND
 			</if>
 			<if test="moduleFlag != null">
-			MODULE_FLAG = #{moduleFlag}
-			AND
+				MODULE_FLAG = #{moduleFlag}
+				AND
 			</if>
-			<if test="delFlag != null">
-			DEL_FLAG = #{delFlag}
-			AND
+			<if test="showFlag != null">
+				SHOW_FLAG = #{showFlag}
+				AND
 			</if>
 			<if test="systemTag != null and systemTag != ''">
-			SYSTEM_TAG = #{systemTag}
-			AND
+				SYSTEM_TAG = #{systemTag}
+				AND
 			</if>
 			1=1 ORDER BY MODULE_FLAG ASC, QUEUE_NUM ASC
 	</select>
+
 	<update id="updateUseFlagBatch">
-		UPDATE MP_SYS_MENU
+		UPDATE ERP_MENU
 		<set>
 			USE_FLAG = #{useFlag},
-			<if test="modifier != null and modifier != ''">
-				MODIFIER = #{modifier},
+			<if test="updateBy != null and updateBy != ''">
+				UPDATE_BY = #{updateBy},
 			</if>
-			<if test="modifyDate != null and modifyDate != ''">
-				MODIFY_DATE = #{modifyDate},
+			<if test="updateAt != null and updateAt != ''">
+				UPDATE_AT = #{updateAt},
 			</if>
 		</set>
-		WHERE MENU_CODE IN
+		WHERE ID IN
 		<foreach collection="codes" item="item" open="(" close=")" separator=", ">
 			#{item}
 		</foreach>
@@ -354,8 +332,8 @@
 
 	<select id="getPermissionListByUser" resultType="Menu">
 		SELECT
-			M.MENU_CODE,
-			M.PARENT_CODE,
+			M.ID,
+			M.PARENT_ID,
 			M.MODULE_FLAG,
 			M.MENU_NAME,
 			M.MENU_URL,
@@ -365,19 +343,19 @@
 			M.OUTSIDE_FLAG,
 			M.WINDOW_MODEL,
 			M.REMARK,
-			M.DEL_FLAG,
-			M.CREATOR,
-			M.CREATE_DATE,
-			M.MODIFIER,
-			M.MODIFY_DATE,
+			M.SHOW_FLAG,
+			M.CREATE_BY,
+			M.CREATE_AT,
+			M.UPDATE_BY,
+			M.UPDATE_AT,
 			M.SYSTEM_TAG
 		FROM MP_SYS_ROLE_MENU RM
 			RIGHT JOIN (
 					SELECT A.* FROM MP_SYS_USER_ROLE A
 						RIGHT JOIN MP_SYS_ROLE R ON R.ROLE_CODE = A.ROLE_CODE
-					WHERE R.SYSTEM_TAG = #{role.systemTag} AND R.DEL_FLAG = #{role.delFlag} AND R.USE_FLAG = #{role.useFlag}
+					WHERE R.SYSTEM_TAG = #{role.systemTag} AND R.SHOW_FLAG = #{role.showFlag} AND R.USE_FLAG = #{role.useFlag}
 				)UR ON UR.ROLE_CODE = RM.ROLE_CODE
-			LEFT JOIN MP_SYS_MENU M ON M.MENU_CODE = RM.MENU_CODE
+			LEFT JOIN ERP_MENU M ON M.ID = RM.ID
 		WHERE
 			UR.USER_CODE = #{userCode} AND
 			UR.SYSTEM_TAG = #{systemTag}

@@ -3,6 +3,7 @@ package com.person.erp.identity.dao;
 import com.itexplore.core.mybatis.MyMapper;
 import com.person.erp.identity.entity.Menu;
 import com.person.erp.identity.entity.User;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -28,14 +29,6 @@ public interface IMenuDao {
      * @author zhuwj
      */
     Integer maxQueueByParentCode(Menu menu);
-
-    /**
-     * 获取单条菜单
-     * @param menu
-     * @return com.minstone.mobile.mp.identity.entity.Menu
-     * @author zhuwj
-     */
-    Menu get(Menu menu);
 
     /**
      *
@@ -84,4 +77,31 @@ public interface IMenuDao {
      * @author zhuwj
      */
     boolean insertMenuBatch(Menu menu);
+
+    /**
+     * 通过主键查询菜单，并封装其父
+     * @author zhuwj
+     * @since 2019/5/22 9:40
+     * @param id
+     * @return com.person.erp.identity.entity.Menu
+     */
+    Menu getMenuById(@Param("id") Long id);
+
+    /**
+     * 批量删除菜单
+     * @author zhuwj
+     * @since 2019/5/22 11:42
+     * @param ids
+     * @return long
+     */
+    long deletes(Long[] ids);
+
+    /**
+     * 通过菜单主键集批量删除角色权限
+     * @author zhuwj
+     * @since 2019/5/22 11:43
+     * @param ids
+     * @return long
+     */
+    long deleteRolePermissionBatch(Long[] ids);
 }
