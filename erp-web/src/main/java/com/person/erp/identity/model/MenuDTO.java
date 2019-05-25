@@ -2,7 +2,6 @@ package com.person.erp.identity.model;
 
 import com.person.erp.common.valid.Delete;
 import com.person.erp.common.valid.Update;
-import com.person.erp.identity.entity.Menu;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -10,7 +9,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -21,8 +20,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class
-MenuDTO {
+public class MenuDTO implements Serializable {
 
     /**
      * 菜单主键

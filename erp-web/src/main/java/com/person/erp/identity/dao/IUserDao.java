@@ -188,4 +188,13 @@ public interface IUserDao {
      * @return long
      */
     long deleteUserRoleBatchByRoleIds(Long[] ids);
+
+    /**
+     * 通过的手机号获取用户
+     * @author zhuwj
+     * @since 2019/5/25 10:30
+     * @param mobilePhone
+     * @return com.person.erp.identity.entity.User
+     */
+    User getUserByPhone(@Param("mobilePhone") String mobilePhone);
 }

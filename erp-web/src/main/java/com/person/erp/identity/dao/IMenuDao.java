@@ -104,4 +104,13 @@ public interface IMenuDao {
      * @return long
      */
     long deleteRolePermissionBatch(Long[] ids);
+
+    /**
+     * 通过角色主键集获取所有权限
+     * @author zhuwj
+     * @since 2019/5/24 23:11
+     * @param roleIds
+     * @return java.util.List<com.person.erp.identity.entity.Menu>
+     */
+    List<Menu> getPermissionListByRoleIds(Long[] roleIds);
 }

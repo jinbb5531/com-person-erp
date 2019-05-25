@@ -165,6 +165,10 @@
 		WHERE U.USER_CODE = #{userCode} AND U.SYSTEM_TAG = #{systemTag}
 	</select>
 
+	<select id="getUserByPhone" resultType="User">
+		SELECT * FROM ERP_USER WHERE MOBILE_PHONE = #{mobilePhone}
+	</select>
+
 	<update id="updateStatusBatch">
 		UPDATE ERP_USER
 		<set>

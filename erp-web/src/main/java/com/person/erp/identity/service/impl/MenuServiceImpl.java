@@ -147,6 +147,15 @@ public class MenuServiceImpl implements IMenuService {
 
     }
 
+    @Override
+    public List<MenuDTO> getPermissionByRoleIds(Long[] roleIds) {
+
+        List<Menu> menuList = menuDao.getPermissionListByRoleIds(roleIds);
+
+        return orderRankRelation(menuList);
+
+    }
+
     /**
      * 从list中筛选出codes的所有子菜单主键
      * @param codes
