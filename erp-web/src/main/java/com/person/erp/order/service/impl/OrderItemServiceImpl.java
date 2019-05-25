@@ -53,4 +53,9 @@ public class OrderItemServiceImpl implements IOrderItemService {
     public boolean deleteBatch(String...codes) {
         return dao.deleteByIds(codes) >=0;
     }
+
+    @Override
+    public boolean updateBatch(List<OrderItem> itemList) {
+        return dao.updateBatch(itemList) > 0;
+    }
 }

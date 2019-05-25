@@ -46,4 +46,11 @@ public interface IOrderItemService {
      * @return
      */
     boolean deleteBatch(String... codes);
+
+    /**
+     * 批量更新订单明细
+     * @param itemList
+     * @return
+     */
+    boolean updateBatch(List<OrderItem> itemList);
 }
