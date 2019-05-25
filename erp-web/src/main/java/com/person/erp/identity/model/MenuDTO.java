@@ -1,12 +1,15 @@
 package com.person.erp.identity.model;
 
-import com.person.erp.identity.entity.Menu;
+import com.person.erp.common.valid.Delete;
+import com.person.erp.common.valid.Update;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -17,39 +20,37 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class MenuDTO {
-    /**
-     * 菜单主键集
-     */
-    @NotNull(message = "菜单主键集不能为空！")
-    private String[] ids;
+public class MenuDTO implements Serializable {
 
     /**
      * 菜单主键
      */
-    @NotEmpty(message = "菜单主键不能为空！")
+    @NotNull(groups = {Update.class, Delete.class}, message = "[id] 菜单主键不能为空！")
     private Long id;
 
     /**
      * 上级菜单主键
      */
+    @Min(value = 1, message = "[parentId] 父主键最小值为1")
     private Long parentId;
 
     /**
      * 菜单名
      */
-    @NotEmpty(message = "菜单名不能为空！")
+    @NotEmpty(message = "[menuName] 菜单名不能为空！")
     private String menuName;
 
     /**
      * 模块标识
      */
+    @Min(value = 0, message = "[moduleFlag] 模块标识最小值为0")
+    @Max(value = 1, message = "[moduleFlag] 模块标识最大值为1")
     private Integer moduleFlag;
 
     /**
      * 菜单URL
      */
-    @NotEmpty(message = "菜单URL不能为空！")
+    @NotEmpty(message = "[menuUrl] 菜单URL不能为空！")
     private String menuUrl;
 
     /**
@@ -83,29 +84,14 @@ public class MenuDTO {
     private String remark;
 
     /**
-     * 创建人
+     * 显示标识
      */
-    private String createBy;
+    private Integer showFlag;
 
     /**
-     * 创建时间
+     * 父菜单名
      */
-    private Timestamp createAt;
-
-    /**
-     * 修改人
-     */
-    private String updateBy;
-
-    /**
-     * 修改时间
-     */
-    private Timestamp updateAt;
-
-    /**
-     * 父菜单实体
-     */
-    private Menu parentMenu;
+    private String parentName;
 
     /**
      * 子菜单

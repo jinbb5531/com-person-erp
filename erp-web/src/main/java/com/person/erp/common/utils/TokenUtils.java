@@ -1,16 +1,19 @@
 package com.person.erp.common.utils;
 
 import com.itexplore.core.common.utils.judge.JudgeUtils;
+import com.person.erp.identity.entity.Menu;
 import com.person.erp.identity.entity.User;
+import com.person.erp.identity.model.MenuDTO;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Session工具类
+ * Token 工具类
  *
  * @author zhuwj
  * @description 操作 token 工具类
@@ -21,6 +24,8 @@ public class TokenUtils {
     private final static String TOKEN_KEY = "283;%$09*&";
 
     private final static String TOKEN_NAME = "token";
+
+    private final static String PERMISSION_KEY = "permission";
 
     /**
      * 获取当前的 Request 域对象
@@ -108,6 +113,55 @@ public class TokenUtils {
     public static boolean superManager() {
         User user = getUser();
         return user != null && user.getSystemTag() == 0;
+    }
+
+    /**
+     * 记录权限
+     * @author zhuwj
+     * @since 2019/5/24 22:06
+     * @param token
+     * @param menuList
+     * @param timeout
+     * @param unit
+     */
+    public static void recordPermission(String token, List<MenuDTO> menuList, long timeout, TimeUnit unit) {
+        RedisUtils.set(token + PERMISSION_KEY, menuList, timeout, unit);
+    }
+
+    /**
+     * 获取当前用户权限
+     * @author zhuwj
+     * @since 2019/5/24 23:10
+     * @return java.util.List<com.person.erp.identity.model.MenuDTO>
+     */
+    public static List<MenuDTO> getPermission() {
+        String token = getHttpRequest().getParameter(TOKEN_NAME);
+        return (List<MenuDTO>) RedisUtils.get(token + PERMISSION_KEY);
+    }
+
+    /**
+     * 获取用户权限
+     * @author zhuwj
+     * @since 2019/5/24 23:10
+     * @param token
+     * @return java.util.List<com.person.erp.identity.model.MenuDTO>
+     */
+    public static List<MenuDTO> getPermission(String token) {
+        return (List<MenuDTO>) RedisUtils.get(token + PERMISSION_KEY);
+    }
+
+    /**
+     * 清除当前用户的权限
+     * @author zhuwj
+     * @since 2019/5/25 10:00
+     * @param
+     * @return
+     */
+    public static void removePermission() {
+        String token = getHttpRequest().getParameter(TOKEN_NAME);
+        if (!JudgeUtils.isEmpty(token)) {
+            RedisUtils.remove(token);
+        }
     }
 
 }

@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.print.attribute.standard.MediaSize;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -16,7 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "ERP_ROLE")
-public class Role {
+public class Role implements Serializable {
 
     /**
      * 角色主键

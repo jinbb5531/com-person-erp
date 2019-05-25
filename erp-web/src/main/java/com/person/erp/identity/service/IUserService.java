@@ -92,4 +92,13 @@ public interface IUserService {
      * @return boolean
      */
     boolean deleteUserRoleBatchByRoleIds(Long[] ids);
+
+    /**
+     * 通过手机号获取用户
+     * @author zhuwj
+     * @since 2019/5/25 10:29
+     * @param mobilePhone
+     * @return com.person.erp.identity.entity.User
+     */
+    User getUserByPhone(String mobilePhone);
 }
