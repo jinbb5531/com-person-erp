@@ -3,8 +3,6 @@ package com.person.erp.order.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.List;
 
