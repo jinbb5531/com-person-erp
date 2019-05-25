@@ -20,15 +20,15 @@ public class DealResultUtils {
      * 封装 单个数据 返回
      * @author zhuwj
      * @since 2019/5/21 9:49
-     * @param id
+     * @param vlaue
      * @return org.springframework.http.ResponseEntity
      */
-    public static ResponseEntity dealData(String key, Object id) {
+    public static ResponseEntity dealData(String key, Object vlaue) {
 
-        if (!JudgeUtils.isEmpty(key) && id != null) {
+        if (!JudgeUtils.isEmpty(key) && vlaue != null) {
 
             Map<String, Object> data = new ConcurrentHashMap<>();
-            data.put("id", id);
+            data.put(key, vlaue);
 
             return ResultUtils.asserts(data);
 

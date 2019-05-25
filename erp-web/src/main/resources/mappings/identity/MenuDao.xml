@@ -361,4 +361,30 @@
 			UR.SYSTEM_TAG = #{systemTag}
 		ORDER BY MODULE_FLAG ASC, QUEUE_NUM ASC
 	</select>
+
+	<select id="getPermissionListByRoleIds" resultType="Menu">
+		SELECT
+			M.ID,
+			M.PARENT_ID,
+			M.MODULE_FLAG,
+			M.MENU_NAME,
+			M.MENU_URL,
+			M.ICON_PATH,
+			M.QUEUE_NUM,
+			M.USE_FLAG,
+			M.OUTSIDE_FLAG,
+			M.WINDOW_MODEL,
+			M.REMARK,
+			M.SHOW_FLAG,
+			M.CREATE_BY,
+			M.CREATE_AT,
+			M.UPDATE_BY,
+			M.UPDATE_AT
+		FROM ERP_ROLE_MENU RM
+			LEFT JOIN ERP_MENU M ON M.ID = RM.MENU_ID
+		WHERE RM.ROLE_ID IN
+		<foreach collection="array" item="item" open="(" close=")" separator=", ">
+			#{item}
+		</foreach>
+	</select>
 </mapper>

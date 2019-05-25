@@ -7,6 +7,7 @@ import com.itexplore.core.api.model.Pager;
 import com.itexplore.core.api.utils.PageChangeUtils;
 import com.itexplore.core.common.utils.judge.JudgeUtils;
 import com.person.erp.common.constant.WebConstant;
+import com.person.erp.common.utils.MD5Utils;
 import com.person.erp.common.utils.TokenUtils;
 import com.person.erp.identity.dao.IUserDao;
 import com.person.erp.identity.entity.Role;
@@ -77,6 +78,9 @@ public class UserServiceImpl implements IUserService {
             user.setSystemTag(WebConstant.SUPER_MANAGER_TAG);
 
         }
+
+        // 密码加密
+        user.setUserPwd(MD5Utils.getMD5(user.getUserPwd()));
 
         // 校验是否存在该用户
         boolean exist = existUser(user.getUserCode(), user.getSystemTag());
@@ -242,6 +246,11 @@ public class UserServiceImpl implements IUserService {
             userDao.insertUserRoleBatch(newUserRoleList);
         }
 
+        // 密码加密
+        if (!JudgeUtils.isEmpty(user.getUserPwd())) {
+            user.setUserPwd(MD5Utils.getMD5(user.getUserPwd()));
+        }
+
         return userDao.update(user) > 0;
     }
 
@@ -336,6 +345,20 @@ public class UserServiceImpl implements IUserService {
     public boolean deleteUserRoleBatchByRoleIds(Long[] ids) {
 
         return userDao.deleteUserRoleBatchByRoleIds(ids) > 0;
+
+    }
+
+    @Override
+    public User getUserByPhone(String mobilePhone) {
+
+
+        if (JudgeUtils.isEmpty(mobilePhone)) {
+
+            return null;
+
+        }
+
+        return userDao.getUserByPhone(mobilePhone);
 
     }
 
