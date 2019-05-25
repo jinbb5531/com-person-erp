@@ -11,6 +11,7 @@ import com.person.erp.order.model.OrderDTO;
 import com.person.erp.order.service.IOrderItemService;
 import com.person.erp.order.service.IOrderService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/order")
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED)
 public class OrderController {
 
     @Resource
@@ -94,8 +95,13 @@ public class OrderController {
         Order order1 = new Order();
         order1.setCustomer(order.getCustomer());
         order1.setUpdateAt(new Timestamp(new Date().getTime()));
+        List<OrderItem> itemList = order.getItemList();
+        OrderItem orderItem = new OrderItem();
         boolean success = orderService.updateOrder(order1);
         if (success) {
+            if(success){
+                orderItemService.update(orderItem);
+            }
             return ResultUtils.success();
         } else {
             return  ResultUtils.failure("操作失败！");
@@ -132,11 +138,16 @@ public class OrderController {
      * @return
      */
     @DeleteMapping("/batch")
-    private ResponseEntity deleteBatch(String codes) {
-        boolean success = orderService.deleteBatch(codes.split(","));
-        HashMap<String, Object> result = new HashMap<>();
+    private ResponseEntity deleteBatch(@RequestParam(name = "codes",required = true) String codes) {
+        String[] params = codes.split(",");
+        boolean success = orderService.deleteBatch(params);
         if (success) {
-            return ResultUtils.success();
+            success = orderItemService.deleteByOrderCodeBatch(params);
+            if(success){
+                return ResultUtils.success();
+            }else {
+                return ResultUtils.failure("操作失败！");
+            }
         } else {
             return  ResultUtils.failure("操作失败！");
         }

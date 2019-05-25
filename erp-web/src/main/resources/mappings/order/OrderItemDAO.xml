@@ -18,4 +18,27 @@
         DELETE FROM ERP_ORDER_ITEM
         WHERE ORDER_CODE = #{orderCode}
     </delete>
+    <delete id="deleteByOrderCodeBatch">
+        DELETE FROM ERP_ORDER_ITEM
+        WHERE ORDER_CODE IN
+        <foreach collection="array" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+    <update id="updateBatch" parameterType="java.util.List">
+        UPDATE ERP_ORDER_ITEM
+        <foreach collection="list" item="item" index="index" separator=",">
+            <set>
+                ORDER_CODE = #{item.orderCode},
+                NAME = #{item.name},
+                COLOR = #{item.color},
+                SIZE_L = #{item.sizeL},
+                SIZE_W = #{item.sizeW},
+                PRO_SIZE_L = #{item.proSizeL},
+                PRO_SIZE_W = #{item.proSizeW},
+
+
+            </set>
+        </foreach>
+    </update>
 </mapper>

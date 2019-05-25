@@ -46,7 +46,7 @@
     </sql>
     <insert id="insert" parameterType="com.person.erp.order.entity.Order"  >
         <selectKey keyColumn="ORDER_CODE" keyProperty="orderCode" order="BEFORE" resultType="java.lang.String">
-        SELECT UUID()
+        SELECT REPLACE(UUID(),'-','')
         </selectKey>
         INSERT INTO ERP_ORDER
         (ORDER_CODE,  CUSTOMER, CREATE_AT, CREATE_BY, UPDATE_AT, ORDER_STATUS, CUTTER, HEMMER, PACKER, DEADLINE, SYSTEM_TAG, REMARK)

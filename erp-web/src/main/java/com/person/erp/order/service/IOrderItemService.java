@@ -33,5 +33,17 @@ public interface IOrderItemService {
      */
     boolean deleteByOrderCode(String orderCode);
 
+    /**
+     * 根据orderCode批量删除明细
+     * @param orderCodes
+     * @return
+     */
+    boolean deleteByOrderCodeBatch(String...orderCodes);
+
+    /**
+     * 批量删除订单明细
+     * @param codes
+     * @return
+     */
     boolean deleteBatch(String... codes);
 }

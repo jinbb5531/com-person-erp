@@ -46,7 +46,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public boolean deleteBatch(String[] codes) {
-        return dao.deleteBatch(codes) > 0;
+        return dao.deleteBatch(codes) >= 0;
     }
 
     @Override
