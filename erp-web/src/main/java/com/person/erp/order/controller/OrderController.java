@@ -90,19 +90,25 @@ public class OrderController {
      * @return
      */
     @PutMapping
-    private ResponseEntity update(@Validated OrderDTO order) {
-        HashMap<String, Object> result = new HashMap<>();
+    private ResponseEntity update(@Validated @RequestBody OrderDTO order) {
         Order order1 = new Order();
         order1.setCustomer(order.getCustomer());
         order1.setUpdateAt(new Timestamp(new Date().getTime()));
+        order1.setDeadline(order.getDeadline());
+        order1.setOrderCode(order.getOrderCode());
+        order1.setRemark(order.getRemark());
+        order1.setSystemTag(0);
         List<OrderItem> itemList = order.getItemList();
-        OrderItem orderItem = new OrderItem();
+        itemList.forEach(item-> item.setOrderCode(order.getOrderCode()));
         boolean success = orderService.updateOrder(order1);
         if (success) {
+
+            success = orderItemService.updateBatch(itemList);
             if(success){
-                orderItemService.update(orderItem);
+                return ResultUtils.success();
+            }else {
+                return ResultUtils.failure("操作失败！");
             }
-            return ResultUtils.success();
         } else {
             return  ResultUtils.failure("操作失败！");
         }
