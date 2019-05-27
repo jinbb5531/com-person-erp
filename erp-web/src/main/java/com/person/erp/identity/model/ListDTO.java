@@ -3,10 +3,9 @@ package com.person.erp.identity.model;
 import com.person.erp.common.valid.UserDelete;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 /**

@@ -16,21 +16,21 @@ public class PojoChangeUtils {
      * 将 entityList 转为 dtoList
      * @author zhuwj
      * @since 2019/5/19 9:45
-     * @param entityList
-     * @param dtoList
-     * @param dtoClass
+     * @param sourceList
+     * @param targetList
+     * @param targetClass
      */
-    public static <T, E> void copyEntityList2DTOList(List<T> entityList, List<E> dtoList, Class<E> dtoClass) {
+    public static <T, E> void copyList(List<T> sourceList, List<E> targetList, Class<E> targetClass) {
 
-        if (entityList != null && dtoList != null) {
+        if (sourceList != null && targetList != null) {
 
-            entityList.forEach(entity -> {
+            sourceList.forEach(source -> {
 
-                E dto = BeanUtils.instantiate(dtoClass);
+                E target = BeanUtils.instantiate(targetClass);
 
-                BeanUtils.copyProperties(entity, dto);
+                BeanUtils.copyProperties(source, target);
 
-                dtoList.add(dto);
+                targetList.add(target);
 
             });
 

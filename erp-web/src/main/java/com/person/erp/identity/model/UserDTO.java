@@ -1,14 +1,11 @@
 package com.person.erp.identity.model;
 
-import com.person.erp.common.valid.*;
+import com.person.erp.common.valid.Delete;
+import com.person.erp.common.valid.Insert;
+import com.person.erp.common.valid.Update;
 import lombok.*;
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import javax.validation.groups.Default;
 import java.sql.Timestamp;
 import java.util.List;
@@ -28,14 +25,14 @@ public class UserDTO {
     /**
      * 用户帐号
      */
-    @NotEmpty(groups = {Delete.class, Default.class, Login.class}, message = "[userCode] 用户帐号不能为空！")
-    @Pattern(groups = {Delete.class, Default.class, Login.class}, regexp = "[a-zA-Z0-9_]{4,10}", message = "[userCode] 用户帐号必须由4-10位数字、字母或下划线组成")
+    @NotEmpty(groups = {Delete.class, Default.class}, message = "[userCode] 用户帐号不能为空！")
+    @Pattern(groups = {Delete.class, Default.class}, regexp = "[a-zA-Z0-9_]{4,10}", message = "[userCode] 用户帐号必须由4-10位数字、字母或下划线组成")
     private String userCode;
 
     /**
      * 用户密码
      */
-    @NotEmpty(groups = {Insert.class, Login.class, LoginPhone.class}, message = "[userPwd] 密码不能为空！")
+    @NotEmpty(groups = {Insert.class}, message = "[userPwd] 密码不能为空！")
     private String userPwd;
 
     /**
@@ -60,7 +57,6 @@ public class UserDTO {
     /**
      * 手机号（需要校验唯一性）
      */
-    @NotBlank(groups = {LoginPhone.class}, message = "[mobilePhone] 手机号不能为空")
     private String mobilePhone;
 
     /**
@@ -76,8 +72,8 @@ public class UserDTO {
     /**
      * 系统标识
      */
-    @NotNull(groups = {Update.class, Delete.class, Login.class}, message = "[systemTag] 系统标识不能为空")
-    @Min(groups = {Update.class, Delete.class, Login.class}, value = 0, message = "[systemTag] 系统标识最小值为 0")
+    @NotNull(groups = {Update.class, Delete.class}, message = "[systemTag] 系统标识不能为空")
+    @Min(groups = {Update.class, Delete.class}, value = 0, message = "[systemTag] 系统标识最小值为 0")
     private Long systemTag;
 
     /**

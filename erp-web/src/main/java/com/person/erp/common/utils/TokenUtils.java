@@ -27,8 +27,11 @@ public class TokenUtils {
 
     private final static String PERMISSION_KEY = "permission";
 
+
+
     /**
      * 获取当前的 Request 域对象
+     *
      * @return HttpServletRequest
      * @author zhuwj
      */
@@ -38,10 +41,11 @@ public class TokenUtils {
 
     /**
      * 加密
-     * @author zhuwj
-     * @since 2019/5/9 11:35
+     *
      * @param str 要加密的字符串
      * @return java.lang.String
+     * @author zhuwj
+     * @since 2019/5/9 11:35
      */
     private static String encode(String str) {
         if (JudgeUtils.isEmpty(str)) {
@@ -52,12 +56,13 @@ public class TokenUtils {
 
     /**
      * 将 User 记录到 Redis 中
-     * @author zhuwj
-     * @since 2019/5/9 11:35
+     *
      * @param user
      * @param timeout
      * @param unit
      * @return java.lang.String
+     * @author zhuwj
+     * @since 2019/5/9 11:35
      */
     public static String recordUser(User user, long timeout, TimeUnit unit) {
         if (user == null) {
@@ -70,9 +75,10 @@ public class TokenUtils {
 
     /**
      * 将用户从 Redis 中移除
+     *
+     * @param user
      * @author zhuwj
      * @since 2019/5/16 16:46
-     * @param user
      */
     public static void removeUser(User user) {
         if (user != null) {
@@ -83,6 +89,7 @@ public class TokenUtils {
 
     /**
      * 从 Redis 中取出当前登录的用户
+     *
      * @param token token
      * @return User
      */
@@ -95,6 +102,7 @@ public class TokenUtils {
 
     /**
      * 先从 Request 中取出 token, 再从 Redis 中取出当前登录的用户。
+     *
      * @return User
      */
     @Nullable
@@ -108,6 +116,7 @@ public class TokenUtils {
 
     /**
      * 判断是否是超级管理员
+     *
      * @return boolean
      */
     public static boolean superManager() {
@@ -117,12 +126,13 @@ public class TokenUtils {
 
     /**
      * 记录权限
-     * @author zhuwj
-     * @since 2019/5/24 22:06
+     *
      * @param token
      * @param menuList
      * @param timeout
      * @param unit
+     * @author zhuwj
+     * @since 2019/5/24 22:06
      */
     public static void recordPermission(String token, List<MenuDTO> menuList, long timeout, TimeUnit unit) {
         RedisUtils.set(token + PERMISSION_KEY, menuList, timeout, unit);
@@ -130,9 +140,10 @@ public class TokenUtils {
 
     /**
      * 获取当前用户权限
+     *
+     * @return java.util.List<com.person.erp.identity.model.MenuDTO>
      * @author zhuwj
      * @since 2019/5/24 23:10
-     * @return java.util.List<com.person.erp.identity.model.MenuDTO>
      */
     public static List<MenuDTO> getPermission() {
         String token = getHttpRequest().getParameter(TOKEN_NAME);
@@ -141,10 +152,11 @@ public class TokenUtils {
 
     /**
      * 获取用户权限
-     * @author zhuwj
-     * @since 2019/5/24 23:10
+     *
      * @param token
      * @return java.util.List<com.person.erp.identity.model.MenuDTO>
+     * @author zhuwj
+     * @since 2019/5/24 23:10
      */
     public static List<MenuDTO> getPermission(String token) {
         return (List<MenuDTO>) RedisUtils.get(token + PERMISSION_KEY);
@@ -152,10 +164,11 @@ public class TokenUtils {
 
     /**
      * 清除当前用户的权限
-     * @author zhuwj
-     * @since 2019/5/25 10:00
+     *
      * @param
      * @return
+     * @author zhuwj
+     * @since 2019/5/25 10:00
      */
     public static void removePermission() {
         String token = getHttpRequest().getParameter(TOKEN_NAME);

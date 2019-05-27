@@ -9,14 +9,12 @@ import com.person.erp.common.utils.RelationUtils;
 import com.person.erp.common.utils.TokenUtils;
 import com.person.erp.identity.constant.IdentityConstant;
 import com.person.erp.identity.dao.IMenuDao;
-import com.person.erp.identity.dao.IRoleDao;
 import com.person.erp.identity.entity.Menu;
 import com.person.erp.identity.entity.User;
 import com.person.erp.identity.model.MenuDTO;
 import com.person.erp.identity.service.IMenuService;
-import lombok.experimental.Tolerate;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +30,7 @@ import java.util.*;
  * @since 2019/5/22 9:17
  */
 @Service
+@Slf4j
 @Transactional
 public class MenuServiceImpl implements IMenuService {
 
@@ -45,6 +44,13 @@ public class MenuServiceImpl implements IMenuService {
 
         BeanUtils.copyProperties(menuDTO, menu);
 
+        // 校验url的唯一性
+        Menu dbMenu = menuDao.getMenuByUrl(menu.getMenuUrl());
+
+        if (dbMenu != null) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "菜单url已经存在于系统中");
+        }
+
         // 默认为模块
         if (menu.getModuleFlag() == null) {
             menu.setModuleFlag(IdentityConstant.ModuleFlag.MODULE.getValue());
@@ -52,16 +58,13 @@ public class MenuServiceImpl implements IMenuService {
 
         // 默认为显示
         if (menu.getShowFlag() == null) {
-            menu.setModuleFlag(WebConstant.ShowFlag.SHOW.getValue());
+            menu.setShowFlag(WebConstant.ShowFlag.SHOW.getValue());
         }
 
         // 默认为启用
         if (menu.getUseFlag() == null) {
             menu.setUseFlag(IdentityConstant.UseFlag.USE.getValue());
         }
-
-        // 菜单都设置为显示
-        menu.setShowFlag(WebConstant.ShowFlag.SHOW.getValue());
 
         menu.setCreateAt(new Timestamp(new Date().getTime()));
 
@@ -103,7 +106,15 @@ public class MenuServiceImpl implements IMenuService {
         MenuDTO oldMenu = getMenuById(menuDTO.getId());
 
         if (oldMenu == null) {
-            throw new ApiException(HttpStatus.NOT_FOUND, "该菜单不存在，无法修改");
+            throw new ApiException(HttpStatus.NOT_FOUND, "菜单已不存在，无法修改");
+        }
+
+        if (!menuDTO.getMenuUrl().equals(oldMenu.getMenuUrl())) {
+
+            Menu existMenu = menuDao.getMenuByUrl(menuDTO.getMenuUrl());
+            if (existMenu != null) {
+                throw new ApiException(HttpStatus.BAD_REQUEST, "菜单url已存在于系统中");
+            }
         }
 
         Menu menu = new Menu();
@@ -156,8 +167,90 @@ public class MenuServiceImpl implements IMenuService {
 
     }
 
+    @Override
+    public List<MenuDTO> findAllList() {
+
+        List<Menu> list = menuDao.findList(null);
+
+        List<MenuDTO> dtoList = new ArrayList<>(list.size());
+
+        PojoChangeUtils.copyList(list, dtoList, MenuDTO.class);
+
+        return dtoList;
+    }
+
+    @Override
+    public boolean insertMenuBatch(List<MenuDTO> dtoList) {
+
+        if (JudgeUtils.isEmpty(dtoList)) {
+            return false;
+        }
+
+        // 取出该系统所有菜单，若url不存在，则放入要插入的List集中
+        List<MenuDTO> insertMenuList = new ArrayList<>();
+
+        List<MenuDTO> allMenuList = findAllList();
+
+        if (JudgeUtils.isEmpty(allMenuList)) {
+
+            insertMenuList = dtoList;
+
+        } else {
+
+            // 整理成URL的String的List，
+            List<String> dbUrlList = new ArrayList<>();
+
+            for (MenuDTO dbMenu : allMenuList) {
+
+                dbUrlList.add(dbMenu.getMenuUrl());
+
+            }
+
+            for (MenuDTO menuDTO : dtoList) {
+
+                if (!dbUrlList.contains(menuDTO.getMenuUrl())) {
+
+                    // 数据库中不存在这个url的菜单，放入要插入的List中
+                    insertMenuList.add(menuDTO);
+
+                }
+
+            }
+
+        }
+
+        boolean flag = false;
+
+        if (!JudgeUtils.isEmpty(insertMenuList)) {
+
+            List<Menu> menuList = new ArrayList<>();
+
+            PojoChangeUtils.copyList(insertMenuList, menuList, Menu.class);
+
+            for (Menu menu : menuList) {
+                menu.setCreateAt(new Timestamp(new Date().getTime()));
+            }
+
+            // 批量插入菜单
+            flag = menuDao.insertMenuBatch(menuList) > 0;
+
+            log.info("插入菜单集【" + (flag ? "success" : "failure") + "】, 所有菜单如下：");
+
+            for (MenuDTO insertMenu : insertMenuList) {
+
+                log.info("菜单名 -> " + insertMenu.getMenuName() + " url -> " + insertMenu.getMenuUrl());
+
+            }
+
+        }
+
+        return flag;
+
+    }
+
     /**
      * 从list中筛选出codes的所有子菜单主键
+     *
      * @param codes
      * @param list
      * @return java.lang.String[]
@@ -205,19 +298,19 @@ public class MenuServiceImpl implements IMenuService {
         if (JudgeUtils.isEmpty(list)) {
             return null;
         }
-        
+
         // 转换
         List<MenuDTO> dtoList = new ArrayList<>(list.size());
-        PojoChangeUtils.copyEntityList2DTOList(list, dtoList, MenuDTO.class);
-        
+        PojoChangeUtils.copyList(list, dtoList, MenuDTO.class);
+
         // key: 父主键；value：所有子菜单集
         Map<Long, List<MenuDTO>> allParentMap = new LinkedHashMap<>();
-        
+
         // 存放无父主键的父菜单
         List<MenuDTO> parentList = new ArrayList<>();
-        
+
         for (MenuDTO menu : dtoList) {
-            
+
             Long parentId = menu.getParentId();
 
             if (parentId == null) {
@@ -240,7 +333,7 @@ public class MenuServiceImpl implements IMenuService {
                 allParentMap.get(parentId).add(menu);
 
             }
-            
+
         }
 
         for (MenuDTO menu : dtoList) {

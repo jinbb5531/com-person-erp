@@ -72,11 +72,11 @@ public interface IMenuDao {
 
     /**
      * 批量插入菜单
-     * @param menu
-     * @return boolean
+     * @param menuList
+     * @return long
      * @author zhuwj
      */
-    boolean insertMenuBatch(Menu menu);
+    long insertMenuBatch(@Param("menuList") List<Menu> menuList);
 
     /**
      * 通过主键查询菜单，并封装其父
@@ -113,4 +113,13 @@ public interface IMenuDao {
      * @return java.util.List<com.person.erp.identity.entity.Menu>
      */
     List<Menu> getPermissionListByRoleIds(Long[] roleIds);
+
+    /**
+     * 通过url查找
+     * @author zhuwj
+     * @since 2019/5/27 15:32
+     * @param menuUrl
+     * @return com.person.erp.identity.entity.Menu
+     */
+    Menu getMenuByUrl(@Param("menuUrl") String menuUrl);
 }

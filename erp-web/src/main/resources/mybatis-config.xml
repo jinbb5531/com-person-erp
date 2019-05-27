@@ -51,6 +51,8 @@
         <typeAlias type="com.person.erp.identity.entity.UserRole" alias="UserRole"/>
         <typeAlias type="com.person.erp.dict.entity.Dict" alias="Dict"/>
         <typeAlias type="com.person.erp.dict.entity.DictType" alias="DictType"/>
+        <typeAlias type="com.person.erp.essay.entity.Essay" alias="Essay"/>
+        <typeAlias type="com.person.erp.essay.entity.Content" alias="Content"/>
     </typeAliases>
 
     <!-- 插件配置 -->

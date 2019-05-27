@@ -1,6 +1,7 @@
 package com.person.erp.identity.controller;
 
 import com.itexplore.core.api.utils.ResultUtils;
+import com.person.erp.common.annotation.Permission;
 import com.person.erp.common.utils.DealResultUtils;
 import com.person.erp.common.valid.Delete;
 import com.person.erp.common.valid.Update;
@@ -27,6 +28,7 @@ public class MenuController {
     private IMenuService menuService;
 
     @PostMapping("/add")
+    @Permission(modelName = "菜单管理", name = "添加菜单")
     public ResponseEntity addMenu(@RequestBody @Validated MenuDTO menuDTO) {
 
         Long id = menuService.addMenu(menuDTO);
@@ -45,6 +47,7 @@ public class MenuController {
     }
 
     @PutMapping("/update")
+    @Permission(modelName = "菜单管理", name = "修改菜单")
     public ResponseEntity updateMenu(@RequestBody @Validated({Update.class}) MenuDTO menuDTO) {
 
         boolean success = menuService.updateMenu(menuDTO);
@@ -63,6 +66,7 @@ public class MenuController {
     }
 
     @DeleteMapping("/delete")
+    @Permission(modelName = "菜单管理", name = "删除菜单")
     public ResponseEntity delete(@RequestBody @Validated({Delete.class}) MenuDTO menuDTO) {
 
         boolean success = menuService.delete(menuDTO.getId());
