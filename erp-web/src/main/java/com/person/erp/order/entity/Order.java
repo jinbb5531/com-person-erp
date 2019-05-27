@@ -30,6 +30,10 @@ public class Order {
      */
     private String createBy;
     /**
+     * 更新人
+     */
+    private String updateBy;
+    /**
      * 更新时间
      */
     private Timestamp updateAt;
