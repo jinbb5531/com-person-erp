@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.person.erp.order.dao.IOrderDAO">
     <resultMap id="BaseResult" type="com.person.erp.order.entity.Order">
         <id column="ORDER_CODE" property="orderCode" jdbcType="VARCHAR"/>
@@ -44,41 +44,68 @@
     <sql id="baseColumn">
         ORDER_CODE,  CUSTOMER, CREATE_AT, CREATE_BY, UPDATE_AT, ORDER_STATUS, CUTTER, HEMMER, PACKER, DEADLINE, SYSTEM_TAG, REMARK
     </sql>
-    <insert id="insert" parameterType="com.person.erp.order.entity.Order"  >
+    <update id="update" parameterType="com.person.erp.order.entity.Order">
+        UPDATE ERP_ORDER
+        <set>
+        <if test="customer != null">
+            CUSTOMER = #{customer},
+        </if>
+        <if test="updateAt != null">
+            UPDATE_AT = #{updateAt},
+        </if>
+        <if test="status != null">
+            ORDER_STATUS = #{status},
+        </if>
+        <if test="updateAt != null">
+            UPDATE_AT = #{updateAt},
+        </if>
+        <if test="cutter != null">
+            CUTTER = #{cutter},
+        </if>
+        <if test="hemmer != null">
+            HEMMER = #{hemmer},
+        </if>
+        <if test="packer != null">
+            PACKER = #{packer},
+        </if>
+        <if test="deadline != null">
+            DEADLINE = #{deadline},
+        </if>
+        <if test="systemTag !=null">
+            SYSTEM_TAG = #{systemTag},
+        </if>
+        <if test="remark != null">
+            REMARK = #{remark}
+        </if>
+        </set>
+        WHERE ORDER_CODE = #{orderCode}
+    </update>
+    <insert id="insert" parameterType="com.person.erp.order.entity.Order">
         <selectKey keyColumn="ORDER_CODE" keyProperty="orderCode" order="BEFORE" resultType="java.lang.String">
-        SELECT REPLACE(UUID(),'-','')
+            SELECT REPLACE(UUID(),'-','')
         </selectKey>
         INSERT INTO ERP_ORDER
-        (ORDER_CODE,  CUSTOMER, CREATE_AT, CREATE_BY, UPDATE_AT, ORDER_STATUS, CUTTER, HEMMER, PACKER, DEADLINE, SYSTEM_TAG, REMARK)
+        (ORDER_CODE, CUSTOMER, CREATE_AT, CREATE_BY, UPDATE_AT, ORDER_STATUS, CUTTER, HEMMER, PACKER, DEADLINE,
+        SYSTEM_TAG, REMARK)
         VALUES(
-            #{orderCode},
-			#{customer},
-			#{createAt},
-			#{createBy},
-			#{updateAt},
-			#{status},
-			#{cutter},
-			#{hemmer},
-			#{packer},
-			#{deadline},
-			#{systemTag},
-			#{remark}
+        #{orderCode},
+        #{customer},
+        #{createAt},
+        #{createBy},
+        #{updateAt},
+        #{status},
+        #{cutter},
+        #{hemmer},
+        #{packer},
+        #{deadline},
+        #{systemTag},
+        #{remark}
         )
     </insert>
     <delete id="delete" parameterType="com.person.erp.order.entity.Order">
         DELETE FROM ERP_ORDER
         WHERE ORDER_CODE = #{orderCode}
     </delete>
-    <update id="update" parameterType="com.person.erp.order.entity.Order" >
-        UPDATE ERP_ORDER
-        SET
-         CUSTOMER = #{customer},
-         UPDATE_AT = #{updateAt},
-         ORDER_STATUS = #{status},
-
-
-        WHERE ORDER_CODE = #{orderCode}
-    </update>
     <delete id="deleteBatch">
         DELETE FROM ERP_ORDER
         WHERE
