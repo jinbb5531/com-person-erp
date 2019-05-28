@@ -28,6 +28,9 @@
 	</resultMap>
 
 	<resultMap id="UserToRoleMap" type="User" autoMapping="true">
+		<id property="userCode" column="USER_CODE" jdbcType="VARCHAR"/>
+		<id property="systemTag" column="SYSTEM_TAG"/>
+
 		<collection property="roleList" javaType="ArrayList" ofType="Role" autoMapping="false">
 			<id property="id" column="ROLE_ID" />
 			<result property="roleName" column="ROLE_NAME" />

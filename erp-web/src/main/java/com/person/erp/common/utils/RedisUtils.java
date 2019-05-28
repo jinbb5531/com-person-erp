@@ -95,8 +95,7 @@ public class RedisUtils {
      * 将key的数据从缓存中删除
      * @param key 键
      */
-    public static void
-    remove(final String key) {
+    public static void remove(final String key) {
         try {
             if (exist(key)) {
                 redisUtils.redisTemplate.delete(key);

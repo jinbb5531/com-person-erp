@@ -1,6 +1,5 @@
 package com.person.erp.identity.service;
 
-import com.person.erp.identity.entity.Menu;
 import com.person.erp.identity.model.MenuDTO;
 
 import java.util.List;
@@ -67,4 +66,22 @@ public interface IMenuService {
      * @return java.util.List<com.person.erp.identity.model.MenuDTO>
      */
     List<MenuDTO> getPermissionByRoleIds(Long[] roleIds);
+
+    /**
+     * 获取所有菜单
+     * @author zhuwj
+     * @since 2019/5/27 16:05
+     * @param
+     * @return java.util.List<com.person.erp.identity.model.MenuDTO>
+     */
+    List<MenuDTO> findAllList();
+
+    /**
+     * 批量插入菜单
+     * @author zhuwj
+     * @since 2019/5/27 16:07
+     * @param insertMenuList
+     * @return boolean
+     */
+    boolean insertMenuBatch(List<MenuDTO> insertMenuList);
 }

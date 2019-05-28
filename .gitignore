@@ -36,6 +36,7 @@ erp-web/*/build/
 erp-web/build/
 erp-web/out/
 erp-web/*/out/
+erp-web/Disk/*
 
 erp-web/**/rebel-remote.xml
 erp-web/**/rebel.xml

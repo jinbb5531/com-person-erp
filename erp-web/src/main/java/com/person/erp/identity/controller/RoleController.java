@@ -5,6 +5,7 @@ import com.itexplore.core.api.model.PageResult;
 import com.itexplore.core.api.model.Pager;
 import com.itexplore.core.api.utils.PageChangeUtils;
 import com.itexplore.core.api.utils.ResultUtils;
+import com.person.erp.common.annotation.Permission;
 import com.person.erp.common.utils.PojoChangeUtils;
 import com.person.erp.common.valid.Delete;
 import com.person.erp.common.valid.Update;
@@ -34,6 +35,7 @@ public class RoleController {
     private IRoleService roleService;
 
     @PostMapping("/add")
+    @Permission(modelName = "角色管理", name = "添加角色")
     public ResponseEntity addRole(@RequestBody @Validated RoleDTO roleDTO) {
 
         long id = roleService.addRole(roleDTO);
@@ -49,6 +51,7 @@ public class RoleController {
     }
 
     @PutMapping("/update")
+    @Permission(modelName = "角色管理", name = "修改角色")
     public ResponseEntity updateRole(@RequestBody @Validated({Update.class}) RoleDTO roleDTO) {
 
         boolean success = roleService.updateRole(roleDTO);
@@ -84,13 +87,14 @@ public class RoleController {
 
         List<RoleDTO> roleDTOList = new ArrayList<>(list.size());
 
-        PojoChangeUtils.copyEntityList2DTOList(list, roleDTOList, RoleDTO.class);
+        PojoChangeUtils.copyList(list, roleDTOList, RoleDTO.class);
 
         return ResultUtils.asserts(new PageResult<>(roleDTOList, PageChangeUtils.pageInfoToPager(rolePageInfo)));
 
     }
 
     @DeleteMapping("/deletes")
+    @Permission(modelName = "角色管理", name = "删除角色")
     public ResponseEntity deleteBatch(@RequestBody @Validated({Delete.class}) RoleDTO roleDTO) {
 
         boolean success = roleService.deleteBatch(roleDTO.getIds());

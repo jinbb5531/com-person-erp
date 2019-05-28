@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.person.erp.essay.dao.IEssayDao">
+
+    <select id="findList" resultType="Essay">
+
+        SELECT * FROM ERP_ESSAY
+        WHERE
+        <if test="status != null">
+            STATUS = #{status} AND
+        </if>
+        <if test="mainTitle != null and mainTitle != ''">
+            MAIN_TITLE LIKE
+            CONCAT('%', #{mainTitle}, '%')
+            AND
+        </if>
+        1=1 ORDER BY QUEUE_NUM ASC
+
+        <if test="status != null">
+            <if test="status == 1">
+                , PUBLISH_DATE DESC
+            </if>
+            <if test="status != 1">
+                , CASE WHEN UPDATE_AT IS NULL THEN CREATE_AT ELSE UPDATE_AT END DESC
+            </if>
+        </if>
+
+
+
+    </select>
+
+    <update id="updateByIds">
+        UPDATE ERP_ESSAY
+        <set>
+            <if test="status != null">
+                STATUS = #{status},
+            </if>
+            <if test="queueNum != null">
+                QUEUE_NUM = #{queueNum},
+            </if>
+            <if test="publishDate != null">
+                PUBLISH_DATE = #{publishDate},
+            </if>
+            <if test="downDate != null">
+                DOWN_DATE = #{downDate},
+            </if>
+            <if test="updateBy != null">
+                UPDATE_BY = #{updateBy},
+            </if>
+            <if test="updateAt != null">
+                UPDATE_AT = #{updateAt},
+            </if>
+        </set>
+        WHERE ID IN
+        <foreach collection="ids" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </update>
+
+</mapper>

@@ -7,6 +7,7 @@ import com.itexplore.core.api.model.Pager;
 import com.itexplore.core.api.utils.PageChangeUtils;
 import com.itexplore.core.api.utils.ResultUtils;
 import com.itexplore.core.common.utils.judge.JudgeUtils;
+import com.person.erp.common.annotation.Permission;
 import com.person.erp.common.utils.PojoChangeUtils;
 import com.person.erp.common.valid.Delete;
 import com.person.erp.common.valid.Insert;
@@ -18,7 +19,7 @@ import com.person.erp.identity.model.ListDTO;
 import com.person.erp.identity.model.RoleDTO;
 import com.person.erp.identity.model.UserDTO;
 import com.person.erp.identity.service.IUserService;
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotEmpty;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,6 +45,7 @@ public class UserController {
     private IUserService userService;
 
     @PostMapping("/add")
+    @Permission(modelName = "用户管理", name = "添加用户")
     public ResponseEntity add(@RequestBody @Validated({Insert.class}) UserDTO userDTO) {
 
         boolean success = userService.addUser(userDTO);
@@ -62,6 +64,7 @@ public class UserController {
     }
 
     @PutMapping("/update")
+    @Permission(modelName = "用户管理", name = "修改用户")
     public ResponseEntity update(@RequestBody @Validated({Update.class}) UserDTO userDTO) {
 
         boolean success = userService.updateUser(userDTO);
@@ -71,6 +74,7 @@ public class UserController {
     }
 
     @DeleteMapping("/deletes")
+    @Permission(modelName = "用户管理", name = "删除用户")
     public ResponseEntity deleteBatch(@RequestBody @Validated({UserDelete.class, Delete.class}) ListDTO listDTO) {
 
 //        for (UserDTO userDTO : userList) {
@@ -102,13 +106,14 @@ public class UserController {
             List<Role> roleList = user.getRoleList();
             List<RoleDTO> roleDTOList = new ArrayList<>();
 
-            PojoChangeUtils.copyEntityList2DTOList(roleList, roleDTOList, RoleDTO.class);
+            PojoChangeUtils.copyList(roleList, roleDTOList, RoleDTO.class);
 
             dto.setRoles(roleDTOList);
 
             dtoList.add(dto);
 
         });
+
 
         return ResultUtils.asserts(new PageResult<>(dtoList, PageChangeUtils.pageInfoToPager(pageInfo)));
 

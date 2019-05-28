@@ -42,8 +42,7 @@
 		CREATE_BY,
 		CREATE_AT,
 		UPDATE_BY,
-		UPDATE_AT,
-		SYSTEM_TAG
+		UPDATE_AT
     </sql>
 
 	<sql id="menuValues">
@@ -61,35 +60,19 @@
 		#{item.createBy},
 		#{item.createAt},
 		#{item.updateBy},
-		#{item.updateAt},
-		#{item.systemTag}
+		#{item.updateAt}
 	</sql>
 
 	<insert id="insertMenuBatch">
-		<if test="dbName == 'mysql'">
-			INSERT INTO ERP_MENU
+		INSERT INTO ERP_MENU
+		(
+			<include refid="Menu_Column_List"/>
+		)VALUES
+		<foreach collection="menuList" item="item" separator="," index="index">
 			(
-				<include refid="Menu_Column_List"/>
-			)VALUES
-			<foreach collection="childMenuList" item="item" separator="," index="index">
-				(
-					<include refid="menuValues"/>
-				)
-			</foreach>
-		</if>
-		<if test="dbName == 'oracle'">
-			INSERT ALL
-			<foreach collection="childMenuList" item="item" separator=" " index="index">
-				INTO ERP_MENU
-				(
-				<include refid="Menu_Column_List"/>
-				)VALUES
-				(
 				<include refid="menuValues"/>
-				)
-			</foreach>
-			SELECT 1 FROM DUAL
-		</if>
+			)
+		</foreach>
 	</insert>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
@@ -230,6 +213,37 @@
 		WHERE
 		<if test="id != null">
 			L.ID = #{id}
+			AND
+		</if>
+		1=1
+	</select>
+
+	<select id="getMenuByUrl" resultMap="MenuResultMap">
+		SELECT
+		L.ID,
+		L.PARENT_ID,
+		L.MODULE_FLAG,
+		L.MENU_NAME,
+		L.MENU_URL,
+		L.ICON_PATH,
+		L.QUEUE_NUM,
+		L.USE_FLAG,
+		L.OUTSIDE_FLAG,
+		L.WINDOW_MODEL,
+		L.REMARK,
+		L.SHOW_FLAG,
+		L.CREATE_BY,
+		L.CREATE_AT,
+		L.UPDATE_BY,
+		L.UPDATE_AT,
+		R.MENU_NAME AS PARENT_MENU_NAME,
+		R.MENU_URL AS PARENT_MENU_URL,
+		R.SHOW_FLAG AS PARENT_SHOW_FLAG,
+		R.USE_FLAG AS PARENT_USE_FLAG
+		FROM ERP_MENU L LEFT JOIN ERP_MENU R ON L.PARENT_ID = R.ID
+		WHERE
+		<if test="menuUrl != null">
+			L.MENU_URL = #{menuUrl}
 			AND
 		</if>
 		1=1
