@@ -35,22 +35,35 @@ public class OrderDTO implements Serializable {
      */
     @NotEmpty(message = "【createBy】 不能为空！")
     private String createBy;
+    /**
+     * 订单状态
+     */
+    private Integer status;
 
     /**
      * 裁剪人
      */
     private String cutter;
-
+    /**
+     * 裁剪时间
+     */
+    private Timestamp cutAt;
     /**
      * 缝边人
      */
     private String hemmer;
-
+    /**
+     * 缝边时间
+     */
+    private Timestamp hemAt;
     /**
      * 包装者
      */
     private String packer;
-
+    /**
+     * 包装时间
+     */
+    private Timestamp packAt;
     /**
      * 截止时间
      */
