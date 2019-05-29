@@ -65,9 +65,9 @@ public interface IDictService {
      * @author zhuwj
      * @since 2019/5/21 9:53
      * @param dictDTO
-     * @return java.lang.Long
+     * @return java.lang.String
      */
-    Long addDict(DictDTO dictDTO);
+    String addDict(DictDTO dictDTO);
 
     /**
      * 通过主键，获取字典
@@ -76,7 +76,7 @@ public interface IDictService {
      * @param id
      * @return com.person.erp.dict.model.DictDTO
      */
-    DictDTO getDict(Long id);
+    DictDTO getDict(String id);
 
     /**
      * 修改字典
@@ -113,5 +113,5 @@ public interface IDictService {
      * @param ids
      * @return boolean
      */
-    boolean deletes(Long[] ids);
+    boolean deletes(String[] ids);
 }

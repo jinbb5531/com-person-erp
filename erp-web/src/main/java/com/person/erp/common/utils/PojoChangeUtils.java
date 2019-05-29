@@ -26,7 +26,7 @@ public class PojoChangeUtils {
 
             sourceList.forEach(source -> {
 
-                E target = BeanUtils.instantiate(targetClass);
+                E target = BeanUtils.instantiateClass(targetClass);
 
                 BeanUtils.copyProperties(source, target);
 

@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 /**
  * <p>MvcConfigure.java</p>
@@ -15,7 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  * @since 2019/5/27 17:24
  */
 @Configuration
-public class MvcConfigure extends WebMvcConfigurerAdapter {
+public class MvcConfigure extends WebMvcConfigurationSupport {
 
     @Value("${permission.use:true}")
     private boolean permissionUse;

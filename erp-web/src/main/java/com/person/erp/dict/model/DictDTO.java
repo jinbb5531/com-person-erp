@@ -1,6 +1,7 @@
 package com.person.erp.dict.model;
 
 import com.person.erp.common.valid.Delete;
+import com.person.erp.common.valid.Single;
 import com.person.erp.common.valid.Update;
 import lombok.Data;
 
@@ -15,9 +16,8 @@ import javax.validation.constraints.*;
 @Data
 public class DictDTO {
 
-    @NotNull(groups = Update.class, message = "[id] 字典主键不能为空")
-    @Min(groups = Update.class, value = 1, message = "[id] 字典主键最小值为1")
-    private Long id;
+    @NotBlank(groups = {Single.class}, message = "[id] 字典主键不能为空")
+    private String id;
 
     @NotBlank(message = "[dictName] 字典名称不能为空")
     private String dictName;
@@ -32,12 +32,9 @@ public class DictDTO {
 
     private String iconPath;
 
-    @NotNull(message = "[typeId] 字典类型主键不能空")
-    @Min(value = 1, message = "[typeId] 字典类型主键最小值为1")
-    private Long typeId;
-
+    @NotBlank(message = "[typeName] 字典类型不能空")
     private String typeName;
 
     @NotEmpty(groups = Delete.class, message = "[ids] 字典主键数组不能为空")
-    private Long[] ids;
+    private String[] ids;
 }

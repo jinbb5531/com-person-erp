@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -94,11 +95,20 @@ public class DictServiceImpl implements IDictService {
     }
 
     @Override
-    public Long addDict(DictDTO dictDTO) {
+    public String addDict(DictDTO dictDTO) {
+
+        Dict dbDict = dictDao.findById(dictDTO.getId());
+
+        if (dbDict != null) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "该字典主键已被占用");
+        }
 
         Dict dict = new Dict();
 
         BeanUtils.copyProperties(dictDTO, dict);
+
+        // 设置字典类型外键
+        dict.setTypeId(findTypeIdOtherwiseCreate(dictDTO.getTypeName()));
 
         dict.setCreateAt(new Timestamp(new Date().getTime()));
 
@@ -111,9 +121,22 @@ public class DictServiceImpl implements IDictService {
         return dict.getId();
     }
 
+    private Long findTypeIdOtherwiseCreate(String typeName) {
+
+        DictType type = findTypeByName(typeName);
+
+        if (type == null) {
+            // 字典类型为空，则创建一个
+            return addType(typeName);
+        } else {
+            return type.getId();
+        }
+
+    }
+
     @Override
     @Transactional(readOnly = true)
-    public DictDTO getDict(Long id) {
+    public DictDTO getDict(String id) {
 
         Dict dict = dictDao.findById(id);
         DictDTO dto = null;
@@ -141,9 +164,17 @@ public class DictServiceImpl implements IDictService {
     @Override
     public boolean updateDict(DictDTO dictDTO) {
 
+        Dict dbDict = dictDao.findById(dictDTO.getId());
+
+        if (dbDict == null) {
+            throw new ApiException(HttpStatus.NOT_FOUND, "字典已不存在，无法修改");
+        }
+
         Dict dict = new Dict();
 
         BeanUtils.copyProperties(dictDTO, dict);
+
+        dict.setTypeId(findTypeIdOtherwiseCreate(dictDTO.getTypeName()));
 
         dict.setUpdateAt(new Timestamp(new Date().getTime()));
 
@@ -161,6 +192,18 @@ public class DictServiceImpl implements IDictService {
         Dict dict = new Dict();
 
         BeanUtils.copyProperties(dictDTO, dict);
+
+        if (!JudgeUtils.isEmpty(dictDTO.getTypeName())) {
+
+            DictType type = findTypeByName(dictDTO.getTypeName());
+
+            if (type == null) {
+                return Collections.emptyList();
+            } else {
+                dict.setTypeId(type.getId());
+            }
+
+        }
 
         List<Dict> dictList = dictDao.findListAssociateType(dict);
 
@@ -195,6 +238,14 @@ public class DictServiceImpl implements IDictService {
 
         BeanUtils.copyProperties(dictDTO, dict);
 
+        if (!JudgeUtils.isEmpty(dictDTO.getTypeName())) {
+
+            DictType type = findTypeByName(dictDTO.getTypeName());
+
+            dict.setTypeId(type == null ? -1L : type.getId());
+
+        }
+
         PageInfo<DictDTO> pageInfo = PageChangeUtils.dealPageInfo(PageChangeUtils.pagerToPageInfo(pager));
 
         PageHelper.startPage(pageInfo.getPageNum(), pageInfo.getPageSize());
@@ -204,7 +255,7 @@ public class DictServiceImpl implements IDictService {
     }
 
     @Override
-    public boolean deletes(Long[] ids) {
+    public boolean deletes(String[] ids) {
 
         return dictDao.deleteByIds(ids) > 0;
 
