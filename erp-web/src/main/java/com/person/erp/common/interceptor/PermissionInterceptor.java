@@ -5,6 +5,8 @@ import com.itexplore.core.common.utils.judge.JudgeUtils;
 import com.person.erp.common.annotation.Permission;
 import com.person.erp.common.utils.TokenUtils;
 import com.person.erp.identity.model.MenuDTO;
+import lombok.experimental.Tolerate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -14,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>PermissionInterceptor.java</p>
@@ -23,6 +26,10 @@ import java.util.List;
  */
 @Component
 public class PermissionInterceptor implements HandlerInterceptor {
+
+    @Value("${token.timeout:30}")
+    private int timeout;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse httpServletResponse, Object handler) throws Exception {
 
@@ -70,6 +77,9 @@ public class PermissionInterceptor implements HandlerInterceptor {
         List<MenuDTO> permissionList = TokenUtils.getPermission();
 
         if (!JudgeUtils.isEmpty(permissionList) && !JudgeUtils.isEmpty(servletPath)) {
+
+            // 刷新权限缓存时间
+            TokenUtils.refreshPermissionDate(permissionList, timeout, TimeUnit.MINUTES);
 
             for (MenuDTO menu : permissionList) {
 

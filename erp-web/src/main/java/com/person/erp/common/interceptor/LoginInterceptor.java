@@ -3,6 +3,7 @@ package com.person.erp.common.interceptor;
 import com.itexplore.core.api.model.ApiException;
 import com.person.erp.common.utils.TokenUtils;
 import com.person.erp.identity.entity.User;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -10,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>LoginInterceptor.java</p>
@@ -19,6 +21,10 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Component
 public class LoginInterceptor implements HandlerInterceptor {
+
+    @Value("${token.timeout:30}")
+    private int timeout;
+
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
 
@@ -27,6 +33,9 @@ public class LoginInterceptor implements HandlerInterceptor {
         boolean flag = false;
 
         if (user != null) {
+            // 更新缓存时间
+            TokenUtils.recordUser(user, timeout, TimeUnit.MINUTES);
+
             flag = true;
         } else {
             // 未登录的；判断其cookie是否有存用户名，存了用户名，帮其做登录
