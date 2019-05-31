@@ -16,8 +16,7 @@ import java.sql.Timestamp;
 public class Dict {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     private String dictName;
 
@@ -39,6 +38,8 @@ public class Dict {
     private DictType dictType;
 
     @Transient
-    private Long[] ids;
+    private String[] ids;
+
+    public Dict() {}
 
 }

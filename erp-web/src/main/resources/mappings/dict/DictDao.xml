@@ -3,7 +3,7 @@
 <mapper namespace="com.person.erp.dict.dao.IDictDao">
 
     <resultMap id="DictAndTypeMap" type="Dict" autoMapping="true">
-        <association property="dictType" javaType="DictType" autoMapping="true">
+        <association property="dictType" javaType="DictType" autoMapping="false">
             <id property="id" column="TYPE_ID" />
             <result property="typeName" column="TYPE_NAME" />
         </association>
@@ -42,7 +42,7 @@
             D.TYPE_ID = #{typeId}
             AND
         </if>
-        1=1 ORDER BY D.ID ASC
+        1=1 ORDER BY D.CREATE_AT ASC
     </select>
     
 </mapper>

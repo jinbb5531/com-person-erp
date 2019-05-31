@@ -7,6 +7,7 @@ import com.itexplore.core.api.utils.PageChangeUtils;
 import com.itexplore.core.api.utils.ResultUtils;
 import com.person.erp.common.utils.DealResultUtils;
 import com.person.erp.common.valid.Delete;
+import com.person.erp.common.valid.Single;
 import com.person.erp.common.valid.Update;
 import com.person.erp.dict.entity.Dict;
 import com.person.erp.dict.entity.DictType;
@@ -50,7 +51,7 @@ public class DictController {
 
         Long id = dictService.addType(dictType.getTypeName());
 
-        return DealResultUtils.dealData("id", id);
+        return ResultUtils.asserts(id != null);
 
     }
 
@@ -59,39 +60,36 @@ public class DictController {
 
         List<DictType> list = dictService.findAllType();
 
-        return ResultUtils.asserts(list);
+        List<String> typeList = new ArrayList<>();
+        list.forEach(dictType -> typeList.add(dictType.getTypeName()));
+
+        return ResultUtils.asserts(typeList);
 
     }
 
-    @GetMapping("/type/find")
-    public ResponseEntity findTypeByName(DictType dictType) {
+    @GetMapping("/check")
+    public ResponseEntity checkDict(@Validated(Single.class) DictDTO dictDTO) {
 
-        dictType = dictService.findTypeByName(dictType.getTypeName());
+        DictDTO dto = dictService.getDict(dictDTO.getId());
 
-        return ResultUtils.asserts(dictType == null ? Collections.EMPTY_MAP : dictType);
+        Map<String, Object> data = new HashMap<>();
+        data.put("exist", dto != null );
 
-    }
-
-    @GetMapping("/type/get/{id}")
-    public ResponseEntity get(@PathVariable("id") Long id) {
-
-        DictType dictType = dictService.findTypeById(id);
-
-        return ResultUtils.asserts(dictType);
+        return ResultUtils.asserts(data);
 
     }
 
     @PostMapping("/add")
     public ResponseEntity addDict(@RequestBody @Validated DictDTO dictDTO) {
 
-        Long id = dictService.addDict(dictDTO);
+        String id = dictService.addDict(dictDTO);
 
         return DealResultUtils.dealData("id", id);
 
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity getDict(@PathVariable("id") Long id) {
+    public ResponseEntity getDict(@PathVariable("id") String id) {
 
         DictDTO dictDTO = dictService.getDict(id);
 

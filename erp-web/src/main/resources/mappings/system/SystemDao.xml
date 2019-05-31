@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.person.erp.system.dao.ISystemDao">
+
+    <select id="findList" resultType="ChildSystem">
+        SELECT * FROM ERP_SYSTEM
+        WHERE
+        <if test="name != null and name != ''">
+            NAME like CONCAT('%',#{name}, '%') and
+        </if>
+        <if test="status != null">
+            STATUS = #{status} AND
+        </if>
+        1=1 ORDER BY ID ASC
+
+    </select>
+
+</mapper>

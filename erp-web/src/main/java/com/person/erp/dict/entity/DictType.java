@@ -16,10 +16,8 @@ import javax.validation.constraints.NotBlank;
  * @since 2019/5/20 16:08
  */
 @Data
-@NoArgsConstructor
 @Table(name = "ERP_TYPE")
-public class
-DictType {
+public class DictType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +25,8 @@ DictType {
 
     @NotBlank(message = "[typeName] 类型名不能为空")
     private String typeName;
+
+    public DictType() {}
 
     public DictType(String typeName) {
         this.typeName = typeName;

@@ -18,17 +18,6 @@ import java.util.List;
 public interface IDictDao extends BaseDao<Dict> {
 
     /**
-     * 插入自增的字典
-     * @author zhuwj
-     * @since 2019/5/21 10:06
-     * @param entity
-     * @return long
-     */
-    @Override
-    @Options(useGeneratedKeys = true)
-    long insert(Dict entity);
-
-    /**
      * 关联查询字典、类型
      * @author zhuwj
      * @since 2019/5/21 14:30
@@ -37,4 +26,5 @@ public interface IDictDao extends BaseDao<Dict> {
      * @return java.util.List<com.person.erp.dict.entity.Dict>
      */
     List<Dict> findListAssociateType(Dict dict);
+
 }
