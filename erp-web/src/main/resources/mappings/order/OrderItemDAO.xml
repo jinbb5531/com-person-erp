@@ -16,7 +16,7 @@
     </resultMap>
     <delete id="deleteByOrderCode">
         DELETE FROM ERP_ORDER_ITEM
-        WHERE ORDER_CODE = #{orderCode}
+        WHERE ORDER_CODE = #{orderCode} AND SYSTEM_TAG = #{systemTag}
     </delete>
     <delete id="deleteByOrderCodeBatch">
         DELETE FROM ERP_ORDER_ITEM
@@ -24,6 +24,7 @@
         <foreach collection="array" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
+        AND SYSTEM_TAG = #{systemTag}
     </delete>
     <update id="updateBatch" parameterType="java.util.List">
         UPDATE ERP_ORDER_ITEM
@@ -102,7 +103,10 @@
         </trim>
         WHERE
         <foreach collection="list" separator="or" item="i" index="index" >
-            CODE =#{i.code}
+            CODE =#{i.code} and
+        </foreach>
+        <foreach collection="list" separator="or" item="i" index="index" >
+            SYSTEM_TAG = #{i.systemTag}
         </foreach>
     </update>
 </mapper>

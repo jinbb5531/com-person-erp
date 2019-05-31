@@ -38,20 +38,25 @@ public class OrderServiceImpl implements IOrderService {
     public boolean createOrder(OrderDTO order) {
         User user = TokenUtils.getUser();
         Order order1 = new Order();
-        order1.setCreateBy(user.getUserName());
+//        order1.setCreateBy(user.getUserName());
+        order1.setCreateBy("jin");
         order1.setCreateAt(new Timestamp(new Date().getTime()));
         order1.setCustomer(order.getCustomer());
         order1.setStatus(OrderConstant.CREATE.getCode());
         //获取当前用户的系统标识符
-        order1.setSystemTag(user.getSystemTag());
+//        order1.setSystemTag(user.getSystemTag());
+        order1.setSystemTag(1);
         order1.setDeadline(order.getDeadline());
         order1.setRemark(order.getRemark());
+        int insert = dao.insert(order1);
         //获取生成的订单主键
         String id = order1.getOrderCode();
         List<OrderItem> itemList = order.getItemList();
         //关联订单号
         itemList.forEach(item -> item.setOrderCode(id));
-        int insert = dao.insert(order1);
+        //设置明细的系统标识
+//        itemList.forEach(item -> item.setSystemTag(user.getSystemTag()));
+        itemList.forEach(item -> item.setSystemTag(1));
         //      级联添加订单列表
         boolean success = orderItemService.insertBatch(itemList);
         return insert > 0 && success ? true : false;
@@ -59,6 +64,8 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public boolean deleteOrder(Order order) {
+//        order.setSystemTag(TokenUtils.getUser().getSystemTag());
+        order.setSystemTag(1);
         int delete = dao.delete(order);
         boolean success = orderItemService.deleteByOrderCode(order.getOrderCode());
         return delete > 0 && success ? true : false;

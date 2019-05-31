@@ -33,7 +33,6 @@ public class OrderDTO implements Serializable {
     /**
      * 创建人
      */
-    @NotEmpty(message = "【createBy】 不能为空！")
     private String createBy;
     /**
      * 订单状态

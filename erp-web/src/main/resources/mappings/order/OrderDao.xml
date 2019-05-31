@@ -150,7 +150,7 @@
         <if test="customer != null">
             CUSTOMER = #{customer} AND
         </if>
-        SYSTEM_TAG = #{systemTag}
+        SYSTEM_TAG = #{systemTag} AND
         1=1
         ORDER BY DEADLINE DESC
     </select>
