@@ -114,4 +114,13 @@ public interface IDictService {
      * @return boolean
      */
     boolean deletes(String[] ids);
+
+    /**
+     * 字典List转换成DTOList
+     * @author zhuwj
+     * @since 2019/5/31 21:38
+     * @param dictList
+     * @return java.util.List<com.person.erp.dict.model.DictDTO>
+     */
+    List<DictDTO> dealDictChange(List<Dict> dictList);
 }

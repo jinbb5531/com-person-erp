@@ -23,7 +23,7 @@ public class TokenUtils {
 
     private final static String TOKEN_KEY = "283;%$09*&";
 
-    private final static String TOKEN_NAME = "token";
+    private final static String TOKEN_HEADER_NAME = "X-Token";
 
     private final static String PERMISSION_KEY = "permission";
 
@@ -37,6 +37,16 @@ public class TokenUtils {
      */
     public static HttpServletRequest getHttpRequest() {
         return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+    }
+
+    /**
+     * 获取请求中的token
+     * @author zhuwj
+     * @since 2019/5/31 22:37
+     * @return java.lang.String
+     */
+    public static String getRequestToken() {
+        return getHttpRequest().getHeader(TOKEN_HEADER_NAME);
     }
 
     /**
@@ -107,7 +117,7 @@ public class TokenUtils {
      */
     @Nullable
     public static User getUser() {
-        String token = getHttpRequest().getParameter(TOKEN_NAME);
+        String token = getRequestToken();
         if (!JudgeUtils.isEmpty(token) && RedisUtils.exist(token)) {
             return (User) RedisUtils.get(token);
         }
@@ -146,7 +156,7 @@ public class TokenUtils {
      * @since 2019/5/24 23:10
      */
     public static List<MenuDTO> getPermission() {
-        String token = getHttpRequest().getParameter(TOKEN_NAME);
+        String token = getRequestToken();
         return (List<MenuDTO>) RedisUtils.get(token + PERMISSION_KEY);
     }
 
@@ -171,7 +181,7 @@ public class TokenUtils {
      * @since 2019/5/25 10:00
      */
     public static void removePermission() {
-        String token = getHttpRequest().getParameter(TOKEN_NAME);
+        String token = getRequestToken();
         if (!JudgeUtils.isEmpty(token)) {
             RedisUtils.remove(token);
         }
@@ -187,7 +197,7 @@ public class TokenUtils {
      * @return void
      */
     public static void refreshPermissionDate(List<MenuDTO> menuList, long timeout, TimeUnit unit) {
-        String token = getHttpRequest().getParameter(TOKEN_NAME);
+        String token = getRequestToken();
         recordPermission(token, menuList, timeout, unit);
     }
 

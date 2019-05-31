@@ -34,6 +34,8 @@ public class Dict {
 
     private Long typeId;
 
+    private Long systemTag;
+
     @Transient
     private DictType dictType;
 
