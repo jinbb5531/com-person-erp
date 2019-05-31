@@ -6,6 +6,7 @@ import com.itexplore.core.api.model.ApiException;
 import com.itexplore.core.api.model.Pager;
 import com.itexplore.core.api.utils.PageChangeUtils;
 import com.itexplore.core.common.utils.judge.JudgeUtils;
+import com.person.erp.common.constant.WebConstant;
 import com.person.erp.common.utils.TokenUtils;
 import com.person.erp.dict.dao.IDictDao;
 import com.person.erp.dict.dao.IDictTypeDao;
@@ -22,10 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>DictServiceImpl.java</p>
@@ -114,6 +112,8 @@ public class DictServiceImpl implements IDictService {
 
         User operator = TokenUtils.getUser();
 
+        dict.setSystemTag(operator == null ? WebConstant.SUPER_MANAGER_TAG : operator.getSystemTag());
+
         dict.setCreateBy(operator == null ? null : operator.getUserCode());
 
         dictDao.insert(dict);
@@ -166,8 +166,16 @@ public class DictServiceImpl implements IDictService {
 
         Dict dbDict = dictDao.findById(dictDTO.getId());
 
+        User operator = TokenUtils.getUser();
+
         if (dbDict == null) {
+
             throw new ApiException(HttpStatus.NOT_FOUND, "字典已不存在，无法修改");
+
+        } else if (operator != null && !Objects.equals(operator.getSystemTag(), dbDict.getSystemTag())) {
+
+            throw new ApiException(HttpStatus.UNAUTHORIZED, "您无权修改其他子系统数据");
+
         }
 
         Dict dict = new Dict();
@@ -177,8 +185,6 @@ public class DictServiceImpl implements IDictService {
         dict.setTypeId(findTypeIdOtherwiseCreate(dictDTO.getTypeName()));
 
         dict.setUpdateAt(new Timestamp(new Date().getTime()));
-
-        User operator = TokenUtils.getUser();
 
         dict.setUpdateBy(operator == null ? null : operator.getUserCode());
 
@@ -192,6 +198,10 @@ public class DictServiceImpl implements IDictService {
         Dict dict = new Dict();
 
         BeanUtils.copyProperties(dictDTO, dict);
+
+        User user = TokenUtils.getUser();
+
+        dict.setSystemTag(user == null ? WebConstant.SUPER_MANAGER_TAG : user.getSystemTag());
 
         if (!JudgeUtils.isEmpty(dictDTO.getTypeName())) {
 
@@ -211,9 +221,14 @@ public class DictServiceImpl implements IDictService {
 
     }
 
-    private List<DictDTO> dealDictChange(List<Dict> dictList) {
+    @Override
+    public List<DictDTO> dealDictChange(List<Dict> dictList) {
 
         List<DictDTO> dtoList = new ArrayList<>();
+
+        User user = TokenUtils.getUser();
+
+        long systemTag = user == null ? WebConstant.SUPER_MANAGER_TAG : user.getSystemTag();
 
         dictList.forEach(d -> {
 
@@ -222,6 +237,9 @@ public class DictServiceImpl implements IDictService {
             BeanUtils.copyProperties(d, dto);
 
             dto.setTypeName(d.getDictType().getTypeName());
+
+            // 若当前用户的系统标识与数据的系统标识相同，则可以操作（0）；否则不能操作（1）
+            dto.setFlag(systemTag == d.getSystemTag() ? 0 : 1);
 
             dtoList.add(dto);
 
@@ -237,6 +255,10 @@ public class DictServiceImpl implements IDictService {
         Dict dict = new Dict();
 
         BeanUtils.copyProperties(dictDTO, dict);
+
+        User user = TokenUtils.getUser();
+
+        dict.setSystemTag(user == null ? WebConstant.SUPER_MANAGER_TAG : user.getSystemTag());
 
         if (!JudgeUtils.isEmpty(dictDTO.getTypeName())) {
 
@@ -256,6 +278,22 @@ public class DictServiceImpl implements IDictService {
 
     @Override
     public boolean deletes(String[] ids) {
+
+        List<Dict> dictList = dictDao.findByIds(ids, " id asc ");
+
+        User user = TokenUtils.getUser();
+
+        long systemTag = user == null ? WebConstant.SUPER_MANAGER_TAG : user.getSystemTag();
+
+        dictList.forEach(dict -> {
+
+            if (dict.getSystemTag() != systemTag) {
+
+                throw new ApiException(HttpStatus.UNAUTHORIZED, "您无权删除其他子系统数据");
+
+            }
+
+        });
 
         return dictDao.deleteByIds(ids) > 0;
 

@@ -16,7 +16,7 @@ import javax.validation.constraints.*;
 @Data
 public class DictDTO {
 
-    @NotBlank(groups = {Single.class}, message = "[id] 字典主键不能为空")
+    @NotBlank(groups = {Single.class, Update.class}, message = "[id] 字典主键不能为空")
     private String id;
 
     @NotBlank(message = "[dictName] 字典名称不能为空")
@@ -34,6 +34,11 @@ public class DictDTO {
 
     @NotBlank(message = "[typeName] 字典类型不能空")
     private String typeName;
+
+    /**
+     * 标识; 0：可以操作；1：不能操作
+     */
+    private Integer flag;
 
     @NotEmpty(groups = Delete.class, message = "[ids] 字典主键数组不能为空")
     private String[] ids;
