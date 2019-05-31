@@ -4,6 +4,8 @@ import com.github.pagehelper.PageInfo;
 import com.itexplore.core.api.model.PageResult;
 import com.itexplore.core.api.utils.PageChangeUtils;
 import com.itexplore.core.api.utils.ResultUtils;
+import com.person.erp.common.utils.TokenUtils;
+import com.person.erp.identity.entity.User;
 import com.person.erp.order.constant.OrderConstant;
 import com.person.erp.order.entity.Order;
 import com.person.erp.order.entity.OrderItem;
@@ -42,13 +44,14 @@ public class OrderController {
     @PostMapping
     private ResponseEntity createOrder(@Validated @RequestBody OrderDTO order) {
 
-        HashMap<String, Object> result = new HashMap<>();
+        User user = TokenUtils.getUser();
         Order order1 = new Order();
+        order1.setCreateBy(user.getUserName());
         order1.setCreateAt(new Timestamp(new Date().getTime()));
         order1.setCustomer(order.getCustomer());
         order1.setStatus(OrderConstant.CREATE.getCode());
         //获取当前用户的系统标识符
-        order1.setSystemTag(0);
+        order1.setSystemTag(user.getSystemTag());
         order1.setDeadline(order.getDeadline());
         order1.setRemark(order.getRemark());
         boolean success = orderService.createOrder(order1);
@@ -90,19 +93,27 @@ public class OrderController {
      * @return
      */
     @PutMapping
-    private ResponseEntity update(@Validated OrderDTO order) {
-        HashMap<String, Object> result = new HashMap<>();
+    private ResponseEntity update(@Validated @RequestBody OrderDTO order) {
         Order order1 = new Order();
+        User user = TokenUtils.getUser();
         order1.setCustomer(order.getCustomer());
+        order1.setUpdateBy(user.getUpdateBy());
         order1.setUpdateAt(new Timestamp(new Date().getTime()));
+        order1.setDeadline(order.getDeadline());
+        order1.setOrderCode(order.getOrderCode());
+        order1.setRemark(order.getRemark());
+        order1.setSystemTag(user.getSystemTag());
         List<OrderItem> itemList = order.getItemList();
-        OrderItem orderItem = new OrderItem();
+        itemList.forEach(item-> item.setOrderCode(order.getOrderCode()));
         boolean success = orderService.updateOrder(order1);
         if (success) {
+
+            success = orderItemService.updateBatch(itemList);
             if(success){
-                orderItemService.update(orderItem);
+                return ResultUtils.success();
+            }else {
+                return ResultUtils.failure("操作失败！");
             }
-            return ResultUtils.success();
         } else {
             return  ResultUtils.failure("操作失败！");
         }

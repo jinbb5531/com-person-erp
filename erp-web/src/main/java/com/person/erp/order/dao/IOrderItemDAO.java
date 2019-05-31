@@ -31,5 +31,5 @@ public interface IOrderItemDAO extends BaseDao<OrderItem> {
      * @param itemList
      * @return
      */
-     int updateBatch(@Param("list") List<OrderItem> itemList);
+     int updateBatch(List<OrderItem> itemList);
 }
