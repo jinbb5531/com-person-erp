@@ -3,8 +3,7 @@
 <mapper namespace="com.person.erp.dict.dao.IDictDao">
 
     <resultMap id="DictAndTypeMap" type="Dict" autoMapping="true">
-        <id property="id" column="D_ID"/>
-        <association property="dictType" javaType="DictType" autoMapping="true">
+        <association property="dictType" javaType="DictType" autoMapping="false">
             <id property="id" column="TYPE_ID" />
             <result property="typeName" column="TYPE_NAME" />
         </association>
@@ -12,7 +11,7 @@
 
     <select id="findListAssociateType" resultMap="DictAndTypeMap">
         SELECT
-        D.ID as D_ID,
+        D.ID,
         D.DICT_NAME,
         D.STATUS,
         D.ICON_PATH,

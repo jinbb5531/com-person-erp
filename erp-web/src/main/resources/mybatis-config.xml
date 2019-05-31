@@ -53,6 +53,7 @@
         <typeAlias type="com.person.erp.dict.entity.DictType" alias="DictType"/>
         <typeAlias type="com.person.erp.essay.entity.Essay" alias="Essay"/>
         <typeAlias type="com.person.erp.essay.entity.Content" alias="Content"/>
+        <typeAlias type="com.person.erp.system.entity.ChildSystem" alias="ChildSystem"/>
     </typeAliases>
 
     <!-- 插件配置 -->

@@ -177,4 +177,18 @@ public class TokenUtils {
         }
     }
 
+    /**
+     * 刷新权限时间
+     * @author zhuwj
+     * @since 2019/5/31 16:56
+     * @param menuList
+     * @param timeout
+     * @param unit
+     * @return void
+     */
+    public static void refreshPermissionDate(List<MenuDTO> menuList, long timeout, TimeUnit unit) {
+        String token = getHttpRequest().getParameter(TOKEN_NAME);
+        recordPermission(token, menuList, timeout, unit);
+    }
+
 }
