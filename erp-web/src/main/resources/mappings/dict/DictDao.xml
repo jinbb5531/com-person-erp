@@ -20,6 +20,7 @@
         D.UPDATE_BY,
         D.UPDATE_AT,
         D.TYPE_ID,
+        D.SYSTEM_TAG,
         T.TYPE_NAME
         FROM ERP_DICT D LEFT JOIN ERP_TYPE T ON D.TYPE_ID = T.ID
         WHERE
@@ -28,6 +29,10 @@
             <foreach collection="ids" item="item" open="(" close=")" separator=", ">
                 #{item}
             </foreach>
+            AND
+        </if>
+        <if test="systemTag != null">
+            D.SYSTEM_TAG IN (0, #{systemTag})
             AND
         </if>
         <if test="dictName != null and dictName != ''">

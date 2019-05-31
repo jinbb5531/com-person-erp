@@ -72,10 +72,7 @@ public class DictController {
 
         DictDTO dto = dictService.getDict(dictDTO.getId());
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("exist", dto != null );
-
-        return ResultUtils.asserts(data);
+        return ResultUtils.success("exist", dto != null);
 
     }
 
@@ -120,19 +117,7 @@ public class DictController {
 
         PageInfo<Dict> pageInfo = dictService.findPage(dictDTO, pager);
 
-        List<DictDTO> list = new ArrayList<>();
-
-        pageInfo.getList().forEach( dict -> {
-
-            DictDTO dto = new DictDTO();
-
-            BeanUtils.copyProperties(dict, dto);
-
-            dto.setTypeName(dict.getDictType().getTypeName());
-
-            list.add(dto);
-
-        });
+        List<DictDTO> list = dictService.dealDictChange(pageInfo.getList());
 
         return ResultUtils.asserts(new PageResult<>(list, PageChangeUtils.pageInfoToPager(pageInfo)));
 
