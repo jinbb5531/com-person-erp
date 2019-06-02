@@ -130,14 +130,13 @@
         <foreach collection="array" open="(" separator="," close=")" item="id">
             #{id}
         </foreach>
-        AND SYSTEM_TAG = #{systemTag}
     </delete>
     <select id="findById" parameterType="com.person.erp.order.model.OrderDTO" resultMap="BaseResult">
         SELECT *
         FROM ERP_ORDER o LEFT JOIN ERP_ORDER_ITEM e
         ON o.ORDER_CODE = e.ORDER_CODE
-        WHERE o.ORDER_CODE = #{orderCode} AND
-        o.SYSTEM_TAG = #{systemTag}
+        WHERE o.ORDER_CODE = #{orderCode}
+        AND SYSTEM_TAG = #{systemTag}
     </select>
     <select id="findPage" parameterType="com.person.erp.order.model.OrderDTO" resultMap="baseOrder">
         SELECT

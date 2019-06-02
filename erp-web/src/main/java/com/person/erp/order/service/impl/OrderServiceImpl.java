@@ -57,6 +57,9 @@ public class OrderServiceImpl implements IOrderService {
         //设置明细的系统标识
 //        itemList.forEach(item -> item.setSystemTag(user.getSystemTag()));
         itemList.forEach(item -> item.setSystemTag(1));
+        itemList.forEach(item -> item.setPlantNum(
+                Math.floor((item.getSizeL() * item.getSizeW() * item.getNumber()) / (item.getProSizeL() * item.getProSizeW())
+                )));
         //      级联添加订单列表
         boolean success = orderItemService.insertBatch(itemList);
         return insert > 0 && success ? true : false;
@@ -76,12 +79,14 @@ public class OrderServiceImpl implements IOrderService {
         Order order1 = new Order();
         User user = TokenUtils.getUser();
         order1.setCustomer(order.getCustomer());
-        order1.setUpdateBy(user.getUserName());
+//        order1.setUpdateBy(user.getUserName());
+        order1.setUpdateBy("jinbb");
         order1.setUpdateAt(new Timestamp(new Date().getTime()));
         order1.setDeadline(order.getDeadline());
         order1.setOrderCode(order.getOrderCode());
         order1.setRemark(order.getRemark());
-        order1.setSystemTag(user.getSystemTag());
+//        order1.setSystemTag(user.getSystemTag());
+        order1.setSystemTag(1);
         order1.setStatus(order.getStatus());
         order1.setCutter(order.getCutter());
         order1.setHemmer(order.getHemmer());
@@ -89,11 +94,23 @@ public class OrderServiceImpl implements IOrderService {
         List<OrderItem> itemList = order.getItemList();
         boolean success = true;
         int update = dao.update(order1);
-        if (!itemList.isEmpty()){
+        if (!itemList.isEmpty()) {
             itemList.forEach(item -> item.setOrderCode(order.getOrderCode()));
-             success = orderItemService.updateBatch(itemList);
+//            itemList.forEach(item -> item.setSystemTag(user.getSystemTag()));
+            itemList.forEach(item -> item.setSystemTag(1));
+            //跟新计划生产量
+            itemList.forEach(item -> item.setPlantNum(
+                    Math.floor((item.getSizeL() * item.getSizeW() * item.getNumber()) / (item.getProSizeL() * item.getProSizeW())
+                    )));
+            success = orderItemService.updateBatch(itemList);
         }
         return update > 0 && success ? true : false;
+    }
+
+    @Override
+    public boolean updateStatus(Order order) {
+
+        return dao.update(order) > 0;
     }
 
     @Override
@@ -102,10 +119,12 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public boolean deleteBatch(String[] codes) {
-        int deleteBatch = dao.deleteBatch(codes);
-        boolean success = orderItemService.deleteByOrderCodeBatch(codes);
-        return deleteBatch > 0 && success ? true : false;
+    public boolean deleteBatch(String... codes) {
+//        Long systemTag = TokenUtils.getUser().getSystemTag();
+        long systemTag =1;
+        int deleteBatch = dao.deleteBatch(codes, systemTag);
+        boolean success = orderItemService.deleteByOrderCodeBatch(codes, systemTag);
+        return deleteBatch >= 0 && success ? true : false;
     }
 
     @Override

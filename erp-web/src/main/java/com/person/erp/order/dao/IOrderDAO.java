@@ -2,6 +2,7 @@ package com.person.erp.order.dao;
 
 import com.person.erp.order.entity.Order;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public interface IOrderDAO  {
      * @param ids
      * @return
      */
-    int deleteBatch(String... ids);
+    int deleteBatch(@Param("array") String[] ids,@Param("systemTag") long systemTag);
 
     /**
      * 修改订单

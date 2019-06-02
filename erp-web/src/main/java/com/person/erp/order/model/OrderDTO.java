@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
+import java.sql.Array;
 import java.sql.Timestamp;
 import java.util.List;
 

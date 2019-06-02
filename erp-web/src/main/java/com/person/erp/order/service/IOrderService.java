@@ -28,6 +28,11 @@ public interface IOrderService {
     boolean updateOrder(OrderDTO order);
 
     /**
+     * 更新订单状态
+     */
+    boolean updateStatus(Order order);
+
+    /**
      * 订单查询
      */
     Order findById(Order order);

@@ -158,11 +158,14 @@ public class OrderController {
      * @return
      */
     @PutMapping("/receive")
-    private ResponseEntity receiveCut(OrderDTO order) {
+    private ResponseEntity receiveCut(Order order) {
         if (order.getStatus().equals(OrderConstant.PUBLISH.getCode())) {
-            order.setCutter(TokenUtils.getUser().getUserName());
+//            order.setCutter(TokenUtils.getUser().getUserName());
+            order.setCutter("jin");
             order.setStatus(OrderConstant.CUTTING.getCode());
-            boolean success = orderService.updateOrder(order);
+            order.setCutAt(new Timestamp(new Date().getTime()));
+            order.setUpdateAt(new Timestamp(new Date().getTime()));
+            boolean success = orderService.updateStatus(order);
             if (success) {
                 return ResultUtils.success();
             } else {
@@ -171,7 +174,9 @@ public class OrderController {
         } else if (order.getStatus().equals(OrderConstant.CUT_END.getCode())) {
             order.setHemmer(TokenUtils.getUser().getUserName());
             order.setStatus(OrderConstant.HEMMING.getCode());
-            boolean success = orderService.updateOrder(order);
+            order.setHemAt(new Timestamp(new Date().getTime()));
+            order.setUpdateAt(new Timestamp(new Date().getTime()));
+            boolean success = orderService.updateStatus(order);
             if (success) {
                 return ResultUtils.success();
             } else {
@@ -180,7 +185,9 @@ public class OrderController {
         } else if (order.getStatus().equals(OrderConstant.HEM_END.getCode())) {
             order.setPacker(TokenUtils.getUser().getUserName());
             order.setStatus(OrderConstant.PACKING.getCode());
-            boolean success = orderService.updateOrder(order);
+            order.setPackAt(new Timestamp(new Date().getTime()));
+            order.setUpdateAt(new Timestamp(new Date().getTime()));
+            boolean success = orderService.updateStatus(order);
             if (success) {
                 return ResultUtils.success();
             } else {

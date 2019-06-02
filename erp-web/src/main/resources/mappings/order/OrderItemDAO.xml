@@ -24,7 +24,6 @@
         <foreach collection="array" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
-        AND SYSTEM_TAG = #{systemTag}
     </delete>
     <update id="updateBatch" parameterType="java.util.List">
         UPDATE ERP_ORDER_ITEM
@@ -103,10 +102,7 @@
         </trim>
         WHERE
         <foreach collection="list" separator="or" item="i" index="index" >
-            CODE =#{i.code} and
-        </foreach>
-        <foreach collection="list" separator="or" item="i" index="index" >
-            SYSTEM_TAG = #{i.systemTag}
+            CODE =#{i.code} and SYSTEM_TAG = #{i.systemTag}
         </foreach>
     </update>
 </mapper>
