@@ -14,6 +14,9 @@
         <result column="DEADLINE" property="deadline" jdbcType="TIMESTAMP"/>
         <result column="SYSTEM_TAG" property="systemTag" jdbcType="BIGINT"/>
         <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <result column="CUT_AT" property="cutAt" jdbcType="TIMESTAMP"/>
+        <result column="HEM_AT" property="hemAt" jdbcType="TIMESTAMP"/>
+        <result column="PACK_AT" property="packAt" jdbcType="TIMESTAMP"/>
         <collection property="itemList" ofType="com.person.erp.order.entity.OrderItem">
             <id column="CODE" property="code" jdbcType="BIGINT"/>
             <result column="NAME" property="name" jdbcType="VARCHAR"/>
@@ -39,46 +42,57 @@
         <result column="DEADLINE" property="deadline" jdbcType="TIMESTAMP"/>
         <result column="SYSTEM_TAG" property="systemTag" jdbcType="BIGINT"/>
         <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <result column="CUT_AT" property="cutAt" jdbcType="TIMESTAMP"/>
+        <result column="HEM_AT" property="hemAt" jdbcType="TIMESTAMP"/>
+        <result column="PACK_AT" property="packAt" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="baseColumn">
-        ORDER_CODE,  CUSTOMER, CREATE_AT, CREATE_BY, UPDATE_AT, ORDER_STATUS, CUTTER, HEMMER, PACKER, DEADLINE, SYSTEM_TAG, REMARK
+        ORDER_CODE,  CUSTOMER, CREATE_AT, CREATE_BY, UPDATE_AT, ORDER_STATUS, CUTTER, HEMMER, PACKER, DEADLINE, SYSTEM_TAG, REMARK,
+        CUT_AT, HEM_AT,PACK_AT
     </sql>
     <update id="update" parameterType="com.person.erp.order.entity.Order">
         UPDATE ERP_ORDER
         <set>
-        <if test="customer != null">
-            CUSTOMER = #{customer},
-        </if>
-        <if test="updateAt != null">
-            UPDATE_AT = #{updateAt},
-        </if>
-        <if test="status != null">
-            ORDER_STATUS = #{status},
-        </if>
-        <if test="updateAt != null">
-            UPDATE_AT = #{updateAt},
-        </if>
-        <if test="cutter != null">
-            CUTTER = #{cutter},
-        </if>
-        <if test="hemmer != null">
-            HEMMER = #{hemmer},
-        </if>
-        <if test="packer != null">
-            PACKER = #{packer},
-        </if>
-        <if test="deadline != null">
-            DEADLINE = #{deadline},
-        </if>
-        <if test="systemTag !=null">
-            SYSTEM_TAG = #{systemTag},
-        </if>
-        <if test="remark != null">
-            REMARK = #{remark}
-        </if>
+            <if test="customer != null">
+                CUSTOMER = #{customer},
+            </if>
+            <if test="updateAt != null">
+                UPDATE_AT = #{updateAt},
+            </if>
+            <if test="status != null">
+                ORDER_STATUS = #{status},
+            </if>
+            <if test="updateAt != null">
+                UPDATE_AT = #{updateAt},
+            </if>
+            <if test="cutter != null">
+                CUTTER = #{cutter},
+            </if>
+            <if test="hemmer != null">
+                HEMMER = #{hemmer},
+            </if>
+            <if test="packer != null">
+                PACKER = #{packer},
+            </if>
+            <if test="deadline != null">
+                DEADLINE = #{deadline},
+            </if>
+            <if test="remark != null">
+                REMARK = #{remark}
+            </if>
+            <if test="cutAt != null">
+                CUT_AT = #{cutAt}
+            </if>
+            <if test="hemAt != null">
+                HEM_AT = #{hemAt}
+            </if>
+            <if test="packAt">
+                PACK_AT = #{packAt}
+            </if>
         </set>
         WHERE ORDER_CODE = #{orderCode}
+        AND SYSTEM_TAG = #{systemTag}
     </update>
     <insert id="insert" parameterType="com.person.erp.order.entity.Order">
         <selectKey keyColumn="ORDER_CODE" keyProperty="orderCode" order="BEFORE" resultType="java.lang.String">
@@ -86,7 +100,7 @@
         </selectKey>
         INSERT INTO ERP_ORDER
         (ORDER_CODE, CUSTOMER, CREATE_AT, CREATE_BY, UPDATE_AT, ORDER_STATUS, CUTTER, HEMMER, PACKER, DEADLINE,
-        SYSTEM_TAG, REMARK)
+        SYSTEM_TAG, REMARK, CUT_AT, HEM_AT, PACK_AT)
         VALUES(
         #{orderCode},
         #{customer},
@@ -99,12 +113,15 @@
         #{packer},
         #{deadline},
         #{systemTag},
-        #{remark}
+        #{remark},
+        #{cutAt},
+        #{hemAt},
+        #{packAt}
         )
     </insert>
     <delete id="delete" parameterType="com.person.erp.order.entity.Order">
         DELETE FROM ERP_ORDER
-        WHERE ORDER_CODE = #{orderCode}
+        WHERE ORDER_CODE = #{orderCode} AND SYSTEM_TAG = #{systemTag}
     </delete>
     <delete id="deleteBatch">
         DELETE FROM ERP_ORDER
@@ -113,12 +130,14 @@
         <foreach collection="array" open="(" separator="," close=")" item="id">
             #{id}
         </foreach>
+        AND SYSTEM_TAG = #{systemTag}
     </delete>
     <select id="findById" parameterType="com.person.erp.order.model.OrderDTO" resultMap="BaseResult">
         SELECT *
         FROM ERP_ORDER o LEFT JOIN ERP_ORDER_ITEM e
         ON o.ORDER_CODE = e.ORDER_CODE
-        WHERE o.ORDER_CODE = #{orderCode}
+        WHERE o.ORDER_CODE = #{orderCode} AND
+        o.SYSTEM_TAG = #{systemTag}
     </select>
     <select id="findPage" parameterType="com.person.erp.order.model.OrderDTO" resultMap="baseOrder">
         SELECT
@@ -131,6 +150,7 @@
         <if test="customer != null">
             CUSTOMER = #{customer} AND
         </if>
+        SYSTEM_TAG = #{systemTag}
         1=1
         ORDER BY DEADLINE DESC
     </select>

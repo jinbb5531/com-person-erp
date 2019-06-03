@@ -46,13 +46,25 @@ public class Order {
      */
     private String cutter;
     /**
+     * 裁剪时间
+     */
+    private Timestamp cutAt;
+    /**
      * 缝边人
      */
     private String hemmer;
     /**
+     * 缝边时间
+     */
+    private Timestamp hemAt;
+    /**
      * 包装者
      */
     private String packer;
+    /**
+     * 包装时间
+     */
+    private Timestamp packAt;
     /**
      * 截止时间
      */
@@ -69,5 +81,6 @@ public class Order {
      * 订单明细，一对多
      */
     private List<OrderItem> itemList;
+
 
 }

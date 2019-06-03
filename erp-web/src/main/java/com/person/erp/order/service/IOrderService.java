@@ -2,6 +2,7 @@ package com.person.erp.order.service;
 
 import com.github.pagehelper.PageInfo;
 import com.person.erp.order.entity.Order;
+import com.person.erp.order.model.OrderDTO;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface IOrderService {
     /**
      * 新增订单
      */
-    boolean createOrder(Order order);
+    boolean createOrder(OrderDTO order);
 
     /**
      * 删除订单
@@ -24,7 +25,7 @@ public interface IOrderService {
      * 修改订单
      */
 
-    boolean updateOrder(Order order);
+    boolean updateOrder(OrderDTO order);
 
     /**
      * 订单查询
