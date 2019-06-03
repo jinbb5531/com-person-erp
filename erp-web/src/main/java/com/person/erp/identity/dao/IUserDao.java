@@ -140,7 +140,7 @@ public interface IUserDao {
      * @param userList
      * @return int
      */
-    int deleteBatchByUsers(List<User> userList);
+    int deleteBatchByUsers(@Param("userList") List<User> userList);
 
     /**
      * 批量删除用户角色中间表
@@ -149,7 +149,7 @@ public interface IUserDao {
      * @param userList
      * @return int
      */
-    int deleteUserRoleByUsers(List<User> userList);
+    int deleteUserRoleByUsers(@Param("userList") List<User> userList);
 
     /**
      * 批量删除用户角色中间表
@@ -187,7 +187,7 @@ public interface IUserDao {
      * @param ids
      * @return long
      */
-    long deleteUserRoleBatchByRoleIds(Long[] ids);
+    long deleteUserRoleBatchByRoleIds(@Param("ids") Long[] ids);
 
     /**
      * 通过的手机号获取用户

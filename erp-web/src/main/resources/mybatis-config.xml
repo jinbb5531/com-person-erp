@@ -54,6 +54,7 @@
         <typeAlias type="com.person.erp.essay.entity.Essay" alias="Essay"/>
         <typeAlias type="com.person.erp.essay.entity.Content" alias="Content"/>
         <typeAlias type="com.person.erp.system.entity.ChildSystem" alias="ChildSystem"/>
+        <typeAlias type="com.person.erp.trade.entity.ProvideTrade" alias="ProvideTrade"/>
     </typeAliases>
 
     <!-- 插件配置 -->
