@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.person.erp.trade.dao.ITradeDao">
+
+    <select id="findList" resultType="ProvideTrade">
+        SELECT * FROM ERP_PROVIDE_TRADE
+        WHERE
+          <if test="name != null and name != ''">
+              NAME LIKE CONCAT('%',#{name}, '%')
+              AND
+          </if>
+        1=1
+    </select>
+</mapper>
