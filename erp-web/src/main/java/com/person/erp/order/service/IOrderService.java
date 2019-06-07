@@ -50,4 +50,12 @@ public interface IOrderService {
      * @return
      */
     PageInfo<Order>findPage(Order order, PageInfo<Order> page);
+
+    /**
+     * 分页查询当前用户订单
+     * @param order
+     * @param page
+     * @return
+     */
+    PageInfo findPageByUser(Order order, PageInfo<Order> page);
 }

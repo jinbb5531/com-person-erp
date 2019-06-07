@@ -52,4 +52,11 @@ public interface IOrderDAO  {
      * @return
      */
     List<Order> findPage(Order order);
+
+    /**
+     * 分页查询当前用户的订单
+     * @param order
+     * @return
+     */
+    List<Order> findPageByUser(Order order);
 }

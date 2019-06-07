@@ -24,6 +24,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.xml.transform.Result;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -65,7 +66,12 @@ public class OrderController {
      */
     @GetMapping
     private ResponseEntity get(Order order) {
-        return ResultUtils.success(orderService.findById(order));
+        Order result = orderService.findById(order);
+       if(result != null){
+          return   ResultUtils.success(result);
+        }else {
+          return   ResultUtils.success("");
+        }
 
     }
 
@@ -134,16 +140,31 @@ public class OrderController {
         return PageChangeUtils.pageInfoToPageResult(result);
     }
 
+    @GetMapping("/page/user")
+    private PageResult<Order> current(PageInfo<Order> page){
+        User user = TokenUtils.getUser();
+        Order order = new Order();
+        order.setSystemTag(user.getSystemTag());
+        order.setHemmer(user.getUserName());
+        order.setCutter(user.getUserName());
+        order.setPacker(user.getUserName());
+//        order.setCutter("jinbb");
+//        order.setHemmer("jin");
+//        order.setPacker("bddb");
+        PageInfo  result = orderService.findPageByUser(order, page);
+            return PageChangeUtils.pageInfoToPageResult(result);
+    }
+
     /**
      * 订单发布
      *
      * @param order
      * @return
      */
-    @RequestMapping("/publish")
-    private ResponseEntity publish(OrderDTO order) {
+    @PutMapping("/publish")
+    private ResponseEntity publish(Order order) {
         order.setStatus(OrderConstant.PUBLISH.getCode());
-        boolean success = orderService.updateOrder(order);
+        boolean success = orderService.updateStatus(order);
         if (success) {
             return ResultUtils.success();
         } else {
@@ -159,9 +180,9 @@ public class OrderController {
      */
     @PutMapping("/receive")
     private ResponseEntity receiveCut(Order order) {
-        if (order.getStatus().equals(OrderConstant.PUBLISH.getCode())) {
-//            order.setCutter(TokenUtils.getUser().getUserName());
-            order.setCutter("jin");
+        Order result = orderService.findById(order);
+        if (result!= null && result.getStatus().equals(OrderConstant.PUBLISH.getCode())) {
+            order.setCutter(TokenUtils.getUser().getUserName());
             order.setStatus(OrderConstant.CUTTING.getCode());
             order.setCutAt(new Timestamp(new Date().getTime()));
             order.setUpdateAt(new Timestamp(new Date().getTime()));
@@ -171,7 +192,7 @@ public class OrderController {
             } else {
                 return ResultUtils.failure("接单失败！");
             }
-        } else if (order.getStatus().equals(OrderConstant.CUT_END.getCode())) {
+        } else if (result!= null && result.getStatus().equals(OrderConstant.CUT_END.getCode())) {
             order.setHemmer(TokenUtils.getUser().getUserName());
             order.setStatus(OrderConstant.HEMMING.getCode());
             order.setHemAt(new Timestamp(new Date().getTime()));
@@ -182,7 +203,7 @@ public class OrderController {
             } else {
                 return ResultUtils.failure("接单失败！");
             }
-        } else if (order.getStatus().equals(OrderConstant.HEM_END.getCode())) {
+        } else if (result!= null && result.getStatus().equals(OrderConstant.HEM_END.getCode())) {
             order.setPacker(TokenUtils.getUser().getUserName());
             order.setStatus(OrderConstant.PACKING.getCode());
             order.setPackAt(new Timestamp(new Date().getTime()));
@@ -206,10 +227,19 @@ public class OrderController {
      */
     @PutMapping("/submit/cut")
     private ResponseEntity submitCut(OrderOperate orderOperate) {
+        User user = TokenUtils.getUser();
+        Long systemTag = user.getSystemTag();
+        String userName = user.getUserName();
         orderOperate.setType(OperateTypeConstant.CUT.getType());
+        orderOperate.setSystemTag(systemTag);
         orderOperate.setOperator(TokenUtils.getUser().getUserName());
+        orderOperate.setOperator(userName);
         orderOperate.setOperaTime(new Timestamp(new Date().getTime()));
-        OrderDTO order = new OrderDTO();
+        Order order = new Order();
+        order.setSystemTag(systemTag);
+        order.setOrderCode(orderOperate.getOrderCode());
+        order.setCutter(userName);
+        order.setCutAt(new Timestamp(System.currentTimeMillis()));
         order.setStatus(OrderConstant.CUT_END.getCode());
         boolean success = operateService.insert(orderOperate, order);
         if (success) {
@@ -227,10 +257,16 @@ public class OrderController {
      */
     @PutMapping("/submit/hem")
     private ResponseEntity submitHem(OrderOperate orderOperate) {
+        User user = TokenUtils.getUser();
+        orderOperate.setSystemTag(user.getSystemTag());
+        orderOperate.setOperator(user.getUserName());
         orderOperate.setType(OperateTypeConstant.HEM.getType());
-        orderOperate.setOperator(TokenUtils.getUser().getUserName());
         orderOperate.setOperaTime(new Timestamp(new Date().getTime()));
-        OrderDTO order = new OrderDTO();
+        Order order = new Order();
+        order.setOrderCode(orderOperate.getOrderCode());
+        order.setHemmer(user.getUserName());
+        order.setHemAt(new Timestamp(new Date().getTime()));
+        order.setSystemTag(user.getSystemTag());
         order.setStatus(OrderConstant.HEM_END.getCode());
         boolean success = operateService.insert(orderOperate, order);
         if (success) {
@@ -248,11 +284,19 @@ public class OrderController {
      */
     @PutMapping("/submit/pack")
     private ResponseEntity submitPack(OrderOperate orderOperate) {
+        User user = TokenUtils.getUser();
+        orderOperate.setSystemTag(user.getSystemTag());
+        orderOperate.setSystemTag(user.getSystemTag());
         orderOperate.setType(OperateTypeConstant.PACK.getType());
-        orderOperate.setOperator(TokenUtils.getUser().getUserName());
+        orderOperate.setOperator(user.getUserName());
         orderOperate.setOperaTime(new Timestamp(new Date().getTime()));
-        OrderDTO order = new OrderDTO();
-        order.setPacker(TokenUtils.getUser().getUserName());
+        Order order = new Order();
+        order.setOrderCode(orderOperate.getOrderCode());
+        order.setPacker(user.getUserName());
+//        order.setPacker("bb");
+//        order.setSystemTag(1);
+        order.setSystemTag(user.getSystemTag());
+        order.setPackAt(new Timestamp(new Date().getTime()));
         order.setStatus(OrderConstant.PACK_END.getCode());
         boolean success = operateService.insert(orderOperate, order);
         if (success) {
