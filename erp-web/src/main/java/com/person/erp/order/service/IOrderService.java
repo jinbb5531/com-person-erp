@@ -28,6 +28,11 @@ public interface IOrderService {
     boolean updateOrder(OrderDTO order);
 
     /**
+     * 更新订单状态
+     */
+    boolean updateStatus(Order order);
+
+    /**
      * 订单查询
      */
     Order findById(Order order);
@@ -45,4 +50,12 @@ public interface IOrderService {
      * @return
      */
     PageInfo<Order>findPage(Order order, PageInfo<Order> page);
+
+    /**
+     * 分页查询当前用户订单
+     * @param order
+     * @param page
+     * @return
+     */
+    PageInfo findPageByUser(Order order, PageInfo<Order> page);
 }

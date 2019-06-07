@@ -67,7 +67,7 @@ public class OrderItem {
      * 计划生产量
      */
     @Min(value = 0)
-    private Integer plantNum;
+    private Double plantNum;
     /**
      * 系统标识
      */

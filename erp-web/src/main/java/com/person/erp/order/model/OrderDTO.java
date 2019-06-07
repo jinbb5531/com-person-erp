@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
+import java.sql.Array;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -33,7 +34,6 @@ public class OrderDTO implements Serializable {
     /**
      * 创建人
      */
-    @NotEmpty(message = "【createBy】 不能为空！")
     private String createBy;
     /**
      * 订单状态

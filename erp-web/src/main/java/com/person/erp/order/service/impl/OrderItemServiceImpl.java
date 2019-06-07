@@ -1,8 +1,10 @@
 package com.person.erp.order.service.impl;
 
+import com.person.erp.common.utils.TokenUtils;
 import com.person.erp.order.dao.IOrderItemDAO;
 import com.person.erp.order.entity.OrderItem;
 import com.person.erp.order.service.IOrderItemService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,13 +47,13 @@ public class OrderItemServiceImpl implements IOrderItemService {
     }
 
     @Override
-    public boolean deleteByOrderCodeBatch(String... orderCodes) {
-        return dao.deleteByOrderCodeBatch(orderCodes)>=0;
+    public boolean deleteByOrderCodeBatch(String[] orderCodes, long systemTag) {
+        return dao.deleteByOrderCodeBatch(orderCodes,systemTag) >= 0;
     }
 
     @Override
-    public boolean deleteBatch(String...codes) {
-        return dao.deleteByIds(codes) >=0;
+    public boolean deleteBatch(String... codes) {
+        return dao.deleteByIds(codes) >= 0;
     }
 
     @Override

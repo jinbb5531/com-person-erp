@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.person.erp.order.dao.IOrderOperateDAO">
+    <resultMap id="BaseResult" type="com.person.erp.order.entity.OrderOperate">
+        <id column="CODE" property="code" jdbcType="BIGINT"/>
+        <result column="ORDER_CODE" property="orderCode" jdbcType="VARCHAR"/>
+        <result column="OPERATOR" property="operator" jdbcType="VARCHAR"/>
+        <result column="TYPE" property="type" jdbcType="INTEGER"/>
+        <result column="CUT_NUM" property="cutNum" jdbcType="INTEGER"/>
+        <result column="WEIGHT" property="weight"  jdbcType="DOUBLE"/>
+        <result column="OPERA_TIME" property="operaTime" jdbcType="TIMESTAMP"/>
+        <result column="SYSTEM_TAG" property="systemTag" jdbcType="BIGINT"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.person.erp.order.entity.OrderOperate">
+        INSERT INTO ERP_ORDER_OPERATE
+        (CODE, ORDER_CODE, OPERATOR, TYPE, CUT_NUM, WEIGHT, OPERA_TIME, SYSTEM_TAG)
+        VALUES (
+            #{code}, #{orderCode}, #{operator}, #{type}, #{cutNum}, #{weight}, #{operaTime}, #{systemTag}
+        )
+    </insert>
 </mapper>

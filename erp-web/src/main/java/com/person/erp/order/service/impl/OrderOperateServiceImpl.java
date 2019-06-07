@@ -1,10 +1,8 @@
 package com.person.erp.order.service.impl;
 
-import com.person.erp.order.constant.OrderConstant;
 import com.person.erp.order.dao.IOrderOperateDAO;
 import com.person.erp.order.entity.Order;
 import com.person.erp.order.entity.OrderOperate;
-import com.person.erp.order.model.OrderDTO;
 import com.person.erp.order.service.IOrderOperateService;
 import com.person.erp.order.service.IOrderService;
 import org.springframework.stereotype.Service;
@@ -21,9 +19,10 @@ public class OrderOperateServiceImpl implements IOrderOperateService {
     private IOrderService orderService;
 
     @Override
-    public boolean insert(OrderOperate orderOperate, OrderDTO order) {
+    @Transactional
+    public boolean insert(OrderOperate orderOperate, Order order) {
         long insert = dao.insert(orderOperate);
-        boolean success = orderService.updateOrder(order);
+        boolean success = orderService.updateStatus(order);
         return insert > 0 && success ? true : false;
     }
 }

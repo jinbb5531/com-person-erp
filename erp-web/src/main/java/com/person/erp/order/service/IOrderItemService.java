@@ -1,6 +1,7 @@
 package com.person.erp.order.service;
 
 import com.person.erp.order.entity.OrderItem;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public interface IOrderItemService {
      * @param orderCodes
      * @return
      */
-    boolean deleteByOrderCodeBatch(String...orderCodes);
+    boolean deleteByOrderCodeBatch(@Param("array") String[]orderCodes, @Param("systemTag") long systemTag);
 
     /**
      * 批量删除订单明细

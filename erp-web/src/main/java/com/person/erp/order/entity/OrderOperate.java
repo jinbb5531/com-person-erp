@@ -15,15 +15,12 @@ import java.sql.Timestamp;
  */
 @Setter
 @Getter
-@Table(name = "erp_order_operate")
 public class OrderOperate {
 
     /**
      * 主键
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long code;
+    private Long code;
     /**
      * 订单号
      */
