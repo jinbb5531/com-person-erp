@@ -31,7 +31,7 @@ import java.util.Set;
 @Slf4j
 public class ApplicationStartupListener implements ApplicationListener<ContextRefreshedEvent> {
 
-    @Value("${server.context-path:/}")
+    @Value("${server.servlet.context-path:/}")
     private String contextPath;
 
     @Resource

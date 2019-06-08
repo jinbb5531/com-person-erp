@@ -5,6 +5,7 @@ import com.itexplore.core.api.model.PageResult;
 import com.itexplore.core.api.model.Pager;
 import com.itexplore.core.api.utils.PageChangeUtils;
 import com.itexplore.core.api.utils.ResultUtils;
+import com.person.erp.common.annotation.Permission;
 import com.person.erp.common.utils.PojoChangeUtils;
 import com.person.erp.common.valid.Delete;
 import com.person.erp.common.valid.Update;
@@ -33,6 +34,7 @@ public class TradeController {
     private ITradeService tradeService;
 
     @PostMapping("/add")
+    @Permission(modelName = "供应商管理", name = "新增供应商")
     public ResponseEntity add(@RequestBody @Validated ProvideTradeDTO dto) {
 
         Long id = tradeService.add(dto);
@@ -51,6 +53,7 @@ public class TradeController {
     }
 
     @PutMapping("/update")
+    @Permission(modelName = "供应商管理", name = "修改供应商")
     public ResponseEntity update(@RequestBody @Validated({Update.class}) ProvideTradeDTO dto) {
 
         boolean success = tradeService.update(dto);
@@ -73,6 +76,7 @@ public class TradeController {
     }
 
     @DeleteMapping("/deletes")
+    @Permission(modelName = "供应商管理", name = "删除供应商")
     public ResponseEntity deletes(@RequestBody @Validated({Delete.class}) ProvideTradeDTO dto) {
 
         boolean success = tradeService.deletes(dto.getIds());
