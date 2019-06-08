@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.itexplore.core.api.model.Pager;
 import com.itexplore.core.api.utils.PageChangeUtils;
 import com.itexplore.core.api.utils.ResultUtils;
+import com.person.erp.common.annotation.Permission;
 import com.person.erp.common.valid.Delete;
 import com.person.erp.common.valid.Update;
 import com.person.erp.system.entity.ChildSystem;
@@ -30,6 +31,7 @@ public class SystemController {
     private ISystemService systemService;
 
     @PostMapping("/add")
+    @Permission(modelName = "子系统管理", name = "新增子系统")
     public ResponseEntity add(@RequestBody @Validated ChildSystemDTO dto) {
 
         Long id = systemService.add(dto);
@@ -48,6 +50,7 @@ public class SystemController {
     }
 
     @PutMapping("/update")
+    @Permission(modelName = "子系统管理", name = "修改子系统")
     public ResponseEntity update(@RequestBody @Validated(Update.class) ChildSystemDTO dto) {
 
         boolean success = systemService.update(dto);
@@ -66,6 +69,7 @@ public class SystemController {
     }
 
     @DeleteMapping("/delete")
+    @Permission(modelName = "子系统管理", name = "删除子系统")
     public ResponseEntity delete(@RequestBody @Validated(Delete.class) ChildSystemDTO dto) {
 
         boolean success = systemService.delete(dto.getId());

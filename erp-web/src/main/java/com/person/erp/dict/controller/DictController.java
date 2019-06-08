@@ -5,6 +5,7 @@ import com.itexplore.core.api.model.PageResult;
 import com.itexplore.core.api.model.Pager;
 import com.itexplore.core.api.utils.PageChangeUtils;
 import com.itexplore.core.api.utils.ResultUtils;
+import com.person.erp.common.annotation.Permission;
 import com.person.erp.common.utils.DealResultUtils;
 import com.person.erp.common.valid.Delete;
 import com.person.erp.common.valid.Single;
@@ -77,6 +78,7 @@ public class DictController {
     }
 
     @PostMapping("/add")
+    @Permission(modelName = "字典管理", name = "新增字典")
     public ResponseEntity addDict(@RequestBody @Validated DictDTO dictDTO) {
 
         String id = dictService.addDict(dictDTO);
@@ -95,6 +97,7 @@ public class DictController {
     }
 
     @PutMapping("/update")
+    @Permission(modelName = "字典管理", name = "修改字典")
     public ResponseEntity updateDict(@RequestBody @Validated({Update.class}) DictDTO dictDTO) {
 
         boolean success = dictService.updateDict(dictDTO);
@@ -124,6 +127,7 @@ public class DictController {
     }
 
     @DeleteMapping("/deletes")
+    @Permission(modelName = "字典管理", name = "删除字典")
     public ResponseEntity deletes(@RequestBody @Validated(Delete.class) DictDTO dictDTO) {
 
         boolean success = dictService.deletes(dictDTO.getIds());
