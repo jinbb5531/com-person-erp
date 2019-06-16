@@ -46,6 +46,7 @@ public class OrderServiceImpl implements IOrderService {
         //获取当前用户的系统标识符
         order1.setSystemTag(user.getSystemTag());
 //        order1.setSystemTag(1);
+        order1.setOrderName(order.getOrderName());
         order1.setDeadline(order.getDeadline());
         order1.setRemark(order.getRemark());
         int insert = dao.insert(order1);
@@ -67,11 +68,11 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public boolean deleteOrder(Order order) {
-        order.setSystemTag(TokenUtils.getUser().getSystemTag());
-//        order.setSystemTag(1);
+        Long systemTag = TokenUtils.getUser().getSystemTag();
+        order.setSystemTag(systemTag);
         int delete = dao.delete(order);
-        boolean success = orderItemService.deleteByOrderCode(order.getOrderCode());
-        return delete > 0 && success ? true : false;
+        boolean success = orderItemService.deleteByOrderCode(order.getOrderCode(), systemTag);
+        return delete >= 0 && success ? true : false;
     }
 
     @Override
@@ -85,6 +86,7 @@ public class OrderServiceImpl implements IOrderService {
         order1.setDeadline(order.getDeadline());
         order1.setOrderCode(order.getOrderCode());
         order1.setRemark(order.getRemark());
+        order1.setOrderName(order.getOrderName());
         order1.setSystemTag(user.getSystemTag());
 //        order1.setSystemTag(1);
 //        order1.setStatus(order.getStatus());

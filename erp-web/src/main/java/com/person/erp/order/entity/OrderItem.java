@@ -16,7 +16,7 @@ import javax.validation.constraints.NotEmpty;
  */
 @Getter
 @Setter
-@Table(name = "erp_order_item")
+@Table(name = "ERP_ORDER_ITEM")
 public class OrderItem {
     /**
      * 主键
