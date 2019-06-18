@@ -101,4 +101,15 @@ public interface IUserService {
      * @return com.person.erp.identity.entity.User
      */
     User getUserByPhone(String mobilePhone);
+
+    /**
+     * 修改密码
+     * @author zhuwj
+     * @since 2019/6/19 1:04
+     * @param userCode
+     * @param systemTag
+     * @param userPwd
+     * @return boolean
+     */
+    boolean updatePassword(String userCode, Long systemTag, String userPwd);
 }

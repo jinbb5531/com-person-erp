@@ -105,6 +105,11 @@ public class User implements Serializable {
     private String workKind;
 
     /**
+     * 地址
+     */
+    private String userAddr;
+
+    /**
      * 对应的所有角色
      */
     private List<Role> roleList;

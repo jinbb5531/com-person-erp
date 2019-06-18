@@ -197,4 +197,17 @@ public interface IUserDao {
      * @return com.person.erp.identity.entity.User
      */
     User getUserByPhone(@Param("mobilePhone") String mobilePhone);
+
+    /**
+     * 修改密码
+     * @author zhuwj
+     * @since 2019/6/19 1:10
+     * @param userCode
+     * @param systemTag
+     * @param userPwd
+     * @return int
+     */
+    int updatePassword(@Param("userCode")String userCode,
+                       @Param("systemTag")Long systemTag,
+                       @Param("userPwd")String userPwd);
 }

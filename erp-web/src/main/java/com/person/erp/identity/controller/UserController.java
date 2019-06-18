@@ -9,13 +9,11 @@ import com.itexplore.core.api.utils.ResultUtils;
 import com.itexplore.core.common.utils.judge.JudgeUtils;
 import com.person.erp.common.annotation.Permission;
 import com.person.erp.common.utils.PojoChangeUtils;
-import com.person.erp.common.valid.Delete;
-import com.person.erp.common.valid.Insert;
-import com.person.erp.common.valid.Update;
-import com.person.erp.common.valid.UserDelete;
+import com.person.erp.common.valid.*;
 import com.person.erp.identity.entity.Role;
 import com.person.erp.identity.entity.User;
 import com.person.erp.identity.model.ListDTO;
+import com.person.erp.identity.model.LoginDTO;
 import com.person.erp.identity.model.RoleDTO;
 import com.person.erp.identity.model.UserDTO;
 import com.person.erp.identity.service.IUserService;
@@ -27,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.groups.Default;
 import javax.xml.transform.Result;
 import java.util.ArrayList;
 import java.util.List;
@@ -117,6 +116,14 @@ public class UserController {
 
         return ResultUtils.asserts(new PageResult<>(dtoList, PageChangeUtils.pageInfoToPager(pageInfo)));
 
+    }
+
+    @PutMapping("/update/password")
+    public ResponseEntity updatePassword(@RequestBody @Validated({UpdatePwd.class}) LoginDTO loginDTO) {
+
+        boolean success = userService.updatePassword(loginDTO.getUserCode(), loginDTO.getSystemTag(), loginDTO.getUserPwd());
+
+        return ResultUtils.asserts(success);
     }
 
 }
