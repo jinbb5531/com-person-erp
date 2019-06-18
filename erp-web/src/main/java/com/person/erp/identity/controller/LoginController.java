@@ -87,7 +87,25 @@ public class LoginController {
     }
 
     @PostMapping("/phone")
-    public ResponseEntity loginIntoByPhone(@RequestBody @Validated({LoginPhone.class}) LoginDTO dto) {
+    public ResponseEntity loginIntoByPhone(@RequestBody @Validated({LoginPhone.class}) LoginDTO dto, HttpServletRequest request) {
+
+        // 校验验证码
+        String verifyCodeKey = WebConstant.VERIFY_CODE + request.getSession().getId();
+        String code = (String) RedisUtils.get(verifyCodeKey);
+
+        if (code == null) {
+
+            throw new ApiException(HttpStatus.BAD_REQUEST, "验证码已失效");
+
+        } else if (!code.equals(dto.getCode())) {
+
+            throw new ApiException(HttpStatus.BAD_REQUEST, "验证码错误");
+
+        } else {
+
+            RedisUtils.remove(verifyCodeKey);
+
+        }
 
         String token = loginService.loginIntoByPhone(dto.getMobilePhone(), dto.getUserPwd());
 

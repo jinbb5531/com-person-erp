@@ -362,4 +362,18 @@ public class UserServiceImpl implements IUserService {
 
     }
 
+    @Override
+    public boolean updatePassword(String userCode, Long systemTag, String userPwd) {
+
+        User user = getUser(userCode, systemTag);
+
+        if (user == null) {
+
+            throw new ApiException(HttpStatus.NOT_FOUND, "该用户不存在");
+
+        }
+
+        return userDao.updatePassword(userCode, systemTag, MD5Utils.getMD5(userPwd)) > 0;
+    }
+
 }
