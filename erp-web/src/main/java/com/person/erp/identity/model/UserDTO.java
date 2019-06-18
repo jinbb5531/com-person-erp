@@ -97,6 +97,11 @@ public class UserDTO {
     private String workKind;
 
     /**
+     * 地址
+     */
+    private String userAddr;
+
+    /**
      * 角色主键集
      */
     private Long[] roleIds;

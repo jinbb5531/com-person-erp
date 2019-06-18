@@ -19,6 +19,7 @@
 		<result property="joinAt" column="JOIN_AT"/>
 		<result property="sex" column="SEX"/>
 		<result property="workKind" column="WORK_KIND"/>
+		<result property="userAddr" column="USER_ADDR"/>
 		<collection property="roleList" javaType="ArrayList" ofType="Role" autoMapping="false">
 			<id property="id" column="ROLE_ID"/>
 			<result property="roleName" column="ROLE_NAME"/>
@@ -56,7 +57,8 @@
 			BASE_SALARY,
 			JOIN_AT,
 			SEX,
-			WORK_KIND
+			WORK_KIND,
+			USER_ADDR
         ) VALUES (
 			#{userCode},
 			#{userPwd},
@@ -74,7 +76,8 @@
 			#{baseSalary},
 			#{joinAt},
 			#{sex},
-			#{workKind}
+			#{workKind},
+			#{userAddr}
         )
     </insert>
 
@@ -135,6 +138,9 @@
 			<if test="workKind != null and workKind != ''">
 				WORK_KIND = #{workKind},
 			</if>
+			<if test="userAddr != null and userAddr != ''">
+				USER_ADDR = #{userAddr},
+			</if>
 		</set>
         WHERE USER_CODE = #{userCode, jdbcType=VARCHAR} AND SYSTEM_TAG = #{systemTag}
 	</update>
@@ -158,6 +164,7 @@
 			U.JOIN_AT,
 			U.SEX,
 			U.WORK_KIND,
+			U.USER_ADDR,
 			UR.ROLE_ID,
 			R.ROLE_NAME,
 			R.SHOW_FLAG,
@@ -188,6 +195,14 @@
 			#{item}
 		</foreach>
 		AND SYSTEM_TAG = #{systemTag}
+	</update>
+
+	<update id="updatePassword">
+		UPDATE ERP_USER
+		<set>
+			USER_PWD = #{userPwd}
+		</set>
+		WHERE USER_CODE = #{userCode} AND SYSTEM_TAG = #{systemTag}
 	</update>
 
 	<update id="updatePasswordBatch">
@@ -302,7 +317,6 @@
 			MOBILE_PHONE,
 			QQ_NUM,
 			USER_MAIL,
-			DEL_FLAG,
 			CREATE_BY,
 			CREATE_AT,
 			UPDATE_BY,
@@ -356,10 +370,6 @@
 			STATUS = #{status}
 			AND
 			</if>
-			<if test="delFlag != null">
-			DEL_FLAG = #{delFlag}
-			AND
-			</if>
 			<if test="systemTag != null and systemTag != ''">
 			SYSTEM_TAG = #{systemTag}
 			AND
@@ -389,6 +399,7 @@
 		U.JOIN_AT,
 		U.SEX,
 		U.WORK_KIND,
+		U.USER_ADDR,
 		R.ID AS ROLE_ID,
 		R.ROLE_NAME,
 		R.SHOW_FLAG
