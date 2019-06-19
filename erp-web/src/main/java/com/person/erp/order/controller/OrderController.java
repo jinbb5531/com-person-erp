@@ -4,31 +4,22 @@ import com.github.pagehelper.PageInfo;
 import com.itexplore.core.api.model.PageResult;
 import com.itexplore.core.api.utils.PageChangeUtils;
 import com.itexplore.core.api.utils.ResultUtils;
-import com.person.erp.common.constant.WebConstant;
 import com.person.erp.common.utils.TokenUtils;
 import com.person.erp.identity.entity.User;
 import com.person.erp.order.constant.OperateTypeConstant;
 import com.person.erp.order.constant.OrderConstant;
 import com.person.erp.order.entity.Order;
-import com.person.erp.order.entity.OrderItem;
 import com.person.erp.order.entity.OrderOperate;
 import com.person.erp.order.model.OrderDTO;
-import com.person.erp.order.service.IOrderItemService;
 import com.person.erp.order.service.IOrderOperateService;
 import com.person.erp.order.service.IOrderService;
-import com.sun.tools.corba.se.idl.constExpr.Or;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.xml.transform.Result;
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 
 
 @RestController
@@ -95,13 +86,11 @@ public class OrderController {
     /**
      * 删除订单
      *
-     * @param orderCode
+     * @param order
      * @return
      */
     @DeleteMapping
-    private ResponseEntity delete(@RequestParam(name = "orderCode", required = true) String orderCode) {
-        Order order = new Order();
-        order.setOrderCode(orderCode);
+    private ResponseEntity delete( Order order) {
         boolean success = orderService.deleteOrder(order);
         if (success) {
             return ResultUtils.success();

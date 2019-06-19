@@ -3,10 +3,12 @@
 <mapper namespace="com.person.erp.order.dao.IOrderDAO">
     <resultMap id="BaseResult" type="com.person.erp.order.entity.Order">
         <id column="ORDER_CODE" property="orderCode" jdbcType="VARCHAR"/>
+        <result column="ORDER_NAME" property="orderName" jdbcType="VARCHAR"/>
         <result column="CUSTOMER" property="customer" jdbcType="VARCHAR"/>
         <result column="CREATE_AT" property="createAt" jdbcType="TIMESTAMP"/>
         <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
         <result column="UPDATE_AT" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR"/>
         <result column="ORDER_STATUS" property="status" jdbcType="INTEGER"/>
         <result column="CUTTER" property="cutter" jdbcType="VARCHAR"/>
         <result column="HEMMER" property="hemmer" jdbcType="VARCHAR"/>
@@ -33,10 +35,12 @@
     </resultMap>
     <resultMap id="baseOrder" type="com.person.erp.order.entity.Order">
         <id column="ORDER_CODE" property="orderCode" jdbcType="VARCHAR"/>
+        <result column="ORDER_NAME" property="orderName" jdbcType="VARCHAR"/>
         <result column="CUSTOMER" property="customer" jdbcType="VARCHAR"/>
         <result column="CREATE_AT" property="createAt" jdbcType="TIMESTAMP"/>
         <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
         <result column="UPDATE_AT" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR"/>
         <result column="ORDER_STATUS" property="status" jdbcType="INTEGER"/>
         <result column="CUTTER" property="cutter" jdbcType="VARCHAR"/>
         <result column="HEMMER" property="hemmer" jdbcType="VARCHAR"/>
@@ -50,46 +54,49 @@
     </resultMap>
 
     <sql id="baseColumn">
-        ORDER_CODE,  CUSTOMER, CREATE_AT, CREATE_BY, UPDATE_AT, ORDER_STATUS, CUTTER, HEMMER, PACKER, DEADLINE, SYSTEM_TAG, REMARK,
+        ORDER_CODE, ORDER_NAME, CUSTOMER, CREATE_AT, CREATE_BY, UPDATE_AT, UPDATE_BY, ORDER_STATUS, CUTTER, HEMMER, PACKER, DEADLINE, SYSTEM_TAG, REMARK,
         CUT_AT, HEM_AT,PACK_AT
     </sql>
     <update id="update" parameterType="com.person.erp.order.entity.Order">
         UPDATE ERP_ORDER
         <set>
-            <if test="customer != null">
+            <if test="customer != null and customer != ''">
                 CUSTOMER = #{customer},
             </if>
+            <if test="orderName!= null and orderName != ''">
+                ORDER_NAME = #{orderName},
+            </if>
             <if test="updateAt != null">
                 UPDATE_AT = #{updateAt},
             </if>
-            <if test="status != null">
+            <if test="status != null and status != ''">
                 ORDER_STATUS = #{status},
             </if>
-            <if test="updateAt != null">
-                UPDATE_AT = #{updateAt},
+            <if test="updateBy != null and updateBy != ''">
+                UPDATE_BY = #{updateBy},
             </if>
-            <if test="cutter != null">
+            <if test="cutter != null and cutter != ''">
                 CUTTER = #{cutter},
             </if>
-            <if test="hemmer != null">
+            <if test="hemmer != null and hemmer != ''">
                 HEMMER = #{hemmer},
             </if>
-            <if test="packer != null">
+            <if test="packer != null and packer != ''">
                 PACKER = #{packer},
             </if>
             <if test="deadline != null">
                 DEADLINE = #{deadline},
             </if>
-            <if test="remark != null">
-                REMARK = #{remark}
+            <if test="remark != null and remark != ''">
+                REMARK = #{remark},
             </if>
             <if test="cutAt != null">
-                CUT_AT = #{cutAt}
+                CUT_AT = #{cutAt},
             </if>
-            <if test="hemAt != null">
-                HEM_AT = #{hemAt}
+            <if test="hemAt != null ">
+                HEM_AT = #{hemAt},
             </if>
-            <if test="packAt">
+            <if test="packAt != null ">
                 PACK_AT = #{packAt}
             </if>
         </set>
@@ -101,14 +108,16 @@
             SELECT REPLACE(UUID(),'-','')
         </selectKey>
         INSERT INTO ERP_ORDER
-        (ORDER_CODE, CUSTOMER, CREATE_AT, CREATE_BY, UPDATE_AT, ORDER_STATUS, CUTTER, HEMMER, PACKER, DEADLINE,
+        (ORDER_CODE, ORDER_NAME, CUSTOMER, CREATE_AT, CREATE_BY, UPDATE_AT, UPDATE_BY, ORDER_STATUS, CUTTER, HEMMER, PACKER, DEADLINE,
         SYSTEM_TAG, REMARK, CUT_AT, HEM_AT, PACK_AT)
         VALUES(
         #{orderCode},
+        #{orderName},
         #{customer},
         #{createAt},
         #{createBy},
         #{updateAt},
+        #{updateBy},
         #{status},
         #{cutter},
         #{hemmer},
@@ -145,11 +154,17 @@
         <include refid="baseColumn"/>
         FROM ERP_ORDER
         WHERE
+        <if test="orderName != null and orderName !=''">
+            ORDER_NAME = #{orderName}
+        </if>
         <if test="orderCode != null and orderCode != ''">
             ORDER_CODE = #{orderCode} AND
         </if>
-        <if test="customer != null and orderCode != ''">
+        <if test="customer != null and customer != ''">
             CUSTOMER = #{customer} AND
+        </if>
+        <if test="status != null and status != ''">
+            ORDER_STATUS = #{status} AND
         </if>
         SYSTEM_TAG = #{systemTag} AND
         1=1
