@@ -18,6 +18,10 @@ public class Order {
      */
     private String orderCode;
     /**
+     * 订单名称
+     */
+    private String orderName;
+    /**
      * 客户名
      */
     private String customer;

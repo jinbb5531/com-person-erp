@@ -42,8 +42,8 @@ public class OrderItemServiceImpl implements IOrderItemService {
     }
 
     @Override
-    public boolean deleteByOrderCode(String orderCode) {
-        return dao.deleteByOrderCode(orderCode) >= 0;
+    public boolean deleteByOrderCode(String orderCode, long systemTag) {
+        return dao.deleteByOrderCode(orderCode,systemTag) >= 0;
     }
 
     @Override

@@ -32,7 +32,7 @@ public interface IOrderItemService {
      * @param orderCode
      * @return
      */
-    boolean deleteByOrderCode(String orderCode);
+    boolean deleteByOrderCode(String orderCode, long systemTag);
 
     /**
      * 根据orderCode批量删除明细
