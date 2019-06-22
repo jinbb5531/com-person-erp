@@ -2,6 +2,7 @@ package com.person.erp.identity.model;
 
 import com.person.erp.common.valid.LoginPhone;
 import com.person.erp.common.valid.UpdatePwd;
+import com.person.erp.common.valid.UpdatePwdValid;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,8 +22,8 @@ public class LoginDTO {
     /**
      * 用户帐号
      */
-    @NotEmpty(groups = {Default.class, UpdatePwd.class}, message = "[userCode] 用户帐号不能为空！")
-    @Pattern(groups = {Default.class, UpdatePwd.class}, regexp = "[a-zA-Z0-9_]{4,10}", message = "[userCode] 用户帐号必须由4-10位数字、字母或下划线组成")
+    @NotEmpty(groups = {Default.class, UpdatePwd.class, UpdatePwdValid.class}, message = "[userCode] 用户帐号不能为空！")
+    @Pattern(groups = {Default.class, UpdatePwd.class, UpdatePwdValid.class}, regexp = "[a-zA-Z0-9_]{4,10}", message = "[userCode] 用户帐号必须由4-10位数字、字母或下划线组成")
     private String userCode;
 
     /**
@@ -34,8 +35,8 @@ public class LoginDTO {
     /**
      * 系统标识
      */
-    @NotNull(groups = {Default.class, UpdatePwd.class}, message = "[systemTag] 系统标识不能为空")
-    @Min(groups = {Default.class, UpdatePwd.class}, value = 0, message = "[systemTag] 系统标识最小值为 0")
+    @NotNull(groups = {Default.class, UpdatePwd.class, UpdatePwdValid.class}, message = "[systemTag] 系统标识不能为空")
+    @Min(groups = {Default.class, UpdatePwd.class, UpdatePwdValid.class}, value = 0, message = "[systemTag] 系统标识最小值为 0")
     private Long systemTag;
 
     /**
@@ -46,5 +47,11 @@ public class LoginDTO {
 
     @NotBlank(groups = {Default.class, LoginPhone.class},message = "[code] 验证码不能为空")
     private String code;
+
+    @NotEmpty(groups = {UpdatePwdValid.class}, message = "[oldPwd] 旧密码不能为空！")
+    private String oldPwd;
+
+    @NotEmpty(groups = {UpdatePwdValid.class}, message = "[newPwd] 新密码不能为空！")
+    private String newPwd;
 
 }

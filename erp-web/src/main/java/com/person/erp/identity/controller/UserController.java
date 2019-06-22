@@ -126,4 +126,12 @@ public class UserController {
         return ResultUtils.asserts(success);
     }
 
+    @PutMapping("/update/password/new")
+    public ResponseEntity updatePasswordValid(@RequestBody @Validated({UpdatePwdValid.class}) LoginDTO loginDTO) {
+
+        boolean success = userService.updatePasswordValid(loginDTO.getUserCode(), loginDTO.getSystemTag(), loginDTO.getOldPwd(), loginDTO.getNewPwd());
+
+        return ResultUtils.asserts(success);
+    }
+
 }
