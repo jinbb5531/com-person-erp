@@ -17,7 +17,7 @@ public interface IOrderItemDAO extends BaseDao<OrderItem> {
      * @param orderCode
      * @return
      */
-     int deleteByOrderCode(String orderCode);
+     int deleteByOrderCode(@Param("orderCode") String orderCode,@Param("systemTag") long systemTag);
 
     /**
      * 批量删除订单下的订单明细

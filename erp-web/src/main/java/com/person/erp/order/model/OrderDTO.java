@@ -26,6 +26,10 @@ public class OrderDTO implements Serializable {
      */
     private String orderCode;
     /**
+     * 订单名称
+     */
+    private String orderName;
+    /**
      * 客户名
      */
     @NotEmpty(message = "【customer】 不能为空！")

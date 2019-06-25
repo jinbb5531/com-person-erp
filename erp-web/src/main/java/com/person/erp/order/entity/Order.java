@@ -18,6 +18,10 @@ public class Order {
      */
     private String orderCode;
     /**
+     * 订单名称
+     */
+    private String orderName;
+    /**
      * 客户名
      */
     private String customer;
@@ -81,6 +85,9 @@ public class Order {
      * 订单明细，一对多
      */
     private List<OrderItem> itemList;
-
+    /**
+     * 订单操作，一对一
+     */
+    private OrderOperate operate;
 
 }

@@ -376,4 +376,22 @@ public class UserServiceImpl implements IUserService {
         return userDao.updatePassword(userCode, systemTag, MD5Utils.getMD5(userPwd)) > 0;
     }
 
+    @Override
+    public boolean updatePasswordValid(String userCode, Long systemTag, String oldPwd, String newPwd) {
+
+        User user = getUser(userCode, systemTag);
+
+        if (user == null) {
+
+            throw new ApiException(HttpStatus.NOT_FOUND, "该用户不存在");
+
+        } else if (!user.getUserPwd().equals(MD5Utils.getMD5(oldPwd))) {
+
+            throw new ApiException(HttpStatus.BAD_REQUEST, "旧密码不匹配，无法修改");
+
+        }
+
+        return userDao.updatePassword(userCode, systemTag, MD5Utils.getMD5(newPwd)) > 0;
+    }
+
 }

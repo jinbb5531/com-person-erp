@@ -112,4 +112,16 @@ public interface IUserService {
      * @return boolean
      */
     boolean updatePassword(String userCode, Long systemTag, String userPwd);
+
+    /**
+     * 修改密码，要检验旧密码是否正确
+     * @author zhuwj
+     * @since 2019/6/21 22:35
+     * @param userCode
+     * @param systemTag
+     * @param oldPwd
+     * @param newPwd
+     * @return boolean
+     */
+    boolean updatePasswordValid(String userCode, Long systemTag, String oldPwd, String newPwd);
 }
