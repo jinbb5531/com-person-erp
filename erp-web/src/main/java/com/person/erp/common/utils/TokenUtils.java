@@ -27,6 +27,8 @@ public class TokenUtils {
 
     private final static String PERMISSION_KEY = "permission";
 
+    private final static String MENU_KEY = "MENU";
+
 
 
     /**
@@ -183,7 +185,7 @@ public class TokenUtils {
     public static void removePermission() {
         String token = getRequestToken();
         if (!JudgeUtils.isEmpty(token)) {
-            RedisUtils.remove(token);
+            RedisUtils.remove(token + PERMISSION_KEY);
         }
     }
 
@@ -201,4 +203,69 @@ public class TokenUtils {
         recordPermission(token, menuList, timeout, unit);
     }
 
+    /**
+     * 存菜单集
+     * @author zhuwj
+     * @since 2019/6/26 0:50
+     * @param token
+     * @param menuList
+     * @param timeout
+     * @param minutes
+     * @return void
+     */
+    public static void recordMenuList(String token, List<MenuDTO> menuList, long timeout, TimeUnit minutes) {
+        RedisUtils.set(token + MENU_KEY, menuList, timeout, minutes);
+    }
+
+    /**
+     * 刷新权限时间
+     * @author zhuwj
+     * @since 2019/6/26 0:51
+     * @param menuList
+     * @param timeout
+     * @param unit
+     * @return void
+     */
+    public static void refreshMenuListDate(List<MenuDTO> menuList, long timeout, TimeUnit unit) {
+        String token = getRequestToken();
+        recordMenuList(token, menuList, timeout, unit);
+    }
+
+    /**
+     * 获取当前用户角色的所有菜单集
+     * @author zhuwj
+     * @since 2019/6/26 0:53
+     * @return java.util.List<com.person.erp.identity.model.MenuDTO>
+     */
+    public static List<MenuDTO> getMenuList() {
+        String token = getRequestToken();
+        return (List<MenuDTO>) RedisUtils.get(token + MENU_KEY);
+    }
+
+    /**
+     * 去除菜单List
+     * @author zhuwj
+     * @since 2019/6/26 1:02
+     * @param
+     * @return void
+     */
+    public static void removeMenuList() {
+        String token = getRequestToken();
+        if (!JudgeUtils.isEmpty(token)) {
+            RedisUtils.remove(token + MENU_KEY);
+        }
+    }
+
+    /**
+     * 刷新权限树时间
+     * @author zhuwj
+     * @since 2019/6/26 1:02
+     * @param timeout
+     * @param minutes
+     * @return void
+     */
+    public static void refreshPermissionDate(int timeout, TimeUnit minutes) {
+        String token = getRequestToken();
+        RedisUtils.expire(token + PERMISSION_KEY, timeout, minutes);
+    }
 }

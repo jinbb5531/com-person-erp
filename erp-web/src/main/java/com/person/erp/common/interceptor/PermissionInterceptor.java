@@ -74,14 +74,17 @@ public class PermissionInterceptor implements HandlerInterceptor {
      */
     private boolean existPermission(String servletPath) {
 
-        List<MenuDTO> permissionList = TokenUtils.getPermission();
+        List<MenuDTO> menuList = TokenUtils.getMenuList();
 
-        if (!JudgeUtils.isEmpty(permissionList) && !JudgeUtils.isEmpty(servletPath)) {
+        if (!JudgeUtils.isEmpty(menuList) && !JudgeUtils.isEmpty(servletPath)) {
 
             // 刷新权限缓存时间
-            TokenUtils.refreshPermissionDate(permissionList, timeout, TimeUnit.MINUTES);
+            TokenUtils.refreshMenuListDate(menuList, timeout, TimeUnit.MINUTES);
 
-            for (MenuDTO menu : permissionList) {
+            // 刷新权限缓存时间
+            TokenUtils.refreshPermissionDate(timeout, TimeUnit.MINUTES);
+
+            for (MenuDTO menu : menuList) {
 
                 if (!JudgeUtils.isEmpty(menu.getMenuUrl()) && menu.getMenuUrl().trim().contains(servletPath)) {
                     return true;
