@@ -168,6 +168,18 @@ public class MenuServiceImpl implements IMenuService {
     }
 
     @Override
+    public List<MenuDTO> getMenusByRoleIds(Long[] roleIds) {
+
+        List<Menu> menuList = menuDao.getPermissionListByRoleIds(roleIds);
+
+        List<MenuDTO> list = new ArrayList<>();
+
+        PojoChangeUtils.copyList(menuList, list, MenuDTO.class);
+
+        return list;
+    }
+
+    @Override
     public List<MenuDTO> findAllList() {
 
         List<Menu> list = menuDao.findList(null);

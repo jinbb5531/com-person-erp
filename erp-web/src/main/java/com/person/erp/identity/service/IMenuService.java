@@ -59,13 +59,22 @@ public interface IMenuService {
     boolean delete(Long id);
 
     /**
-     * 通过角色主键集获取所有权限
+     * 通过角色主键集获取所有权限(树形)
      * @author zhuwj
      * @since 2019/5/24 23:09
      * @param roleIds
      * @return java.util.List<com.person.erp.identity.model.MenuDTO>
      */
     List<MenuDTO> getPermissionByRoleIds(Long[] roleIds);
+
+    /**
+     * 通过角色主键集获取所有权限(List形)
+     * @author zhuwj
+     * @since 2019/5/24 23:09
+     * @param roleIds
+     * @return java.util.List<com.person.erp.identity.model.MenuDTO>
+     */
+    List<MenuDTO> getMenusByRoleIds(Long[] roleIds);
 
     /**
      * 获取所有菜单
