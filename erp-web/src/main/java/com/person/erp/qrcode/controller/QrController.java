@@ -25,7 +25,7 @@ import java.util.Hashtable;
 /**
  * 生成二维码
  */
-@RequestMapping("/qrCode")
+@RequestMapping("/api/qrcode")
 @RestController
 public class QrController {
     @GetMapping
