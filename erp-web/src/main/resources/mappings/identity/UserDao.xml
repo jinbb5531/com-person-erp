@@ -253,7 +253,7 @@
 		AND SYSTEM_TAG = #{systemTag}
 	</delete>
 
-	<delete id="deleteBatchByUser">
+	<delete id="deleteBatchByUsers">
 		DELETE FROM ERP_USER
 		WHERE
 		<foreach collection="userList" item="item" index="index" separator="or">
