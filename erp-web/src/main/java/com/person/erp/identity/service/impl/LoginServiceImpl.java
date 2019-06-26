@@ -75,6 +75,11 @@ public class LoginServiceImpl implements ILoginService {
         // 将用户权限放入 Redis 中
         TokenUtils.recordPermission(token, permissionList, timeout, TimeUnit.MINUTES);
 
+        // 将角色对应的所有菜单放入 redis 中
+        List<MenuDTO> menuList = menuService.getMenusByRoleIds(roldIdList.toArray(new Long[0]));
+
+        TokenUtils.recordMenuList(token, menuList, timeout, TimeUnit.MINUTES);
+
         return token;
     }
 
