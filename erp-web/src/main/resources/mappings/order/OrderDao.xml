@@ -19,6 +19,14 @@
         <result column="CUT_AT" property="cutAt" jdbcType="TIMESTAMP"/>
         <result column="HEM_AT" property="hemAt" jdbcType="TIMESTAMP"/>
         <result column="PACK_AT" property="packAt" jdbcType="TIMESTAMP"/>
+        <association property="operate" column="ORDER_CODE" javaType="com.person.erp.order.entity.OrderOperate">
+            <id column="CODE" property="code" jdbcType="BIGINT"/>
+            <result column="OPERATOR" property="operator" jdbcType="VARCHAR"/>
+            <result column="TYPE" property="type" jdbcType="VARCHAR"/>
+            <result column="CUT_NUM" property="cutNum" jdbcType="INTEGER"/>
+            <result column="WEIGHT" property="weight" jdbcType="VARCHAR"/>
+            <result column="OPERA_TIME" property="operaTime" jdbcType="TIMESTAMP"/>
+        </association>
         <collection property="itemList" ofType="com.person.erp.order.entity.OrderItem">
             <id column="CODE" property="code" jdbcType="BIGINT"/>
             <result column="ORDER_CODE" property="orderCode" jdbcType="VARCHAR"/>
@@ -146,6 +154,8 @@
         SELECT *
         FROM ERP_ORDER o LEFT JOIN ERP_ORDER_ITEM e
         ON o.ORDER_CODE = e.ORDER_CODE
+        LEFT JOIN ERP_ORDER_OPERATE p
+        ON  o.ORDER_CODE = p.ORDER_CODE
         WHERE o.ORDER_CODE = #{orderCode}
         AND o.SYSTEM_TAG = #{systemTag}
     </select>
