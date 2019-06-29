@@ -37,7 +37,7 @@ public class MvcConfigure extends WebMvcConfigurationSupport {
             registry.addInterceptor(loginInterceptor).addPathPatterns("/api/**/*").excludePathPatterns(
                     "/api/file/**",
                     "/api/user/update/password/new",
-
+                    "/api/sys/get/**",
                     "/api/login/**"
             );
 
