@@ -118,6 +118,35 @@ public class UserController {
 
     }
 
+    @GetMapping("/salary/page")
+    @Permission(modelName = "工资管理", name = "查询工资列表")
+    public ResponseEntity findPageSalary(UserDTO userDTO, Pager pager) {
+
+        PageInfo<User> pageInfo = userService.findPage(userDTO, pager);
+
+        List<UserDTO> dtoList = new ArrayList<>(pageInfo.getList().size());
+
+        pageInfo.getList().forEach(user -> {
+
+            UserDTO dto = new UserDTO();
+            BeanUtils.copyProperties(user, dto);
+
+            List<Role> roleList = user.getRoleList();
+            List<RoleDTO> roleDTOList = new ArrayList<>();
+
+            PojoChangeUtils.copyList(roleList, roleDTOList, RoleDTO.class);
+
+            dto.setRoles(roleDTOList);
+
+            dtoList.add(dto);
+
+        });
+
+
+        return ResultUtils.asserts(new PageResult<>(dtoList, PageChangeUtils.pageInfoToPager(pageInfo)));
+
+    }
+
     @PutMapping("/update/password")
     public ResponseEntity updatePassword(@RequestBody @Validated({UpdatePwd.class}) LoginDTO loginDTO) {
 
