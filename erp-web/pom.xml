@@ -17,6 +17,7 @@
     <properties>
         <mysql.connector>5.1.44</mysql.connector>
         <itexplore.core>1.0.10</itexplore.core>
+        <qr.code>0.1.7</qr.code>
     </properties>
     <dependencies>
         <!--私人开发依赖包-->
@@ -52,6 +53,11 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.sogyf</groupId>
+            <artifactId>goja-qrcode</artifactId>
+            <version>${qr.code}</version>
         </dependency>
     </dependencies>
 
