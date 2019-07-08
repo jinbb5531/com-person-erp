@@ -90,4 +90,13 @@ public class Order {
      */
     private OrderOperate operate;
 
+    /**
+     * 图片
+     */
+    private String image;
+
+    /**
+     * 原料数量
+     */
+    private Integer number;
 }

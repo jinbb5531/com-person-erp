@@ -84,6 +84,15 @@ public class OrderDTO implements Serializable {
     @NotEmpty(message = "【itemList】 不能为空！")
     private List<OrderItem> itemList;
 
+    /**
+     * 图片
+     */
+    private String image;
+
+    /**
+     * 原料数量
+     */
+    private Integer number;
 
 }
 
