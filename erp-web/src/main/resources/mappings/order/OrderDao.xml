@@ -111,7 +111,7 @@
             <if test="packAt != null ">
                 PACK_AT = #{packAt}
             </if>
-            <if test="image != null and image != ''">
+            <if test="image != null ">
                 IMAGE = #{image}
             </if>
             <if test="number != null ">
