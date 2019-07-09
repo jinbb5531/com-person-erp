@@ -246,12 +246,16 @@ public class UserServiceImpl implements IUserService {
             userDao.insertUserRoleBatch(newUserRoleList);
         }
 
+        // 不修改密码
+        userDTO.setUserPwd(null);
+
         BeanUtils.copyProperties(userDTO, user);
 
         // 密码加密
-        if (!JudgeUtils.isEmpty(userDTO.getUserPwd())) {
-            user.setUserPwd(MD5Utils.getMD5(userDTO.getUserPwd()));
-        }
+//        if (!JudgeUtils.isEmpty(userDTO.getUserPwd())) {
+//            user.setUserPwd(MD5Utils.getMD5(userDTO.getUserPwd()));
+//        }
+        user.setUpdateAt(new Timestamp(new Date().getTime()));
 
         return userDao.update(user) > 0;
     }
