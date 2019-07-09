@@ -20,6 +20,7 @@
         <result column="HEM_AT" property="hemAt" jdbcType="TIMESTAMP"/>
         <result column="PACK_AT" property="packAt" jdbcType="TIMESTAMP"/>
         <result column="IMAGE" property="image" jdbcType="VARCHAR"/>
+        <result column="NUMBER" property="number" jdbcType="BIGINT"/>
         <association property="operate" column="ORDER_CODE" javaType="com.person.erp.order.entity.OrderOperate">
             <id column="CODE" property="code" jdbcType="BIGINT"/>
             <result column="OPERATOR" property="operator" jdbcType="VARCHAR"/>
@@ -40,6 +41,7 @@
             <result column="NUMBER" property="number" jdbcType="INTEGER"/>
             <result column="PLANT_NUM" property="plantNum" jdbcType="INTEGER"/>
             <result column="SYSTEM_TAG" property="systemTag" jdbcType="BIGINT"/>
+            <result column="NUMBER" property="number" jdbcType="BIGINT"/>
         </collection>
     </resultMap>
     <resultMap id="baseOrder" type="com.person.erp.order.entity.Order">
@@ -65,7 +67,7 @@
 
     <sql id="baseColumn">
         ORDER_CODE, ORDER_NAME, CUSTOMER, CREATE_AT, CREATE_BY, UPDATE_AT, UPDATE_BY, ORDER_STATUS, CUTTER, HEMMER, PACKER, DEADLINE, SYSTEM_TAG, REMARK,
-        CUT_AT, HEM_AT, PACK_AT, IMAGE
+        CUT_AT, HEM_AT, PACK_AT, IMAGE, NUMBER
     </sql>
     <update id="update" parameterType="com.person.erp.order.entity.Order">
         UPDATE ERP_ORDER
@@ -112,6 +114,9 @@
             <if test="image != null and image != ''">
                 IMAGE = #{image}
             </if>
+            <if test="number != null ">
+                NUMBER =#{number}
+            </if>
         </set>
         WHERE ORDER_CODE = #{orderCode}
         AND SYSTEM_TAG = #{systemTag}
@@ -122,7 +127,7 @@
         </selectKey>
         INSERT INTO ERP_ORDER
         (ORDER_CODE, ORDER_NAME, CUSTOMER, CREATE_AT, CREATE_BY, UPDATE_AT, UPDATE_BY, ORDER_STATUS, CUTTER, HEMMER, PACKER, DEADLINE,
-        SYSTEM_TAG, REMARK, CUT_AT, HEM_AT, PACK_AT, IMAGE)
+        SYSTEM_TAG, REMARK, CUT_AT, HEM_AT, PACK_AT, IMAGE, NUMBER)
         VALUES(
         #{orderCode},
         #{orderName},
@@ -141,7 +146,8 @@
         #{cutAt},
         #{hemAt},
         #{packAt},
-        #{image}
+        #{image},
+        #{number}
         )
     </insert>
     <delete id="delete" parameterType="com.person.erp.order.entity.Order">
@@ -203,5 +209,10 @@
         SYSTEM_TAG = #{systemTag} AND
         1=1
         ORDER BY DEADLINE DESC
+    </select>
+    <select id="planNumber">
+        SELECT PACK_AT , NUMBER
+        FROM ERP_ORDER
+        ORDER BY PACK_AT
     </select>
 </mapper>

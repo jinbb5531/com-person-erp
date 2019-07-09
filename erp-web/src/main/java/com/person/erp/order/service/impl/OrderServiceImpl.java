@@ -84,6 +84,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public boolean updateOrder(OrderDTO order) {
+        List<OrderItem> itemList = order.getItemList();
         Order order1 = new Order();
         User user = TokenUtils.getUser();
         order1.setCustomer(order.getCustomer());
@@ -96,18 +97,16 @@ public class OrderServiceImpl implements IOrderService {
         order1.setImage(order.getImage());
         order1.setOrderName(order.getOrderName());
         order1.setSystemTag(user.getSystemTag());
-//        order1.setSystemTag(1);
-//        order1.setStatus(order.getStatus());
-//        order1.setCutter(order.getCutter());
-//        order1.setHemmer(order.getHemmer());
-//        order1.setPacker(order.getPacker());
-        List<OrderItem> itemList = order.getItemList();
+        Integer number =  0;
+        for (OrderItem orderItem : itemList) {
+            number += orderItem.getNumber();
+        }
+        order1.setNumber(number);
         boolean success = true;
         int update = dao.update(order1);
         if (!itemList.isEmpty()) {
             itemList.forEach(item -> item.setOrderCode(order.getOrderCode()));
             itemList.forEach(item -> item.setSystemTag(user.getSystemTag()));
-//            itemList.forEach(item -> item.setSystemTag(1));
             //跟新计划生产量
             itemList.forEach(item -> item.setPlantNum(
                     Math.floor((item.getSizeL() * item.getSizeW() * item.getNumber()) / (item.getProSizeL() * item.getProSizeW())
