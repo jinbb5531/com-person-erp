@@ -63,8 +63,13 @@
         <result column="HEM_AT" property="hemAt" jdbcType="TIMESTAMP"/>
         <result column="PACK_AT" property="packAt" jdbcType="TIMESTAMP"/>
         <result column="SYSTEM_TAG" property="systemTag" jdbcType="BIGINT"/>
+        <result column="NUMBER" property="number" jdbcType="BIGINT"/>
     </resultMap>
-
+    <resultMap id="simpleOrder" type="com.person.erp.order.entity.Order">
+        <id column="ORDER_CODE" property="orderCode" jdbcType="VARCHAR"/>
+        <result column="CUT_AT" property="cutAt" jdbcType="TIMESTAMP"/>
+        <result column="NUMBER" property="number" jdbcType="BIGINT"/>
+    </resultMap>
     <sql id="baseColumn">
         ORDER_CODE, ORDER_NAME, CUSTOMER, CREATE_AT, CREATE_BY, UPDATE_AT, UPDATE_BY, ORDER_STATUS, CUTTER, HEMMER, PACKER, DEADLINE, SYSTEM_TAG, REMARK,
         CUT_AT, HEM_AT, PACK_AT, IMAGE, NUMBER
@@ -210,9 +215,10 @@
         1=1
         ORDER BY DEADLINE DESC
     </select>
-    <select id="planNumber">
-        SELECT PACK_AT , NUMBER
+    <select id="planNumber" resultMap="simpleOrder" >
+        SELECT DATE(CUT_AT), SUM(NUMBER) NUM
         FROM ERP_ORDER
-        ORDER BY PACK_AT
+        WHERE CUT_AT BETWEEN #{startDate} AND #{endDate}
+        GROUP BY DAY(CUT_AT)
     </select>
 </mapper>
