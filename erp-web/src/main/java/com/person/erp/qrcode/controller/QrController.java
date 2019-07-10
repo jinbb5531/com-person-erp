@@ -1,15 +1,11 @@
 package com.person.erp.qrcode.controller;
 
-import ch.qos.logback.core.util.FileUtil;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import com.itexplore.core.api.utils.ResultUtils;
 import com.itexplore.core.common.utils.io.FileUtils;
-import com.person.erp.common.constant.WebConstant;
 import com.person.erp.qrcode.constants.QrConstants;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -59,4 +59,9 @@ public interface IOrderDAO  {
      * @return
      */
     List<Order> findPageByUser(Order order);
+
+    /**
+     * 获取订单的理想产量
+     */
+    List<Order>  planNumber(@Param(value = "startDate") Long startDate, @Param(value = "endDate") Long endDate);
 }

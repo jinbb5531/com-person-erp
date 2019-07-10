@@ -17,6 +17,7 @@ import com.person.erp.order.service.IOrderService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.validation.constraints.Min;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -37,11 +38,13 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public boolean createOrder(OrderDTO order) {
         User user = TokenUtils.getUser();
+        List<OrderItem> itemList = order.getItemList();
         Order order1 = new Order();
         order1.setCreateBy(user.getUserName());
 //        order1.setCreateBy("jin");
         order1.setCreateAt(new Timestamp(new Date().getTime()));
         order1.setCustomer(order.getCustomer());
+        order1.setImage(order.getImage());
         order1.setStatus(OrderConstant.CREATE.getCode());
         //获取当前用户的系统标识符
         order1.setSystemTag(user.getSystemTag());
@@ -49,10 +52,14 @@ public class OrderServiceImpl implements IOrderService {
         order1.setOrderName(order.getOrderName());
         order1.setDeadline(order.getDeadline());
         order1.setRemark(order.getRemark());
+        Integer number =  0;
+        for (OrderItem orderItem : itemList) {
+             number += orderItem.getNumber();
+        }
+        order1.setNumber(number);
         int insert = dao.insert(order1);
         //获取生成的订单主键
         String id = order1.getOrderCode();
-        List<OrderItem> itemList = order.getItemList();
         //关联订单号
         itemList.forEach(item -> item.setOrderCode(id));
         //设置明细的系统标识
@@ -77,6 +84,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public boolean updateOrder(OrderDTO order) {
+        List<OrderItem> itemList = order.getItemList();
         Order order1 = new Order();
         User user = TokenUtils.getUser();
         order1.setCustomer(order.getCustomer());
@@ -86,20 +94,19 @@ public class OrderServiceImpl implements IOrderService {
         order1.setDeadline(order.getDeadline());
         order1.setOrderCode(order.getOrderCode());
         order1.setRemark(order.getRemark());
+        order1.setImage(order.getImage());
         order1.setOrderName(order.getOrderName());
         order1.setSystemTag(user.getSystemTag());
-//        order1.setSystemTag(1);
-//        order1.setStatus(order.getStatus());
-//        order1.setCutter(order.getCutter());
-//        order1.setHemmer(order.getHemmer());
-//        order1.setPacker(order.getPacker());
-        List<OrderItem> itemList = order.getItemList();
+        Integer number =  0;
+        for (OrderItem orderItem : itemList) {
+            number += orderItem.getNumber();
+        }
+        order1.setNumber(number);
         boolean success = true;
         int update = dao.update(order1);
         if (!itemList.isEmpty()) {
             itemList.forEach(item -> item.setOrderCode(order.getOrderCode()));
             itemList.forEach(item -> item.setSystemTag(user.getSystemTag()));
-//            itemList.forEach(item -> item.setSystemTag(1));
             //跟新计划生产量
             itemList.forEach(item -> item.setPlantNum(
                     Math.floor((item.getSizeL() * item.getSizeW() * item.getNumber()) / (item.getProSizeL() * item.getProSizeW())
