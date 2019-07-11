@@ -123,7 +123,7 @@
 	        <if test="updateBy != null and updateBy != ''">
 				UPDATE_BY = #{updateBy},
 			</if>
-	        <if test="updateAt != null and updateAt != ''">
+	        <if test="updateAt != null ">
 				UPDATE_AT = #{updateAt},
 			</if>
 			<if test="baseSalary != null and baseSalary != ''">
@@ -186,7 +186,7 @@
 			<if test="updateBy != null and updateBy != ''">
 			UPDATE_BY = #{updateBy},
 			</if>
-			<if test="updateAt != null and updateAt != ''">
+			<if test="updateAt != null ">
 			UPDATE_AT = #{updateAt},
 			</if>
 		</set>
@@ -448,7 +448,7 @@
 			<if test="updateBy != null and updateBy != ''">
 				UPDATE_BY = #{updateBy},
 			</if>
-			<if test="updateAt != null and updateAt != ''">
+			<if test="updateAt != null ">
 				UPDATE_AT = #{updateAt},
 			</if>
 		</set>

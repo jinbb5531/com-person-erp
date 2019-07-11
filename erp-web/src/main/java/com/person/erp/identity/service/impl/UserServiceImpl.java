@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import javax.management.relation.RoleList;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
