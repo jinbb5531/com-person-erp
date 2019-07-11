@@ -11,6 +11,11 @@
         <result column="OPERA_TIME" property="operaTime" jdbcType="TIMESTAMP"/>
         <result column="SYSTEM_TAG" property="systemTag" jdbcType="BIGINT"/>
     </resultMap>
+    <resultMap id="simpleOperate" type="com.person.erp.order.entity.OrderOperate">
+        <id column="CODE" property="code" jdbcType="BIGINT"/>
+        <result column="CUT_NUM" property="cutNum" jdbcType="INTEGER"/>
+        <result column="OPERA_TIME" property="operaTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
     <insert id="insert" parameterType="com.person.erp.order.entity.OrderOperate">
         INSERT INTO ERP_ORDER_OPERATE
         (CODE, ORDER_CODE, OPERATOR, TYPE, CUT_NUM, WEIGHT, OPERA_TIME, SYSTEM_TAG)
@@ -18,4 +23,13 @@
             #{code}, #{orderCode}, #{operator}, #{type}, #{cutNum}, #{weight}, #{operaTime}, #{systemTag}
         )
     </insert>
+    <select id="realYiely" resultMap="simpleOperate">
+        SELECT DATE(OPERA_TIME) operaTime, SUM(CUT_NUM) cutNum
+        FROM ERP_ORDER_OPERATE
+        WHERE UNIX_TIMESTAMP(OPERA_TIME) BETWEEN #{startDate} AND #{endDate}
+        AND SYSTEM_TAG = #{systemTag}
+        AND TYPE = 0
+        GROUP BY DAY(OPERA_TIME)
+        ORDER BY OPERA_TIME DESC
+    </select>
 </mapper>

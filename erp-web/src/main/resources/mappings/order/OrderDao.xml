@@ -216,9 +216,11 @@
         ORDER BY DEADLINE DESC
     </select>
     <select id="planNumber" resultMap="simpleOrder" >
-        SELECT DATE(CUT_AT), SUM(NUMBER) NUM
+        SELECT DATE(CUT_AT) cutAt, SUM(NUMBER) number
         FROM ERP_ORDER
-        WHERE CUT_AT BETWEEN #{startDate} AND #{endDate}
+        WHERE UNIX_TIMESTAMP(CUT_AT) BETWEEN #{startDate} AND #{endDate}
+        AND SYSTEM_TAG = #{systemTag}
         GROUP BY DAY(CUT_AT)
+        ORDER BY CUT_AT DESC
     </select>
 </mapper>
