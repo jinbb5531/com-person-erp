@@ -63,5 +63,5 @@ public interface IOrderDAO  {
     /**
      * 获取订单的理想产量
      */
-    List<Order>  planNumber(@Param(value = "startDate") Long startDate, @Param(value = "endDate") Long endDate);
+    List<Order>  planNumber(@Param(value = "startDate") Long startDate, @Param(value = "endDate") Long endDate, @Param(value = "systemTag") Long systemTag);
 }

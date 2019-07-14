@@ -18,6 +18,7 @@
         <mysql.connector>5.1.44</mysql.connector>
         <itexplore.core>1.0.10</itexplore.core>
         <qr.code>0.1.7</qr.code>
+        <json>1.2.47</json>
     </properties>
     <dependencies>
         <!--私人开发依赖包-->
@@ -58,6 +59,12 @@
             <groupId>com.github.sogyf</groupId>
             <artifactId>goja-qrcode</artifactId>
             <version>${qr.code}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${json}</version>
         </dependency>
     </dependencies>
 
