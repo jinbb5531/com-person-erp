@@ -182,15 +182,18 @@
         FROM ERP_ORDER
         WHERE
         <if test="orderName != null and orderName !=''">
-            ORDER_NAME = #{orderName}
+            ORDER_NAME LIKE '%' #{orderName} '%' AND
         </if>
         <if test="orderCode != null and orderCode != ''">
-            ORDER_CODE = #{orderCode} AND
+            ORDER_CODE LIKE '%' #{orderCode} '%' AND
         </if>
         <if test="customer != null and customer != ''">
-            CUSTOMER = #{customer} AND
+            CUSTOMER LIKE '%' #{customer} '%' AND
         </if>
-        <if test="status != null and status != ''">
+        <if test="number != null">
+            NUMBER =  #{number} AND
+        </if>
+        <if test="status != null">
             ORDER_STATUS = #{status} AND
         </if>
         SYSTEM_TAG = #{systemTag} AND
@@ -220,6 +223,7 @@
         FROM ERP_ORDER
         WHERE UNIX_TIMESTAMP(CUT_AT) BETWEEN #{startDate} AND #{endDate}
         AND SYSTEM_TAG = #{systemTag}
+        AND ORDER_STATUS > 2
         GROUP BY DAY(CUT_AT)
         ORDER BY CUT_AT DESC
     </select>
