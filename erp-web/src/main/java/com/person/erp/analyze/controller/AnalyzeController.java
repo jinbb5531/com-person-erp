@@ -3,6 +3,7 @@ package com.person.erp.analyze.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.itexplore.core.api.utils.ResultUtils;
 import com.mysql.cj.xdevapi.JsonArray;
 import com.person.erp.analyze.service.IAnlayzeService;
 import com.person.erp.common.utils.TokenUtils;
@@ -11,6 +12,7 @@ import com.person.erp.order.entity.OrderOperate;
 import net.sf.ehcache.search.expression.Or;
 import netscape.javascript.JSObject;
 import org.springframework.boot.jackson.JsonObjectSerializer;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +33,7 @@ public class AnalyzeController {
      * 初始化标准产量
      */
     @GetMapping("/init")
-    public JSONArray initEchars(Long startDate, Long endDate){
+    public ResponseEntity initEchars(Long startDate, Long endDate){
         JSONArray res = new JSONArray();
         if(startDate == null){
             startDate = new Date().getTime()/1000 - 7 * 24 * 3600;
@@ -51,10 +53,14 @@ public class AnalyzeController {
                 res.add(json);
             }
         }
-        return res;
+        if (res != null){
+           return ResultUtils.success(res);
+        }else {
+            return ResultUtils.success();
+        }
     }
     @GetMapping("/yield")
-    public JSONArray raalYield(Long startDate, Long endDate){
+    public ResponseEntity raalYield(Long startDate, Long endDate){
         JSONArray res = new JSONArray();
         if(startDate == null){
             startDate = new Date().getTime()/1000 - 7 * 24 * 3600;
@@ -74,6 +80,10 @@ public class AnalyzeController {
                 res.add(json);
             }
         }
-        return res;
+        if (res != null){
+            return ResultUtils.success(res);
+        }else {
+            return ResultUtils.success();
+        }
     }
 }
