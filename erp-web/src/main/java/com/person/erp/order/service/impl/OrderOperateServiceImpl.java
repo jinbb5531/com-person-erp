@@ -19,10 +19,14 @@ public class OrderOperateServiceImpl implements IOrderOperateService {
     private IOrderService orderService;
 
     @Override
-    @Transactional
     public boolean insert(OrderOperate orderOperate, Order order) {
         long insert = dao.insert(orderOperate);
         boolean success = orderService.updateStatus(order);
-        return insert > 0 && success ? true : false;
+        return insert > 0 && success;
+    }
+
+    @Override
+    public boolean insert(OrderOperate orderOperate) {
+        return dao.insert(orderOperate) > 0 ;
     }
 }

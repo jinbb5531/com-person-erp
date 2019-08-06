@@ -94,6 +94,10 @@ public class OrderDTO implements Serializable {
      */
     private Integer number;
 
+    /**
+     * 订单金额
+     */
+    private Double cost;
 }
 
 

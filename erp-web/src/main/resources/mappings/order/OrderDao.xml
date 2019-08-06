@@ -21,6 +21,7 @@
         <result column="PACK_AT" property="packAt" jdbcType="TIMESTAMP"/>
         <result column="IMAGE" property="image" jdbcType="VARCHAR"/>
         <result column="NUMBER" property="number" jdbcType="BIGINT"/>
+        <result column="COST" property="cost" jdbcType="DOUBLE"/>
         <association property="operate" column="ORDER_CODE" javaType="com.person.erp.order.entity.OrderOperate">
             <id column="CODE" property="code" jdbcType="BIGINT"/>
             <result column="OPERATOR" property="operator" jdbcType="VARCHAR"/>
@@ -64,6 +65,7 @@
         <result column="PACK_AT" property="packAt" jdbcType="TIMESTAMP"/>
         <result column="SYSTEM_TAG" property="systemTag" jdbcType="BIGINT"/>
         <result column="NUMBER" property="number" jdbcType="BIGINT"/>
+        <result column="COST" property="cost" jdbcType="DOUBLE"/>
     </resultMap>
     <resultMap id="simpleOrder" type="com.person.erp.order.entity.Order">
         <id column="ORDER_CODE" property="orderCode" jdbcType="VARCHAR"/>
@@ -72,7 +74,7 @@
     </resultMap>
     <sql id="baseColumn">
         ORDER_CODE, ORDER_NAME, CUSTOMER, CREATE_AT, CREATE_BY, UPDATE_AT, UPDATE_BY, ORDER_STATUS, CUTTER, HEMMER, PACKER, DEADLINE, SYSTEM_TAG, REMARK,
-        CUT_AT, HEM_AT, PACK_AT, IMAGE, NUMBER
+        CUT_AT, HEM_AT, PACK_AT, IMAGE, NUMBER, COST
     </sql>
     <update id="update" parameterType="com.person.erp.order.entity.Order">
         UPDATE ERP_ORDER
@@ -114,13 +116,16 @@
                 HEM_AT = #{hemAt},
             </if>
             <if test="packAt != null ">
-                PACK_AT = #{packAt}
+                PACK_AT = #{packAt},
             </if>
             <if test="image != null ">
-                IMAGE = #{image}
+                IMAGE = #{image},
             </if>
             <if test="number != null ">
-                NUMBER =#{number}
+                NUMBER = #{number},
+            </if>
+            <if test="cost != null">
+                COST = #{cost}
             </if>
         </set>
         WHERE ORDER_CODE = #{orderCode}
@@ -132,7 +137,7 @@
         </selectKey>
         INSERT INTO ERP_ORDER
         (ORDER_CODE, ORDER_NAME, CUSTOMER, CREATE_AT, CREATE_BY, UPDATE_AT, UPDATE_BY, ORDER_STATUS, CUTTER, HEMMER, PACKER, DEADLINE,
-        SYSTEM_TAG, REMARK, CUT_AT, HEM_AT, PACK_AT, IMAGE, NUMBER)
+        SYSTEM_TAG, REMARK, CUT_AT, HEM_AT, PACK_AT, IMAGE, NUMBER, COST)
         VALUES(
         #{orderCode},
         #{orderName},
@@ -152,7 +157,8 @@
         #{hemAt},
         #{packAt},
         #{image},
-        #{number}
+        #{number},
+        #{cost}
         )
     </insert>
     <delete id="delete" parameterType="com.person.erp.order.entity.Order">

@@ -49,4 +49,14 @@ public class OrderOperate {
      * 系统标识
      */
     private long systemTag;
+
+    /**
+     * 参与者
+     */
+    private String coagent;
+
+    /**
+     * 参与人数
+     */
+    private Integer peopleCount;
 }

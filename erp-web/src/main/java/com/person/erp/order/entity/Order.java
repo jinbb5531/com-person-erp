@@ -99,4 +99,9 @@ public class Order {
      * 原料数量
      */
     private Integer number;
+
+    /**
+     * 订单金额
+     */
+    private Double cost;
 }
