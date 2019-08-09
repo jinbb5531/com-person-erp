@@ -38,8 +38,10 @@ public class Inventory {
 
     private String weight;
 
-    @NotBlank(groups = Single.class, message = "[id] 主键不能为空")
+    @NotBlank(groups = Single.class, message = "[amount] 不能为空")
     private String amount;
+
+    private String stockPrice;
 
     private String imaPath;
 
