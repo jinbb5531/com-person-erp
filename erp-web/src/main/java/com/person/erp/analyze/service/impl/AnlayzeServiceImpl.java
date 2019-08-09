@@ -26,4 +26,9 @@ public class AnlayzeServiceImpl implements IAnlayzeService {
         List<OrderOperate> orderOperates = operateDAO.realYiely(startDate, endDate, systemTag);
         return orderOperates;
     }
+
+    @Override
+    public List<Order> getProfit(Long startDate, Long endDate, long systenTag) {
+        return null;
+    }
 }

@@ -60,7 +60,7 @@ public class AnalyzeController {
         }
     }
     @GetMapping("/yield")
-    public ResponseEntity raalYield(Long startDate, Long endDate){
+    public ResponseEntity realYield(Long startDate, Long endDate){
         JSONArray res = new JSONArray();
         if(startDate == null){
             startDate = new Date().getTime()/1000 - 7 * 24 * 3600;
@@ -85,5 +85,26 @@ public class AnalyzeController {
         }else {
             return ResultUtils.success();
         }
+    }
+
+    /**
+     * 获取订单的利润
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public ResponseEntity profit(Long startDate, Long endDate){
+        JSONArray res = new JSONArray();
+        if(startDate == null){
+            startDate = new Date().getTime()/1000 - 7 * 24 * 3600;
+        }else {
+            startDate = startDate/1000;
+        }
+        if (endDate == null){
+            endDate = new Date().getTime()/1000;
+        }else {
+            endDate = endDate/1000;
+        }
+        return null;
     }
 }
