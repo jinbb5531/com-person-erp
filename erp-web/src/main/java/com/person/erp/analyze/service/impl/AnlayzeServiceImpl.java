@@ -1,7 +1,6 @@
 package com.person.erp.analyze.service.impl;
 
 import com.person.erp.analyze.service.IAnlayzeService;
-import com.person.erp.order.dao.IOrderDAO;
 import com.person.erp.order.dao.IOrderOperateDAO;
 import com.person.erp.order.entity.Order;
 import com.person.erp.order.entity.OrderOperate;
@@ -28,7 +27,8 @@ public class AnlayzeServiceImpl implements IAnlayzeService {
     }
 
     @Override
-    public List<Order> getProfit(Long startDate, Long endDate, long systenTag) {
+    public List<Order> getProfit(Long startDate, Long endDate, long systemTag) {
+        orderDAO.profit(startDate, endDate,systemTag);
         return null;
     }
 }
