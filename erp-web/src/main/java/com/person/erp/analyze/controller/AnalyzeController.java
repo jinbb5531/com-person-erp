@@ -9,6 +9,7 @@ import com.person.erp.analyze.service.IAnlayzeService;
 import com.person.erp.common.utils.TokenUtils;
 import com.person.erp.order.entity.Order;
 import com.person.erp.order.entity.OrderOperate;
+import com.person.erp.order.entity.RelationVO;
 import net.sf.ehcache.search.expression.Or;
 import netscape.javascript.JSObject;
 import org.springframework.boot.jackson.JsonObjectSerializer;
@@ -97,8 +98,8 @@ public class AnalyzeController {
     public ResponseEntity profit(Long startDate, Long endDate){
         JSONArray res = new JSONArray();
         if(startDate == null){
-            startDate = new Date().getTime()/1000 - 7 * 24 * 3600;
-        }else {
+            startDate = new Date().getTime() - 7 * 24 * 3600 * 1000;
+        }else{
             startDate = startDate/1000;
         }
         if (endDate == null){
@@ -106,7 +107,7 @@ public class AnalyzeController {
         }else {
             endDate = endDate/1000;
         }
-        List<Order> profit = anlayzeService.getProfit(startDate, endDate, TokenUtils.getUser().getSystemTag());
+        List<RelationVO> profit = anlayzeService.getProfit(startDate, endDate, TokenUtils.getUser().getSystemTag());
         return ResultUtils.success(profit);
     }
 }

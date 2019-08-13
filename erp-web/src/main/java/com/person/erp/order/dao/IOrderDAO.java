@@ -1,6 +1,7 @@
 package com.person.erp.order.dao;
 
 import com.person.erp.order.entity.Order;
+import com.person.erp.order.entity.RelationVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -72,6 +73,6 @@ public interface IOrderDAO  {
      * @param systemTag
      * @return
      */
-    List<Order> profit(@Param(value = "startDate") Long startDate, @Param(value = "endDate") Long endDate, @Param(value = "systemTag") Long systemTag);
+    List<RelationVO> profit(@Param(value = "startDate") Long startDate, @Param(value = "endDate") Long endDate, @Param(value = "systemTag") Long systemTag);
 
 }

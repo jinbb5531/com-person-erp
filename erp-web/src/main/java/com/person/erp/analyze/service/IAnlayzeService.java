@@ -2,6 +2,7 @@ package com.person.erp.analyze.service;
 
 import com.person.erp.order.entity.Order;
 import com.person.erp.order.entity.OrderOperate;
+import com.person.erp.order.entity.RelationVO;
 
 import java.util.List;
 
@@ -31,8 +32,8 @@ public interface IAnlayzeService {
      * 获取利润
      * @param startDate
      * @param endDate
-     * @param systenTag
+     * @param systemTag
      * @return
      */
-    List<Order> getProfit(Long startDate,Long endDate, long systenTag);
+    List<RelationVO> getProfit(Long startDate, Long endDate, long systemTag);
 }
