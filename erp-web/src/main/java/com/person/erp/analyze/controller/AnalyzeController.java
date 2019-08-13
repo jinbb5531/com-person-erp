@@ -93,6 +93,7 @@ public class AnalyzeController {
      * @param endDate
      * @return
      */
+    @GetMapping("/profit")
     public ResponseEntity profit(Long startDate, Long endDate){
         JSONArray res = new JSONArray();
         if(startDate == null){
@@ -105,7 +106,7 @@ public class AnalyzeController {
         }else {
             endDate = endDate/1000;
         }
-
-        return null;
+        List<Order> profit = anlayzeService.getProfit(startDate, endDate, TokenUtils.getUser().getSystemTag());
+        return ResultUtils.success(profit);
     }
 }

@@ -72,6 +72,17 @@
         <result column="CUT_AT" property="cutAt" jdbcType="TIMESTAMP"/>
         <result column="NUMBER" property="number" jdbcType="BIGINT"/>
     </resultMap>
+    <resultMap id="profit" type="com.person.erp.order.entity.Order">
+        <id column="ORDER_CODE" property="orderCode" jdbcType="VARCHAR"/>
+        <result column="CUSTOMER" property="customer" jdbcType="VARCHAR"/>
+        <result column="COST" property="cost" jdbcType="DOUBLE"/>
+        <association property="cutNum" column="CUT_NUM" javaType="com.person.erp.order.entity.OrderOperate">
+            <id column="ORDER_CODE" property="orderCode"/>
+            <association property="unitCost" column="UNIT_COST" javaType="com.person.erp.identity.entity.User">
+                <id column="USER_CODE" property="USER_CODE"/>
+            </association>
+        </association>
+    </resultMap>
     <sql id="baseColumn">
         ORDER_CODE, ORDER_NAME, CUSTOMER, CREATE_AT, CREATE_BY, UPDATE_AT, UPDATE_BY, ORDER_STATUS, CUTTER, HEMMER, PACKER, DEADLINE, SYSTEM_TAG, REMARK,
         CUT_AT, HEM_AT, PACK_AT, IMAGE, NUMBER, COST
@@ -234,12 +245,12 @@
         GROUP BY DAY(CUT_AT)
         ORDER BY CUT_AT DESC
     </select>
-    <select id="profit">
+    <select id="profit" resultMap="profit">
         SELECT d.CUSTOMER, d.COST, SUM(CUT_NUM * UNIT_COST) wages
         FROM `erp_order_operate` o LEFT JOIN erp_user u  ON o.OPERATOR = u.USER_CODE
         LEFT JOIN erp_order d ON o.ORDER_CODE = d.ORDER_CODE
-        WHERE UNIX_TIMESTAMP(CUT_AT) BETWEEN #{startDate} AND #{endDate}
-        AND SYSTEM_TAG = #{systemTag}  AND ORDER_STATUS = 7
+        WHERE UNIX_TIMESTAMP(d.CUT_AT) BETWEEN #{startDate} AND #{endDate}
+        AND d.SYSTEM_TAG = #{systemTag}  AND ORDER_STATUS = 7
         ORDER BY d.CREATE_AT DESC
     </select>
 </mapper>
