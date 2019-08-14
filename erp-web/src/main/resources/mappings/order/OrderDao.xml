@@ -74,6 +74,7 @@
     </resultMap>
     <resultMap id="profit" type="com.person.erp.order.entity.RelationVO">
         <result column="CUSTOMER" property="customer" jdbcType="VARCHAR"/>
+        <result column="CREATE_AT" property="createAt" jdbcType="TIMESTAMP"/>
         <result column="COST" property="cost" jdbcType="DOUBLE"/>
         <result column="WAGES" property="wages" jdbcType="DOUBLE"/>
 
@@ -241,11 +242,12 @@
         ORDER BY CUT_AT DESC
     </select>
     <select id="profit" resultMap="profit">
-        SELECT d.CUSTOMER, d.COST, SUM(CUT_NUM * UNIT_COST) WAGES
+        SELECT d.CUSTOMER, d.CREATE_AT, d.COST, SUM(CUT_NUM * UNIT_COST) WAGES
         FROM `erp_order_operate` o LEFT JOIN erp_user u  ON o.OPERATOR = u.USER_CODE
         LEFT JOIN erp_order d ON o.ORDER_CODE = d.ORDER_CODE
         WHERE UNIX_TIMESTAMP(d.CUT_AT) BETWEEN #{startDate} AND #{endDate}
         AND d.SYSTEM_TAG = #{systemTag}  AND ORDER_STATUS = 7
+        GROUP BY o.ORDER_CODE
         ORDER BY d.CREATE_AT DESC
     </select>
 </mapper>

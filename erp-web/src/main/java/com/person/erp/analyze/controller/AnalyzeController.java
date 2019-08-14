@@ -96,9 +96,8 @@ public class AnalyzeController {
      */
     @GetMapping("/profit")
     public ResponseEntity profit(Long startDate, Long endDate){
-        JSONArray res = new JSONArray();
         if(startDate == null){
-            startDate = new Date().getTime() - 7 * 24 * 3600 * 1000;
+            startDate = new Date().getTime()/1000 - 7 * 24 * 3600;
         }else{
             startDate = startDate/1000;
         }
