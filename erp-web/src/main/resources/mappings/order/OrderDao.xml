@@ -243,8 +243,8 @@
     </select>
     <select id="profit" resultMap="profit">
         SELECT d.CUSTOMER, d.CREATE_AT, d.COST, SUM(CUT_NUM * UNIT_COST) WAGES
-        FROM `erp_order_operate` o LEFT JOIN erp_user u  ON o.OPERATOR = u.USER_CODE
-        LEFT JOIN erp_order d ON o.ORDER_CODE = d.ORDER_CODE
+        FROM ERP_ORDER_OPERATE o LEFT JOIN ERP_USER u  ON o.OPERATOR = u.USER_NAME
+        LEFT JOIN ERP_ORDER d ON o.ORDER_CODE = d.ORDER_CODE
         WHERE UNIX_TIMESTAMP(d.CUT_AT) BETWEEN #{startDate} AND #{endDate}
         AND d.SYSTEM_TAG = #{systemTag}  AND ORDER_STATUS = 7
         GROUP BY o.ORDER_CODE
