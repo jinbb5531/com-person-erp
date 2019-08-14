@@ -114,4 +114,8 @@ public class User implements Serializable {
      */
     private List<Role> roleList;
 
+    /**
+     * 单件工资
+     */
+    private Double unitCost;
 }

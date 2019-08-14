@@ -5,6 +5,7 @@ import com.person.erp.order.dao.IOrderDAO;
 import com.person.erp.order.dao.IOrderOperateDAO;
 import com.person.erp.order.entity.Order;
 import com.person.erp.order.entity.OrderOperate;
+import com.person.erp.order.entity.RelationVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -25,5 +26,11 @@ public class AnlayzeServiceImpl implements IAnlayzeService {
     public List<OrderOperate> getRealYield(Long startDate, Long endDate, long systemTag) {
         List<OrderOperate> orderOperates = operateDAO.realYiely(startDate, endDate, systemTag);
         return orderOperates;
+    }
+
+    @Override
+    public List<RelationVO> getProfit(Long startDate, Long endDate, long systemTag) {
+        List<RelationVO> profit = orderDAO.profit(startDate, endDate, systemTag);
+        return profit;
     }
 }

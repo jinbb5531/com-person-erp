@@ -17,7 +17,6 @@ import com.person.erp.order.service.IOrderService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.validation.constraints.Min;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -45,6 +44,7 @@ public class OrderServiceImpl implements IOrderService {
         order1.setCreateAt(new Timestamp(new Date().getTime()));
         order1.setCustomer(order.getCustomer());
         order1.setImage(order.getImage());
+        order1.setCost(order.getCost());
         order1.setStatus(OrderConstant.CREATE.getCode());
         //获取当前用户的系统标识符
         order1.setSystemTag(user.getSystemTag());
@@ -90,6 +90,7 @@ public class OrderServiceImpl implements IOrderService {
         order1.setCustomer(order.getCustomer());
         order1.setUpdateBy(user.getUserName());
 //        order1.setUpdateBy("jinbb");
+        order1.setCost(order.getCost());
         order1.setUpdateAt(new Timestamp(new Date().getTime()));
         order1.setDeadline(order.getDeadline());
         order1.setOrderCode(order.getOrderCode());

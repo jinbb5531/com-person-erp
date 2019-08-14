@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.itexplore.core.api.model.PageResult;
 import com.itexplore.core.api.utils.PageChangeUtils;
 import com.itexplore.core.api.utils.ResultUtils;
+import com.itexplore.core.common.utils.judge.JudgeUtils;
 import com.person.erp.common.utils.TokenUtils;
 import com.person.erp.identity.entity.User;
 import com.person.erp.order.constant.OperateTypeConstant;
@@ -221,9 +222,20 @@ public class OrderController {
         String userName = user.getUserName();
         orderOperate.setType(OperateTypeConstant.CUT.getType());
         orderOperate.setSystemTag(systemTag);
-        orderOperate.setOperator(TokenUtils.getUser().getUserName());
-        orderOperate.setOperator(userName);
         orderOperate.setOperaTime(new Timestamp(new Date().getTime()));
+        int peopleCount  = 1;
+        if (!JudgeUtils.isEmpty(orderOperate.getCoagent())){
+            String[] split = orderOperate.getCoagent().split(",");
+            peopleCount += split.length;
+            for (String coagent: split) {
+                orderOperate.setCoagent(null);
+                orderOperate.setOperator(coagent);
+                operateService.insert(orderOperate);
+            }
+        }
+        orderOperate.setCoagent(orderOperate.getCoagent());
+        orderOperate.setPeopleCount(peopleCount);
+        orderOperate.setOperator(userName);
         Order order = new Order();
         order.setSystemTag(systemTag);
         order.setOrderCode(orderOperate.getOrderCode());
@@ -248,9 +260,20 @@ public class OrderController {
     private ResponseEntity submitHem(OrderOperate orderOperate) {
         User user = TokenUtils.getUser();
         orderOperate.setSystemTag(user.getSystemTag());
-        orderOperate.setOperator(user.getUserName());
         orderOperate.setType(OperateTypeConstant.HEM.getType());
         orderOperate.setOperaTime(new Timestamp(new Date().getTime()));
+        int peopleCount  = 1;
+        if (!JudgeUtils.isEmpty(orderOperate.getCoagent())){
+            String[] split = orderOperate.getCoagent().split(",");
+            peopleCount += split.length;
+            for (String coagent: split) {
+                orderOperate.setCoagent(null);
+                orderOperate.setOperator(coagent);
+                operateService.insert(orderOperate);
+            }
+        }
+        orderOperate.setCoagent(orderOperate.getCoagent());
+        orderOperate.setOperator(user.getUserName());
         Order order = new Order();
         order.setOrderCode(orderOperate.getOrderCode());
         order.setHemmer(user.getUserName());
@@ -277,8 +300,19 @@ public class OrderController {
         orderOperate.setSystemTag(user.getSystemTag());
         orderOperate.setSystemTag(user.getSystemTag());
         orderOperate.setType(OperateTypeConstant.PACK.getType());
-        orderOperate.setOperator(user.getUserName());
         orderOperate.setOperaTime(new Timestamp(new Date().getTime()));
+        int peopleCount  = 1;
+        if (!JudgeUtils.isEmpty(orderOperate.getCoagent())){
+            String[] split = orderOperate.getCoagent().split(",");
+            peopleCount += split.length;
+            for (String coagent: split) {
+                orderOperate.setCoagent(null);
+                orderOperate.setOperator(coagent);
+                operateService.insert(orderOperate);
+            }
+        }
+        orderOperate.setCoagent(orderOperate.getCoagent());
+        orderOperate.setOperator(user.getUserName());
         Order order = new Order();
         order.setOrderCode(orderOperate.getOrderCode());
         order.setPacker(user.getUserName());

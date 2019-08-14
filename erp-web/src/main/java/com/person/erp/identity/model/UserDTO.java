@@ -111,4 +111,9 @@ public class UserDTO {
      */
     private List<RoleDTO> roles;
 
+    /**
+     * 单件工资
+     */
+    private Double unitCost;
+
 }

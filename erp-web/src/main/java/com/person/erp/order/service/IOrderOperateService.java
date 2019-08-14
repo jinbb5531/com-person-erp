@@ -11,4 +11,10 @@ public interface IOrderOperateService {
      */
     boolean insert(OrderOperate orderOperate, Order order);
 
+    /**
+     * 订单操作表
+     * @param orderOperate
+     * @return
+     */
+    boolean insert(OrderOperate orderOperate);
 }

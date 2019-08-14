@@ -20,6 +20,7 @@
 		<result property="sex" column="SEX"/>
 		<result property="workKind" column="WORK_KIND"/>
 		<result property="userAddr" column="USER_ADDR"/>
+		<result property="unitCost" column="UNIT_COST"/>
 		<collection property="roleList" javaType="ArrayList" ofType="Role" autoMapping="false">
 			<id property="id" column="ROLE_ID"/>
 			<result property="roleName" column="ROLE_NAME"/>
@@ -58,7 +59,8 @@
 			JOIN_AT,
 			SEX,
 			WORK_KIND,
-			USER_ADDR
+			USER_ADDR,
+			UNIT_COST
         ) VALUES (
 			#{userCode},
 			#{userPwd},
@@ -77,7 +79,8 @@
 			#{joinAt},
 			#{sex},
 			#{workKind},
-			#{userAddr}
+			#{userAddr},
+			#{unitCost}
         )
     </insert>
 
@@ -141,6 +144,9 @@
 			<if test="userAddr != null and userAddr != ''">
 				USER_ADDR = #{userAddr},
 			</if>
+			<if test="unitCost != null">
+				UNIT_COST = #{unitCost}
+			</if>
 		</set>
         WHERE USER_CODE = #{userCode, jdbcType=VARCHAR} AND SYSTEM_TAG = #{systemTag}
 	</update>
@@ -165,6 +171,7 @@
 			U.SEX,
 			U.WORK_KIND,
 			U.USER_ADDR,
+			U.UNIT_COST,
 			UR.ROLE_ID,
 			R.ROLE_NAME,
 			R.SHOW_FLAG,
@@ -400,6 +407,7 @@
 		U.SEX,
 		U.WORK_KIND,
 		U.USER_ADDR,
+		U.UNIT_COST,
 		R.ID AS ROLE_ID,
 		R.ROLE_NAME,
 		R.SHOW_FLAG
