@@ -3,9 +3,10 @@ package com.person.erp.common.interceptor;
 import com.itexplore.core.api.model.ApiException;
 import com.itexplore.core.common.utils.judge.JudgeUtils;
 import com.person.erp.common.annotation.Permission;
+import com.person.erp.common.constant.WebConstant;
 import com.person.erp.common.utils.TokenUtils;
+import com.person.erp.identity.constant.IdentityConstant;
 import com.person.erp.identity.model.MenuDTO;
-import lombok.experimental.Tolerate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -54,7 +56,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
                     desc.append("您没有【")
                             .append(moduleExist ? moduleDesc + " - " : "")
                             .append(methodDesc)
-                            .append("】权限！");
+                            .append("】权限或菜单已关闭或隐藏");
                     // 不存在，要抛异常
                     throw new ApiException(HttpStatus.FORBIDDEN, desc.toString());
                 }
@@ -86,7 +88,10 @@ public class PermissionInterceptor implements HandlerInterceptor {
 
             for (MenuDTO menu : menuList) {
 
-                if (!JudgeUtils.isEmpty(menu.getMenuUrl()) && menu.getMenuUrl().trim().contains(servletPath)) {
+                if (!JudgeUtils.isEmpty(menu.getMenuUrl())
+                        && menu.getMenuUrl().trim().contains(servletPath)
+                        && !Objects.equals(menu.getShowFlag(), WebConstant.ShowFlag.HIDE.getValue())
+                        && !Objects.equals(menu.getUseFlag(), IdentityConstant.UseFlag.BAN.getValue())) {
                     return true;
                 }
 

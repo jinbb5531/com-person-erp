@@ -163,6 +163,11 @@ public class MenuServiceImpl implements IMenuService {
 
         List<Menu> menuList = menuDao.getPermissionListByRoleIds(roleIds);
 
+        // 去除隐藏的菜单
+        if (!JudgeUtils.isEmpty(menuList)) {
+            menuList.removeIf(menu -> menu != null && Objects.equals(WebConstant.ShowFlag.HIDE.getValue(), menu.getShowFlag()));
+        }
+
         return orderRankRelation(menuList);
 
     }
