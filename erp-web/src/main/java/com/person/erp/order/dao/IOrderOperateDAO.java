@@ -1,9 +1,11 @@
 package com.person.erp.order.dao;
 
+import com.person.erp.identity.model.UserDTO;
 import com.person.erp.order.entity.OrderOperate;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -26,4 +28,15 @@ public interface IOrderOperateDAO {
      * @return 期间的每条对象
      */
     List<OrderOperate> realYiely(@Param(value = "startDate") Long startDate, @Param(value = "endDate") Long endDate, @Param(value = "systemTag") Long systemTag);
+
+    /**
+     * 统计出对应用户的计件数和
+     * @param dtoList
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    List<OrderOperate> sumCutNumGroupByUserList(@Param(value = "dtoList") List<UserDTO> dtoList,
+                                                @Param(value = "startDate") Timestamp startTime,
+                                                @Param(value = "endDate")Timestamp endTime);
 }

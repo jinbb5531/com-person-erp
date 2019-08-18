@@ -59,4 +59,9 @@ public class OrderOperate {
      * 参与人数
      */
     private Integer peopleCount;
+
+    /**
+     * 操作人帐号
+     */
+    private String operaCode;
 }

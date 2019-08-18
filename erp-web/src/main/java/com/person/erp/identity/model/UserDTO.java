@@ -7,6 +7,7 @@ import lombok.*;
 
 import javax.validation.constraints.*;
 import javax.validation.groups.Default;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -115,5 +116,45 @@ public class UserDTO {
      * 单件工资
      */
     private Double unitCost;
+
+    /**
+     * 当前总数
+     */
+    private Integer countNum;
+
+    /**
+     * 总工资
+     */
+    private Double sumSalary;
+
+    /**
+     * 开始时间
+     */
+    private Timestamp startTime;
+
+    /**
+     * 结束时间
+     */
+    private Timestamp endTime;
+
+    /**
+     * 计算出总工资数（基本工资 + 单件工资*当月总件数）
+     * @return 基本工资 + 单件工资*当月总件数
+     */
+    public Double getSumSalary() {
+
+        BigDecimal nimbleSalary = BigDecimal.valueOf(0);
+        if (countNum != null && unitCost != null) {
+            BigDecimal countNumDecimal = BigDecimal.valueOf(countNum);
+            BigDecimal unitCostDecimal = BigDecimal.valueOf(unitCost);
+            nimbleSalary = countNumDecimal.multiply(unitCostDecimal);
+        }
+
+        BigDecimal baseSalaryDecimal = BigDecimal.valueOf(0);
+        if (baseSalary != null) {
+            baseSalaryDecimal = BigDecimal.valueOf(Double.valueOf(baseSalary));
+        }
+        return baseSalaryDecimal.add(nimbleSalary).doubleValue();
+    }
 
 }
