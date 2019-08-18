@@ -56,6 +56,7 @@
         <typeAlias type="com.person.erp.system.entity.ChildSystem" alias="ChildSystem"/>
         <typeAlias type="com.person.erp.trade.entity.ProvideTrade" alias="ProvideTrade"/>
         <typeAlias type="com.person.erp.inventory.entity.Inventory" alias="Inventory"/>
+        <typeAlias type="com.person.erp.order.entity.OrderOperate" alias="OrderOperate"/>
     </typeAliases>
 
     <!-- 插件配置 -->

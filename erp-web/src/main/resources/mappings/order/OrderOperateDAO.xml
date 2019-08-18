@@ -34,4 +34,27 @@
         GROUP BY DAY(OPERA_TIME)
         ORDER BY OPERA_TIME DESC
     </select>
+    <select id="sumCutNumGroupByUserList" resultType="OrderOperate">
+        SELECT
+            OPERA_CODE,
+            SYSTEM_TAG,
+            SUM(CUT_NUM) AS CUT_NUM,
+            OPERA_TIME
+        FROM ERP_ORDER_OPERATE
+        WHERE
+          (OPERA_CODE, SYSTEM_TAG) IN (
+          <foreach collection="dtoList" open="" separator=", " close="" item="item">
+              (
+                #{item.userCode}, #{item.systemTag}
+              )
+          </foreach>
+          )
+          <if test="startDate != null">
+           AND OPERA_TIME <![CDATA[ > ]]> #{startDate}
+          </if>
+          <if test="endDate != null">
+           AND OPERA_TIME <![CDATA[ < ]]> #{endDate}
+          </if>
+          GROUP BY OPERA_CODE, SYSTEM_TAG
+    </select>
 </mapper>
