@@ -195,16 +195,16 @@
         FROM ERP_ORDER
         WHERE
         <if test="orderName != null and orderName !=''">
-            ORDER_NAME LIKE '%' #{orderName} '%' AND
+            ORDER_NAME LIKE '%' #{keyword} '%' OR
         </if>
         <if test="orderCode != null and orderCode != ''">
-            ORDER_CODE LIKE '%' #{orderCode} '%' AND
+            ORDER_CODE LIKE '%' #{keyword} '%' OR
         </if>
         <if test="customer != null and customer != ''">
-            CUSTOMER LIKE '%' #{customer} '%' AND
+            CUSTOMER LIKE '%' #{keyword} '%' OR
         </if>
         <if test="number != null">
-            NUMBER = #{number} AND
+            NUMBER = #{keyword} AND
         </if>
         <if test="status != null">
             ORDER_STATUS = #{status} AND
