@@ -1,5 +1,6 @@
 package com.person.erp.order.service.impl;
 
+import com.person.erp.identity.model.UserDTO;
 import com.person.erp.order.dao.IOrderOperateDAO;
 import com.person.erp.order.entity.Order;
 import com.person.erp.order.entity.OrderOperate;
@@ -9,6 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
 
 @Service
 @Transactional
@@ -28,5 +32,10 @@ public class OrderOperateServiceImpl implements IOrderOperateService {
     @Override
     public boolean insert(OrderOperate orderOperate) {
         return dao.insert(orderOperate) > 0 ;
+    }
+
+    @Override
+    public List<OrderOperate> sumCutNumGroupByUserList(List<UserDTO> dtoList, Date startTime, Date endTime) {
+        return dao.sumCutNumGroupByUserList(dtoList, startTime, endTime);
     }
 }
