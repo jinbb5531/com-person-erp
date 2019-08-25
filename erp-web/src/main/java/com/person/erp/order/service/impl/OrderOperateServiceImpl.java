@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -34,7 +35,7 @@ public class OrderOperateServiceImpl implements IOrderOperateService {
     }
 
     @Override
-    public List<OrderOperate> sumCutNumGroupByUserList(List<UserDTO> dtoList, Timestamp startTime, Timestamp endTime) {
+    public List<OrderOperate> sumCutNumGroupByUserList(List<UserDTO> dtoList, Date startTime, Date endTime) {
         return dao.sumCutNumGroupByUserList(dtoList, startTime, endTime);
     }
 }

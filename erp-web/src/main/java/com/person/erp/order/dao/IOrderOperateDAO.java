@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,6 +38,6 @@ public interface IOrderOperateDAO {
      * @return
      */
     List<OrderOperate> sumCutNumGroupByUserList(@Param(value = "dtoList") List<UserDTO> dtoList,
-                                                @Param(value = "startDate") Timestamp startTime,
-                                                @Param(value = "endDate")Timestamp endTime);
+                                                @Param(value = "startDate") Date startTime,
+                                                @Param(value = "endDate")Date endTime);
 }
