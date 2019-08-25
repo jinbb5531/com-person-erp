@@ -7,6 +7,7 @@ import com.itexplore.core.api.utils.ResultUtils;
 import com.itexplore.core.common.utils.judge.JudgeUtils;
 import com.person.erp.common.utils.TokenUtils;
 import com.person.erp.identity.entity.User;
+import com.person.erp.identity.service.IUserService;
 import com.person.erp.order.constant.OperateTypeConstant;
 import com.person.erp.order.constant.OrderConstant;
 import com.person.erp.order.entity.Order;
@@ -32,6 +33,9 @@ public class OrderController {
 
     @Resource
     private IOrderOperateService operateService;
+
+    @Resource
+    private IUserService userService;
 
     /**
      * 新增订单
@@ -171,7 +175,9 @@ public class OrderController {
     @PutMapping("/receive")
     private ResponseEntity receiveCut(Order order) {
         Order result = orderService.findById(order);
-        if (result!= null && result.getStatus().equals(OrderConstant.PUBLISH.getCode())) {
+        String workKind = TokenUtils.getUser().getWorkKind();
+        if (result!= null && workKind != null && result.getStatus().equals(OrderConstant.PUBLISH.getCode())
+                && workKind.equals("裁剪工") ) {
             order.setCutter(TokenUtils.getUser().getUserName());
             order.setStatus(OrderConstant.CUTTING.getCode());
             order.setCutAt(new Timestamp(new Date().getTime()));
@@ -180,9 +186,10 @@ public class OrderController {
             if (success) {
                 return ResultUtils.success();
             } else {
-                return ResultUtils.failure("接单失败！");
+                return ResultUtils.failure("非对应工种不能接单或接单失败！");
             }
-        } else if (result!= null && result.getStatus().equals(OrderConstant.CUT_END.getCode())) {
+        } else if (result!= null && workKind != null && result.getStatus().equals(OrderConstant.CUT_END.getCode())
+                && workKind.equals("缝边工") ) {
             order.setHemmer(TokenUtils.getUser().getUserName());
             order.setStatus(OrderConstant.HEMMING.getCode());
             order.setHemAt(new Timestamp(new Date().getTime()));
@@ -191,9 +198,10 @@ public class OrderController {
             if (success) {
                 return ResultUtils.success();
             } else {
-                return ResultUtils.failure("接单失败！");
+                return ResultUtils.failure("非对应工种不能接单或接单失败！");
             }
-        } else if (result!= null && result.getStatus().equals(OrderConstant.HEM_END.getCode())) {
+        } else if (result!= null && workKind != null && result.getStatus().equals(OrderConstant.HEM_END.getCode())
+                && workKind.equals("包装工")) {
             order.setPacker(TokenUtils.getUser().getUserName());
             order.setStatus(OrderConstant.PACKING.getCode());
             order.setPackAt(new Timestamp(new Date().getTime()));
@@ -202,7 +210,7 @@ public class OrderController {
             if (success) {
                 return ResultUtils.success();
             } else {
-                return ResultUtils.failure("接单失败！");
+                return ResultUtils.failure("非对应工种不能接单或接单失败！");
             }
         } else {
             return ResultUtils.failure("订单状态有误，不可接单！");
@@ -223,23 +231,26 @@ public class OrderController {
         orderOperate.setType(OperateTypeConstant.CUT.getType());
         orderOperate.setSystemTag(systemTag);
         orderOperate.setOperaTime(new Timestamp(new Date().getTime()));
+        orderOperate.setOrderCode(orderOperate.getOrderCode());
         int peopleCount  = 1;
         if (!JudgeUtils.isEmpty(orderOperate.getCoagent())){
             String[] split = orderOperate.getCoagent().split(",");
             peopleCount += split.length;
             for (String coagent: split) {
                 orderOperate.setCoagent(null);
-                orderOperate.setOperator(coagent);
+                orderOperate.setOperator(userService.getUser(coagent, user.getSystemTag()).getUserName());
+                orderOperate.setOperaCode(coagent);
                 operateService.insert(orderOperate);
             }
         }
+        orderOperate.setOperaCode(user.getUserCode());
         orderOperate.setCoagent(orderOperate.getCoagent());
         orderOperate.setPeopleCount(peopleCount);
         orderOperate.setOperator(userName);
         Order order = new Order();
         order.setSystemTag(systemTag);
-        order.setOrderCode(orderOperate.getOrderCode());
         order.setCutter(userName);
+        order.setOrderCode(orderOperate.getOrderCode());
         order.setCutAt(new Timestamp(System.currentTimeMillis()));
         order.setStatus(OrderConstant.CUT_END.getCode());
         boolean success = operateService.insert(orderOperate, order);
@@ -262,16 +273,19 @@ public class OrderController {
         orderOperate.setSystemTag(user.getSystemTag());
         orderOperate.setType(OperateTypeConstant.HEM.getType());
         orderOperate.setOperaTime(new Timestamp(new Date().getTime()));
+        orderOperate.setOrderCode(orderOperate.getOrderCode());
         int peopleCount  = 1;
         if (!JudgeUtils.isEmpty(orderOperate.getCoagent())){
             String[] split = orderOperate.getCoagent().split(",");
             peopleCount += split.length;
             for (String coagent: split) {
                 orderOperate.setCoagent(null);
-                orderOperate.setOperator(coagent);
+                orderOperate.setOperator(userService.getUser(coagent, user.getSystemTag()).getUserName());
+                orderOperate.setOperaCode(coagent);
                 operateService.insert(orderOperate);
             }
         }
+        orderOperate.setOperaCode(user.getUserCode());
         orderOperate.setCoagent(orderOperate.getCoagent());
         orderOperate.setOperator(user.getUserName());
         Order order = new Order();
@@ -301,16 +315,19 @@ public class OrderController {
         orderOperate.setSystemTag(user.getSystemTag());
         orderOperate.setType(OperateTypeConstant.PACK.getType());
         orderOperate.setOperaTime(new Timestamp(new Date().getTime()));
+        orderOperate.setOrderCode(orderOperate.getOrderCode());
         int peopleCount  = 1;
         if (!JudgeUtils.isEmpty(orderOperate.getCoagent())){
             String[] split = orderOperate.getCoagent().split(",");
             peopleCount += split.length;
             for (String coagent: split) {
                 orderOperate.setCoagent(null);
-                orderOperate.setOperator(coagent);
+                orderOperate.setOperator(userService.getUser(coagent, user.getSystemTag()).getUserName());
+                orderOperate.setOperaCode(coagent);
                 operateService.insert(orderOperate);
             }
         }
+        orderOperate.setOperaCode(user.getUserCode());
         orderOperate.setCoagent(orderOperate.getCoagent());
         orderOperate.setOperator(user.getUserName());
         Order order = new Order();

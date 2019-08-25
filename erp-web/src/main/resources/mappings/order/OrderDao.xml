@@ -195,17 +195,11 @@
         <include refid="baseColumn"/>
         FROM ERP_ORDER
         WHERE
-        <if test="orderName != null and orderName !=''">
-            ORDER_NAME LIKE '%' #{orderName} '%' AND
-        </if>
-        <if test="orderCode != null and orderCode != ''">
-            ORDER_CODE LIKE '%' #{orderCode} '%' AND
-        </if>
-        <if test="customer != null and customer != ''">
-            CUSTOMER LIKE '%' #{customer} '%' AND
-        </if>
-        <if test="number != null">
-            NUMBER = #{number} AND
+        <if test="keyword != null and keyword !=''">
+            ORDER_NAME LIKE '%' #{keyword} '%' OR
+            ORDER_CODE LIKE '%' #{keyword} '%' OR
+            CUSTOMER LIKE '%' #{keyword} '%' OR
+            NUMBER = #{keyword} AND
         </if>
         <if test="status != null">
             ORDER_STATUS = #{status} AND

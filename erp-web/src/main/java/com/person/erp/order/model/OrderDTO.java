@@ -98,6 +98,10 @@ public class OrderDTO implements Serializable {
      * 订单金额
      */
     private Double cost;
+    /**
+     * 封装关键词
+     */
+    private String keyword;
 }
 
 

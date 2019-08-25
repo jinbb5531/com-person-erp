@@ -61,7 +61,7 @@ public class OrderOperate {
     private Integer peopleCount;
 
     /**
-     * 操作人帐号
+     * 操作人userCode
      */
     private String operaCode;
 }
