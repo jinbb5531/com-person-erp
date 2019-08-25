@@ -50,10 +50,10 @@
           </foreach>
           )
           <if test="startDate != null">
-           AND OPERA_TIME <![CDATA[ > ]]> #{startDate}
+           AND OPERA_TIME <![CDATA[ >= ]]> #{startDate}
           </if>
           <if test="endDate != null">
-           AND OPERA_TIME <![CDATA[ < ]]> #{endDate}
+           AND OPERA_TIME <![CDATA[ <= ]]> #{endDate}
           </if>
           GROUP BY OPERA_CODE, SYSTEM_TAG
     </select>

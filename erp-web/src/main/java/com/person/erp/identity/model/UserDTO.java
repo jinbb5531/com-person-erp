@@ -4,11 +4,14 @@ import com.person.erp.common.valid.Delete;
 import com.person.erp.common.valid.Insert;
 import com.person.erp.common.valid.Update;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.*;
 import javax.validation.groups.Default;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -130,12 +133,14 @@ public class UserDTO {
     /**
      * 开始时间
      */
-    private Timestamp startTime;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date startTime;
 
     /**
      * 结束时间
      */
-    private Timestamp endTime;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date endTime;
 
     /**
      * 计算出总工资数（基本工资 + 单件工资*当月总件数）
@@ -151,7 +156,7 @@ public class UserDTO {
         }
 
         BigDecimal baseSalaryDecimal = BigDecimal.valueOf(0);
-        if (baseSalary != null) {
+        if (baseSalary != null && !StringUtils.isEmpty(baseSalary)) {
             baseSalaryDecimal = BigDecimal.valueOf(Double.valueOf(baseSalary));
         }
         return baseSalaryDecimal.add(nimbleSalary).doubleValue();

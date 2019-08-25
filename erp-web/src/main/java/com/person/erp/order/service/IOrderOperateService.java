@@ -5,6 +5,7 @@ import com.person.erp.order.entity.Order;
 import com.person.erp.order.entity.OrderOperate;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 public interface IOrderOperateService {
@@ -29,5 +30,5 @@ public interface IOrderOperateService {
      * @param endTime
      * @return
      */
-    List<OrderOperate> sumCutNumGroupByUserList(List<UserDTO> dtoList, Timestamp startTime, Timestamp endTime);
+    List<OrderOperate> sumCutNumGroupByUserList(List<UserDTO> dtoList, Date startTime, Date endTime);
 }
