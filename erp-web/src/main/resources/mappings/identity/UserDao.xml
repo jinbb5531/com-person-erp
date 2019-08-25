@@ -292,7 +292,7 @@
 	<delete id="deleteUserRoleBatchByRoleIds">
 		DELETE FROM ERP_USER_ROLE
 		WHERE ROLE_ID IN
-		<foreach collection="array" item="item" index="index" open="(" close=")" separator=", ">
+		<foreach collection="ids" item="item" index="index" open="(" close=")" separator=", ">
 			#{item}
 		</foreach>
 	</delete>
