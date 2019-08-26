@@ -18,6 +18,9 @@ import com.person.erp.identity.model.RoleDTO;
 import com.person.erp.identity.model.UserDTO;
 import com.person.erp.identity.service.IUserService;
 import javax.validation.constraints.NotEmpty;
+
+import com.person.erp.order.entity.OrderOperate;
+import com.person.erp.order.service.IOrderOperateService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,6 +32,7 @@ import javax.validation.groups.Default;
 import javax.xml.transform.Result;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>UserController.java</p>
@@ -42,6 +46,9 @@ public class UserController {
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private IOrderOperateService orderOperateService;
 
     @PostMapping("/add")
     @Permission(modelName = "用户管理", name = "添加用户")
@@ -142,6 +149,15 @@ public class UserController {
 
         });
 
+        // 统计出其总件数
+        List<OrderOperate> orderOperateList = orderOperateService.sumCutNumGroupByUserList(dtoList, userDTO.getStartTime(), userDTO.getEndTime());
+
+        dtoList.forEach(dto -> orderOperateList.forEach(orderOperate -> {
+            if (Objects.equals(dto.getSystemTag(), orderOperate.getSystemTag())
+                    && Objects.equals(dto.getUserCode(), orderOperate.getOperaCode())) {
+                dto.setCountNum(orderOperate.getCutNum());
+            }
+        }));
 
         return ResultUtils.asserts(new PageResult<>(dtoList, PageChangeUtils.pageInfoToPager(pageInfo)));
 

@@ -38,7 +38,8 @@ public class MvcConfigure extends WebMvcConfigurationSupport {
                     "/api/file/**",
                     "/api/user/update/password/new",
                     "/api/sys/get/**",
-                    "/api/login/**"
+                    "/api/login/**",
+                    "/api/order/**"
             );
 
         // 权限拦截

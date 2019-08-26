@@ -4,10 +4,14 @@ import com.person.erp.common.valid.Delete;
 import com.person.erp.common.valid.Insert;
 import com.person.erp.common.valid.Update;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.*;
 import javax.validation.groups.Default;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -115,5 +119,47 @@ public class UserDTO {
      * 单件工资
      */
     private Double unitCost;
+
+    /**
+     * 当前总数
+     */
+    private Integer countNum;
+
+    /**
+     * 总工资
+     */
+    private Double sumSalary;
+
+    /**
+     * 开始时间
+     */
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date startTime;
+
+    /**
+     * 结束时间
+     */
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date endTime;
+
+    /**
+     * 计算出总工资数（基本工资 + 单件工资*当月总件数）
+     * @return 基本工资 + 单件工资*当月总件数
+     */
+    public Double getSumSalary() {
+
+        BigDecimal nimbleSalary = BigDecimal.valueOf(0);
+        if (countNum != null && unitCost != null) {
+            BigDecimal countNumDecimal = BigDecimal.valueOf(countNum);
+            BigDecimal unitCostDecimal = BigDecimal.valueOf(unitCost);
+            nimbleSalary = countNumDecimal.multiply(unitCostDecimal);
+        }
+
+        BigDecimal baseSalaryDecimal = BigDecimal.valueOf(0);
+        if (baseSalary != null && !StringUtils.isEmpty(baseSalary)) {
+            baseSalaryDecimal = BigDecimal.valueOf(Double.valueOf(baseSalary));
+        }
+        return baseSalaryDecimal.add(nimbleSalary).doubleValue();
+    }
 
 }
