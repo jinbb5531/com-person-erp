@@ -12,9 +12,11 @@ public interface IClientService {
 
     boolean delete(Client client);
 
+    boolean deleteBatch(String ids);
+
     boolean update(Client client);
 
     Client get(Client client);
 
-    List<Client> findPage(PageInfo<Client> pageInfo, Client client);
+    PageInfo<Client> findPage(PageInfo<Client> pageInfo, Client client);
 }

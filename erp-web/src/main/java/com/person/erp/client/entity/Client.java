@@ -7,6 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -27,6 +29,7 @@ public class Client {
     /*
         客户名
      */
+    @NotEmpty(message = "【clientName】 不能为空！")
     private String clientName;
 
     /*
@@ -37,16 +40,19 @@ public class Client {
     /*
         客户电话
      */
+    @NotEmpty(message = "【clientName】 不能为空！")
     private String clientPhone;
 
     /*
         应付
      */
-    private BigDecimal payAble;
+    @NotNull(message = "【payable】 不能为空！")
+    private BigDecimal payable;
 
     /*
         实付
      */
+    @NotNull(message = "【payable】 不能为空！")
     private BigDecimal paid;
 
     /*
@@ -57,7 +63,7 @@ public class Client {
     /*
         系统标识
      */
-    private int systemTag;
+    private long systemTag;
 
     /*
         创建人

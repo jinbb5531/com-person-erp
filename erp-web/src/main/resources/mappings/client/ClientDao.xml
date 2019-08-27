@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.person.erp.client.dao.IClientDAO">
+
+    <resultMap id="BaseMap" type="com.person.erp.client.entity.Client">
+        <result column="ID" property="id" jdbcType="BIGINT"/>
+        <result column="CLIENT_NAME" property="clientName" jdbcType="VARCHAR"/>
+        <result column="CLIENT_ADDR" property="clientAddr" jdbcType="VARCHAR"/>
+        <result column="CLIENT_PHONE" property="clientPhone" jdbcType="VARCHAR"/>
+        <result column="PAYABLE" property="payable" jdbcType="DECIMAL"/>
+        <result column="PAID" property="paid" jdbcType="DECIMAL"/>
+        <result column="IS_SETTLE" property="isSettle" jdbcType="BIGINT"/>
+        <result column="SYSTEM_TAG" property="systemTag" jdbcType="BIGINT"/>
+        <result column="CREATE_AT" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
+        <result column="UPDATE_AT" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="findPage" resultMap="BaseMap" parameterType="com.person.erp.client.entity.Client">
+        SELECT * FROM ERP_CLIENT
+        WHERE
+        <if test="clientName != null and clientName != ''">
+            CLIENT_NAME LIKE '%' #{clientName} '%' AND
+        </if>
+        <if test="systemTag != null">
+            SYSTEM_TAG = #{systemTag} AND
+        </if>
+        1=1
+        ORDER BY CREATE_AT DESC
+
+    </select>
+</mapper>
