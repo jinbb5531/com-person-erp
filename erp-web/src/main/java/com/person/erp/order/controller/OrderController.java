@@ -6,6 +6,7 @@ import com.itexplore.core.api.utils.PageChangeUtils;
 import com.itexplore.core.api.utils.ResultUtils;
 import com.itexplore.core.common.utils.judge.JudgeUtils;
 import com.person.erp.common.utils.TokenUtils;
+import com.person.erp.identity.constant.IdentityConstant;
 import com.person.erp.identity.entity.User;
 import com.person.erp.identity.service.IUserService;
 import com.person.erp.order.constant.OperateTypeConstant;
@@ -177,7 +178,7 @@ public class OrderController {
         Order result = orderService.findById(order);
         String workKind = TokenUtils.getUser().getWorkKind();
         if (result!= null && workKind != null && result.getStatus().equals(OrderConstant.PUBLISH.getCode())
-                && workKind.equals("裁剪工") ) {
+                && workKind.equals(IdentityConstant.WorkType.CJG.getValue()) ) {
             order.setCutter(TokenUtils.getUser().getUserName());
             order.setStatus(OrderConstant.CUTTING.getCode());
             order.setCutAt(new Timestamp(new Date().getTime()));
@@ -189,7 +190,7 @@ public class OrderController {
                 return ResultUtils.failure("非对应工种不能接单或接单失败！");
             }
         } else if (result!= null && workKind != null && result.getStatus().equals(OrderConstant.CUT_END.getCode())
-                && workKind.equals("缝边工") ) {
+                && workKind.equals(IdentityConstant.WorkType.FBG.getValue()) ) {
             order.setHemmer(TokenUtils.getUser().getUserName());
             order.setStatus(OrderConstant.HEMMING.getCode());
             order.setHemAt(new Timestamp(new Date().getTime()));
@@ -201,7 +202,7 @@ public class OrderController {
                 return ResultUtils.failure("非对应工种不能接单或接单失败！");
             }
         } else if (result!= null && workKind != null && result.getStatus().equals(OrderConstant.HEM_END.getCode())
-                && workKind.equals("包装工")) {
+                && workKind.equals(IdentityConstant.WorkType.BZG.getValue())) {
             order.setPacker(TokenUtils.getUser().getUserName());
             order.setStatus(OrderConstant.PACKING.getCode());
             order.setPackAt(new Timestamp(new Date().getTime()));
