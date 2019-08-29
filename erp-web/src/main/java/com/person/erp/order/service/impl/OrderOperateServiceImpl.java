@@ -30,6 +30,11 @@ public class OrderOperateServiceImpl implements IOrderOperateService {
     }
 
     @Override
+    public OrderOperate getNum(String orderCode, long systemTag) {
+        return dao.getCutNum(orderCode, systemTag);
+    }
+
+    @Override
     public boolean insert(OrderOperate orderOperate) {
         return dao.insert(orderOperate) > 0 ;
     }

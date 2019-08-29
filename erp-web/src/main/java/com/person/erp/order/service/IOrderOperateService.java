@@ -17,6 +17,13 @@ public interface IOrderOperateService {
     boolean insert(OrderOperate orderOperate, Order order);
 
     /**
+     * 获取裁剪数量
+     * @param orderCode
+     * @return
+     */
+    OrderOperate getNum(String orderCode, long syetemTag);
+
+    /**
      * 订单操作表
      * @param orderOperate
      * @return

@@ -238,7 +238,6 @@ public class OrderController {
             String[] split = orderOperate.getCoagent().split(",");
             peopleCount += split.length;
             for (String coagent: split) {
-                orderOperate.setCoagent(null);
                 orderOperate.setOperator(userService.getUser(coagent, user.getSystemTag()).getUserName());
                 orderOperate.setOperaCode(coagent);
                 operateService.insert(orderOperate);
@@ -275,17 +274,20 @@ public class OrderController {
         orderOperate.setType(OperateTypeConstant.HEM.getType());
         orderOperate.setOperaTime(new Timestamp(new Date().getTime()));
         orderOperate.setOrderCode(orderOperate.getOrderCode());
+        //获取裁剪数即该订单的数量
+        Integer cutNum = operateService.getNum(orderOperate.getOrderCode(), user.getSystemTag()).getCutNum();
+        orderOperate.setCutNum(cutNum);
         int peopleCount  = 1;
         if (!JudgeUtils.isEmpty(orderOperate.getCoagent())){
             String[] split = orderOperate.getCoagent().split(",");
             peopleCount += split.length;
             for (String coagent: split) {
-                orderOperate.setCoagent(null);
                 orderOperate.setOperator(userService.getUser(coagent, user.getSystemTag()).getUserName());
                 orderOperate.setOperaCode(coagent);
                 operateService.insert(orderOperate);
             }
         }
+
         orderOperate.setOperaCode(user.getUserCode());
         orderOperate.setCoagent(orderOperate.getCoagent());
         orderOperate.setOperator(user.getUserName());
@@ -317,12 +319,14 @@ public class OrderController {
         orderOperate.setType(OperateTypeConstant.PACK.getType());
         orderOperate.setOperaTime(new Timestamp(new Date().getTime()));
         orderOperate.setOrderCode(orderOperate.getOrderCode());
+        //获取裁剪数即该订单的数量
+        Integer cutNum = operateService.getNum(orderOperate.getOrderCode(), user.getSystemTag()).getCutNum();
+        orderOperate.setCutNum(cutNum);
         int peopleCount  = 1;
         if (!JudgeUtils.isEmpty(orderOperate.getCoagent())){
             String[] split = orderOperate.getCoagent().split(",");
             peopleCount += split.length;
             for (String coagent: split) {
-                orderOperate.setCoagent(null);
                 orderOperate.setOperator(userService.getUser(coagent, user.getSystemTag()).getUserName());
                 orderOperate.setOperaCode(coagent);
                 operateService.insert(orderOperate);

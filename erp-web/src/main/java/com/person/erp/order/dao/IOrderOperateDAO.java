@@ -23,6 +23,10 @@ public interface IOrderOperateDAO {
     int insert(OrderOperate orderOperate);
 
     /**
+     * 获取订单的裁剪数
+     */
+    OrderOperate getCutNum(@Param("orderCode") String orderCode, @Param("systemTag") long systemTag);
+    /**
      * 获取实际产量
      * @param startDate 开始时间
      * @param endDate 结束时间
