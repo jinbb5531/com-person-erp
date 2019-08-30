@@ -26,7 +26,7 @@ public class ClientServiceImpl implements IClientService {
         User user = TokenUtils.getUser();
         client.setCreateBy(user.getUserName());
         client.setCreateAt(new Timestamp(new Date().getTime()));
-        client.setIsSettle(client.getPayable().compareTo(client.getPaid())>= 0 ? 0 : 1);
+        client.setIsSettle(client.getPayable().compareTo(client.getPaid())> 0 ? 0 : 1);
         client.setSystemTag(user.getSystemTag());
         return clientDAO.insert(client) > 0;
     }
@@ -44,7 +44,7 @@ public class ClientServiceImpl implements IClientService {
     @Override
     public boolean update(Client client) {
         User user = TokenUtils.getUser();
-        client.setIsSettle(client.getPayable().compareTo(client.getPaid())>= 0 ? 0 : 1);
+        client.setIsSettle(client.getPayable().compareTo(client.getPaid())> 0 ? 0 : 1);
         client.setUpdateBy(user.getUserName());
         client.setSystemTag(user.getSystemTag());
         client.setUpdateAt(new Timestamp(new Date().getTime()));
