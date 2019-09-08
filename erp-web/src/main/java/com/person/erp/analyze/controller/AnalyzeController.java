@@ -36,14 +36,17 @@ public class AnalyzeController {
     @GetMapping("/init")
     public ResponseEntity initEchars(Long startDate, Long endDate){
         JSONArray res = new JSONArray();
-        if(startDate == null){
+        if(startDate == null && endDate == null ){
             startDate = new Date().getTime()/1000 - 7 * 24 * 3600;
+            endDate = new Date().getTime()/1000;
+        }else if (startDate != null && endDate == null){
+            startDate = startDate/1000;
+            endDate = new Date().getTime()/1000;
+        }else if(startDate == null && endDate != null ){
+            startDate = new Date().getTime()/1000 - 7 * 24 * 3600;
+            endDate = endDate/1000;
         }else{
             startDate = startDate/1000;
-        }
-        if (endDate == null){
-            endDate = new Date().getTime()/1000;
-        }else{
             endDate = endDate/1000;
         }
         List<Order> planNumber = anlayzeService.getPlanYield(startDate, endDate, TokenUtils.getUser().getSystemTag());
@@ -63,16 +66,20 @@ public class AnalyzeController {
     @GetMapping("/yield")
     public ResponseEntity realYield(Long startDate, Long endDate){
         JSONArray res = new JSONArray();
-        if(startDate == null){
+        if(startDate == null && endDate == null ){
             startDate = new Date().getTime()/1000 - 7 * 24 * 3600;
-        }else {
-            startDate = startDate/1000;
-        }
-        if (endDate == null){
             endDate = new Date().getTime()/1000;
-        }else {
+        }else if (startDate != null && endDate == null){
+            startDate = startDate/1000;
+            endDate = new Date().getTime()/1000;
+        }else if(startDate == null && endDate != null ){
+            startDate = new Date().getTime()/1000 - 7 * 24 * 3600;
+            endDate = endDate/1000;
+        }else{
+            startDate = startDate/1000;
             endDate = endDate/1000;
         }
+
         List<OrderOperate> planNumber = anlayzeService.getRealYield(startDate, endDate, TokenUtils.getUser().getSystemTag());
         if (planNumber != null && planNumber.size() > 0){
             for (OrderOperate order : planNumber) {
@@ -96,14 +103,18 @@ public class AnalyzeController {
      */
     @GetMapping("/profit")
     public ResponseEntity profit(Long startDate, Long endDate){
-        if(startDate == null){
+
+        if(startDate == null && endDate == null ){
             startDate = new Date().getTime()/1000 - 7 * 24 * 3600;
+            endDate = new Date().getTime()/1000;
+        }else if (startDate != null && endDate == null){
+            startDate = startDate/1000;
+            endDate = new Date().getTime()/1000;
+        }else if(startDate == null && endDate != null ){
+            startDate = new Date().getTime()/1000 - 7 * 24 * 3600;
+            endDate = endDate/1000;
         }else{
             startDate = startDate/1000;
-        }
-        if (endDate == null){
-            endDate = new Date().getTime()/1000;
-        }else {
             endDate = endDate/1000;
         }
         List<RelationVO> profit = anlayzeService.getProfit(startDate, endDate, TokenUtils.getUser().getSystemTag());

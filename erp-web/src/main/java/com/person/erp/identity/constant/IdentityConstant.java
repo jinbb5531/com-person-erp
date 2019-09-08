@@ -35,4 +35,18 @@ public class IdentityConstant {
             return value;
         }
     }
+
+    public enum WorkType{
+        CJG("CJG"),
+        BZG("BZG"),
+        FBG("FDG");
+
+        private String value;
+        WorkType(String value){
+            this.value = value;
+        }
+        public String getValue() {
+            return value;
+        }
+    }
 }

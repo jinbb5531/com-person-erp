@@ -58,4 +58,9 @@
           </if>
           GROUP BY OPERA_CODE, SYSTEM_TAG
     </select>
+    <select id="getCutNum" resultMap="simpleOperate" >
+        SELECT CUT_NUM FROM ERP_ORDER_OPERATE
+        WHERE ORDER_CODE = #{orderCode} AND SYSTEM_TAG = #{systemTag} AND TYPE = 0 LIMIT 1
+
+    </select>
 </mapper>

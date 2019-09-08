@@ -44,3 +44,5 @@ erp-web/**/src/profile/
 erp-web/logs/
 erp-web/src/main/resources/static/*.html
 erp-web/src/main/resources/static/static/**
+/erp-web/src/main/resources/application.properties
+/erp-web/src/main/resources/application.properties

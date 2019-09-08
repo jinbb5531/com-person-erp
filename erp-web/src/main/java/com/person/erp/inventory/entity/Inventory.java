@@ -28,7 +28,9 @@ public class Inventory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull(groups = {Single.class, Update.class, UpdatePwd.class}, message = "[id] 主键不能为空")
     private Long id;
-
+    /**
+     * 产品名称
+     */
     @NotBlank(groups = {Default.class, Update.class}, message = "[name] 名称不能为空")
     private String name;
 
@@ -38,10 +40,24 @@ public class Inventory {
 
     private String weight;
 
+    /**
+     * 产品数量
+     */
     @NotBlank(groups = Single.class, message = "[amount] 不能为空")
     private String amount;
-
+    /**
+     * 采购价格
+     */
     private String stockPrice;
+
+    /**
+     * 辅料名称
+     */
+    private String fitName;
+    /**
+     * 辅料数量
+     */
+    private String fitAmount;
 
     private String imaPath;
 
